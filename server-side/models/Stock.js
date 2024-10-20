@@ -13,6 +13,9 @@ const stockSchema = new mongoose.Schema({
 		required: [true, 'Product price is required'],
 		min: [0, 'Product price must be greater than 0'],
 	},
+	brand: {
+		type: String,
+	},
 	productDosage: {
 		type: String,
 	},
