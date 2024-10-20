@@ -7,7 +7,7 @@ const {
 	updateInvoice,
 	deleteInvoice,
 	generatePDF,
-} = require('../controllers/invoiceControllers');
+} = require('../controllers/invoiceController');
 const {
 	authenticateUser,
 	authorizePermissions,

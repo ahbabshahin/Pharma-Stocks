@@ -5,11 +5,11 @@ const {
 	logoutUser,
 	updateUserProfile,
 	editUserRole,
-} = require('../controllers/userControllers');
+} = require('../controllers/userController');
 const {
 	authenticateUser,
 	authorizePermissions,
-} = require('../middleware/auth');
+} = require('../middleware/authentication');
 const router = express.Router();
 const { validateUser } = require('../middleware/validation');
 // Register

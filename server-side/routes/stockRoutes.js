@@ -7,7 +7,7 @@ const {
 	deleteProduct,
 	updateStockForStore,
 	searchStock, // Import the search function
-} = require('../controllers/stockControllers');
+} = require('../controllers/stockController');
 const {
 	authenticateUser,
 	authorizePermissions,
