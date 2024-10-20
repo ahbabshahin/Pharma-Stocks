@@ -7,8 +7,14 @@ const invoiceSchema = new mongoose.Schema({
 	products: [
 		{
 			name: String,
-			quantity: Number,
-			price: Number,
+			quantity: {
+				type: Number,
+				min: [1, 'Quantity must be at least 1'],
+			},
+			price: {
+				type: Number,
+				min: [0, 'Price must be a positive value'],
+			},
 		},
 	],
 	taxRate: {
@@ -21,13 +27,20 @@ const invoiceSchema = new mongoose.Schema({
 		enum: ['paid', 'unpaid', 'overdue'],
 		default: 'unpaid',
 	},
-	customer: {
-		type: String,
-	},
+	customer: String, // You could add more validation based on your requirements
 	createdAt: {
 		type: Date,
 		default: Date.now,
 	},
+});
+
+invoiceSchema.pre('save', function (next) {
+	let total = 0;
+	this.products.forEach((product) => {
+		total += product.price * product.quantity;
+	});
+	this.totalAmount = total + total * this.taxRate;
+	next();
 });
 
 module.exports = mongoose.model('Invoice', invoiceSchema);

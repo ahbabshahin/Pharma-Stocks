@@ -16,26 +16,25 @@ const stockSchema = new mongoose.Schema({
 	productDosage: {
 		type: String,
 	},
-	// variations: [
-	// 	{
-	// 		type: String,
-	// 		// required: [true, 'Variation (e.g., size/color) is required'],
-	// 	},
-	// ],
-	// stores: [
-	// 	{
-	// 		storeId: String,
-	// 		stockLevel: {
-	// 			type: Number,
-	// 			required: [true, 'Stock level is required'],
-	// 			min: [0, 'Stock level cannot be negative'],
-	// 		},
-	// 		lowStockThreshold: {
-	// 			type: Number,
-	// 			default: 10, // Customize as needed
-	// 		},
-	// 	},
-	// ],
+	lowStockThreshold: {
+		type: Number,
+		default: 10, // Customize as needed
+	},
+	isLowStock: {
+		type: Boolean,
+		default: false,
+	},
+});
+
+// Pre-save hook to check for low stock
+stockSchema.pre('save', function (next) {
+	// Check if the product quantity is below the threshold
+	if (this.productQuantity <= this.lowStockThreshold) {
+		this.isLowStock = true;
+	} else {
+		this.isLowStock = false;
+	}
+	next();
 });
 
 module.exports = mongoose.model('Stock', stockSchema);
