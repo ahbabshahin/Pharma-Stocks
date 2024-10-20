@@ -18,6 +18,9 @@ const cors = require('cors');
 const connectDB = require('./db/connect');
 
 // routers
+const userRouter = require('./routes/userRoutes');
+const stockRouter = require('./routes/stockRoutes');
+const invoiceRouter = require('./routes/invoiceRoutes');
 
 app.use(morgan('tiny'));
 app.use(express.json());
@@ -33,6 +36,10 @@ app.get('/api/v1', (req, res) => {
 	console.log(req.signedCookies);
 	res.send('test-api');
 });
+
+app.use('/v1/auth', userRouter);
+app.use('/v1/stock', stockRouter);
+app.use('/v1/invoice', invoiceRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
