@@ -1,0 +1,103 @@
+<div class="theme-toggle">
+  <label> <input type="checkbox" (change)="toggleTheme()" /> Dark Mode </label>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="invoice-container">
+    <header class="invoice-header">
+      <div class="logo">
+        <img src="path/to/logo.png" alt="Company Logo" />
+      </div>
+      <div class="company-details">
+        <h1>Your Company Name</h1>
+        <p>Address, City, ZIP</p>
+        <p>Email | Phone</p>
+      </div>
+    </header>
+
+    <section class="invoice-info">
+      <div class="sender">
+        <h3>From:</h3>
+        <p>Sender Details</p>
+      </div>
+      <div class="recipient">
+        <h3>To:</h3>
+        <input formControlName="customer" placeholder="Customer Name" />
+      </div>
+      <div class="invoice-meta">
+        <p>Invoice #: <span>12345</span></p>
+        <p>
+          Date: <span>{{ createdAt | date }}</span>
+        </p>
+        <p>
+          Status: <span>{{ status ? "Paid" : "Unpaid" }}</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="product-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            formArrayName="products"
+            *ngFor="let product of products.controls; let i = index"
+          >
+            <tr [formGroupName]="i">
+              <td>
+                <input formControlName="name" type="text" placeholder="Name" />
+              </td>
+              <td>
+                <input
+                  formControlName="quantity"
+                  type="number"
+                  placeholder="Quantity"
+                />
+              </td>
+              <td>
+                <input
+                  formControlName="price"
+                  type="number"
+                  placeholder="Price"
+                />
+              </td>
+              <td>
+                {{
+                  (product.get("quantity")?.value || 0) *
+                    (product.get("price")?.value || 0) | currency
+                }}
+              </td>
+              <td>
+                <button (click)="removeProduct(i)">Remove</button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <button
+        type="button"
+        nz-button
+        class="primary-btn"
+        (click)="addProduct()"
+      >
+        Add Product
+      </button>
+    </section>
+
+    <footer class="invoice-footer">
+      <div class="summary">
+        <p>Tax: {{ taxRate * 100 }}%</p>
+        <p>Total Amount: {{ totalAmount | currency }}</p>
+      </div>
+      <button type="button" (click)="generatePDF()">Generate PDF</button>
+      <button type="submit">Submit Invoice</button>
+    </footer>
+  </div>
+</form>

@@ -28,7 +28,11 @@ const invoiceSchema = new mongoose.Schema({
 		enum: ['paid', 'unpaid', 'overdue'],
 		default: 'unpaid',
 	},
-	customer: String, // You could add more validation based on your requirements
+	customer: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Customer',
+		required: true,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
