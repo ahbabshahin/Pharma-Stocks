@@ -22,7 +22,9 @@ const invoiceSchema = new mongoose.Schema({
 		type: Number,
 		default: 0.15, // 15% tax rate
 	},
-	totalAmount: Number,
+	totalAmount: {
+		type: Number,
+	},
 	status: {
 		type: String,
 		enum: ['paid', 'unpaid', 'overdue'],
