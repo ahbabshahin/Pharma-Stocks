@@ -1,12 +1,9 @@
-import { NgModule } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SecureModule } from './secure/secure.module';
@@ -14,6 +11,16 @@ import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './secure/sidebar/sidebar.module';
 import { SidebarComponent } from './secure/sidebar/sidebar.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { CustomSerializer } from './store/router/custom-serializer';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { HttpClientModule } from '@angular/common/http';
+import { Config } from './config';
+import { InvoiceEffects } from './store/effects/invoice.effect';
+import { invoiceReducer } from './store/reducers/invoice.reducer';
+import { appReducer } from './store/app.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,14 +31,26 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
     RouterLink,
     RouterOutlet,
     RouterModule,
-    NzIconModule,
-    NzLayoutModule,
-    NzMenuModule,
     BrowserAnimationsModule,
     SecureModule,
     SharedModule,
     SidebarModule,
     SidebarComponent,
+    HttpClientModule,
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreModule.forRoot(appReducer, {
+      runtimeChecks: {
+        strictActionImmutability: true,
+        strictStateImmutability: true,
+        strictActionWithinNgZone: true,
+        strictActionTypeUniqueness: true,
+      },
+    }),
+    EffectsModule.forRoot([InvoiceEffects]),
+    StoreRouterConnectingModule.forRoot({
+      serializer: CustomSerializer,
+    }),
+    StoreRouterConnectingModule.forRoot(),
   ],
   exports: [
     RouterLink,
@@ -42,6 +61,6 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
     SidebarModule,
   ],
   bootstrap: [AppComponent],
-  providers: [NzDrawerService],
+  providers: [NzDrawerService, Config],
 })
 export class AppModule {}
