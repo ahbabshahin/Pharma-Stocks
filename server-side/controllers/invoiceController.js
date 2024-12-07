@@ -83,7 +83,7 @@ const getAllInvoices = async (req, res) => {
 		.populate('user', 'username email'); // Optional: populate user data
 
 	const totalInvoices = await Invoice.countDocuments(queryObject);
-	res.status(200).json({ invoices, total: totalInvoices, page });
+	res.status(200).json({ body: invoices, total: totalInvoices, page: Number(page) });
 };
 
 // Get Single Invoice

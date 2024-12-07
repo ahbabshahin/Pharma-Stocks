@@ -17,7 +17,7 @@ const {
 router.post('/', authenticateUser, createInvoice);
 
 // Get all invoices with pagination and filtering
-router.get('/', authenticateUser, getAllInvoices);
+router.get('/', getAllInvoices);
 
 // Get a single invoice by ID
 router.get('/:id', authenticateUser, getInvoice);
