@@ -7,7 +7,12 @@ const invoiceSchema = new mongoose.Schema({
 	},
 	products: [
 		{
-			name: String,
+			_id: {
+				type: String,
+			},
+			name: {
+				type: String,
+			},
 			quantity: {
 				type: Number,
 				min: [1, 'Quantity must be at least 1'],
@@ -31,9 +36,7 @@ const invoiceSchema = new mongoose.Schema({
 		default: 'unpaid',
 	},
 	customer: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Customer',
-		required: true,
+		type: String,
 	},
 	createdAt: {
 		type: Date,

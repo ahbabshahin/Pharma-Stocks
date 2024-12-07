@@ -1,4 +1,5 @@
 const Invoice = require('../models/Invoice');
+const Stock = require('../models/Stock');
 const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 const PDFDocument = require('pdfkit');
@@ -22,8 +23,36 @@ const createInvoice = async (req, res) => {
 		);
 	}
 
+	// Check stock availability for each product
+	for (const product of products) {
+		const stock = await Stock.findOne({ _id: product._id });
+
+		if (!stock) {
+			throw new CustomError.NotFoundError(
+				`Product "${product.name}" not found in stock`
+			);
+		}
+
+		if (product.quantity > stock.productQuantity) {
+			throw new CustomError.BadRequestError(
+				`Insufficient stock for product "${product.name}". Available quantity: ${stock.productQuantity}`
+			);
+		}
+	}
+
+	// Deduct stock quantities
+	for (const product of products) {
+		await Stock.findOneAndUpdate(
+			{ productName: product.name },
+			{ $inc: { productQuantity: -product.quantity } },
+			{ new: true }
+		);
+	}
+
+	// Calculate total and subtotal
 	const { subtotal, total } = calculateTotal(products, 0.15);
 
+	// Create the invoice
 	const invoice = await Invoice.create({
 		user: req.user.userId,
 		products,
@@ -31,6 +60,7 @@ const createInvoice = async (req, res) => {
 		totalAmount: total,
 	});
 
+	// Generate PDF if requested
 	if (sendPDF) {
 		await generatePDF(invoice);
 	}
