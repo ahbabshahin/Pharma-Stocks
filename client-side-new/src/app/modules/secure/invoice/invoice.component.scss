@@ -1,0 +1,12 @@
+.full-drawer {
+  .ant-drawer {
+    width: 100% !important; /* Makes the drawer cover the full width */
+    height: 100% !important; /* Makes the drawer cover the full height */
+    max-width: 100% !important;
+    top: 0;
+  }
+
+  .ant-drawer-body {
+    padding: 0; /* Optional: Remove padding for full-screen content */
+  }
+}

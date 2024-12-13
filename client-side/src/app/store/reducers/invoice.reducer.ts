@@ -7,6 +7,7 @@ export interface InvoiceState extends EntityState<Invoice> {
   loader: boolean;
   subLoader: boolean;
   loaded: boolean;
+  total: number;
   error: string;
 }
 
@@ -16,6 +17,7 @@ export const defaultInvoiceState: InvoiceState = {
   loader: false,
   subLoader: false,
   loaded: false,
+  total: 0,
   error: '',
 };
 
@@ -32,11 +34,11 @@ export const invoiceReducer = createReducer(
   initialState,
 
   // Set Loader
-  on(invoiceActions.setLoader, (state, { status }) => {
-    console.log('reducer status ', status);
+  on(invoiceActions.setLoader, (state, action) => {
+    console.log('reducer status ', action.status);
     return {
     ...state,
-    loader: status,
+    loader: action.status,
   }}),
 
   // Set SubLoader
@@ -46,21 +48,23 @@ export const invoiceReducer = createReducer(
   })),
 
   // Load Invoices
-  on(invoiceActions.loadInvoice, (state) => ({
-    ...state,
-    loader: true,
-    error: '',
-  })),
-  on(invoiceActions.loadInvoiceSuccess, (state, { res }) =>
-    invoiceAdapter.setAll(res, {
+  on(invoiceActions.loadInvoice, (state, action) => {
+    return {
       ...state,
-      loader: false,
-      loaded: true,
+    loaded: true,
+    error: '',
+    }
+  }),
+  on(invoiceActions.loadInvoiceSuccess, (state, action) =>{
+    console.log('action.res: ', action.res);
+    return invoiceAdapter.setAll(action.res, {
+      ...state,
+      loaded: false,
     })
-  ),
+  }),
   on(invoiceActions.loadInvoiceFail, (state, { error }) => ({
     ...state,
-    loader: false,
+    loaded: false,
     error,
   })),
 

@@ -20,11 +20,13 @@ export class InvoiceEffects {
         return this.invoiceApi.getInvoices(action.params).pipe(
           map((res: any) => {
             console.log('res: ', res);
-            return invoiceActions.loadInvoiceSuccess(res);
+            this.invoiceStore.setLoader(false);
+             this.invoiceStore.loadInvoiceSuccess(res?.body, res?.total);
           })
         );
       })
-    )
+    ),
+    {dispatch: false}
   );
 
   // addInvoice$ = createEffect(

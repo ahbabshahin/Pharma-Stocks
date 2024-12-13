@@ -13,8 +13,8 @@ const {
 	authorizePermissions,
 } = require('../middleware/authentication');
 
-// Create an invoice
-router.post('/', authenticateUser, createInvoice);
+// Create an invoice authenticateUser
+router.post('/', createInvoice);
 
 // Get all invoices with pagination and filtering
 router.get('/', getAllInvoices);

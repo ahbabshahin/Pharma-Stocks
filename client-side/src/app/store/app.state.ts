@@ -8,6 +8,5 @@ export interface AppState {
 }
 export const appReducer = {
   [invoiceStateName]: invoiceReducer,
-
   router: routerReducer,
 };

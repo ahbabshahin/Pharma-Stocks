@@ -1,5 +1,5 @@
 {
-  "name": "client-side",
+  "name": "Pharma Stocks",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -25,6 +25,7 @@
     "@ngrx/store-devtools": "^17.2.0",
     "ng-zorro-antd": "^17.3.2",
     "rxjs": "~7.5.0",
+    "subsink": "^1.0.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },

@@ -1,0 +1,134 @@
+<div class="theme-toggle">
+  <label>
+    <input type="checkbox" (change)="toggleTheme()" />
+    Dark Mode
+  </label>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="invoice-container">
+    <!-- Header Section -->
+    <header class="invoice-header">
+      <div class="logo">
+        <img src="path/to/logo.png" alt="Company Logo" />
+      </div>
+      <div class="company-details">
+        <h1>Your Company Name</h1>
+        <address>
+          Golapgonj, Sylhet, Bangladesh<br />
+          Phone: 0176*****67
+        </address>
+      </div>
+    </header>
+
+    <!-- Invoice Information -->
+    <section class="invoice-info">
+      <div class="info-group">
+        <h3>From:</h3>
+        <p>Sender Details</p>
+      </div>
+      <div class="info-group">
+        <h3>To:</h3>
+        <input
+          formControlName="customer"
+          placeholder="Enter Customer Name"
+          aria-label="Customer Name"
+        />
+      </div>
+      <div class="info-group invoice-meta">
+        <p>
+          Invoice #: <span>{{ invoiceNumber || 'N/A' }}</span>
+        </p>
+        <p>
+          Date: <span>{{ createdAt | date }}</span>
+        </p>
+        <p>
+          Status:
+          <nz-select formControlName="status" aria-label="Invoice Status">
+            <nz-option nzValue="due" nzLabel="Due"></nz-option>
+            <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
+          </nz-select>
+        </p>
+      </div>
+    </section>
+
+    <!-- Product List -->
+    <section class="product-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            formArrayName="products"
+            *ngFor="let product of products.controls; let i = index"
+          >
+            <tr [formGroupName]="i">
+              <td>
+                <input
+                  formControlName="name"
+                  type="text"
+                  placeholder="Product Name"
+                  aria-label="Product Name"
+                />
+              </td>
+              <td>
+                <input
+                  formControlName="quantity"
+                  type="number"
+                  placeholder="Qty"
+                  min="1"
+                  aria-label="Quantity"
+                />
+              </td>
+              <td>
+                <input
+                  formControlName="price"
+                  type="number"
+                  placeholder="Price"
+                  min="0"
+                  step="0.01"
+                  aria-label="Price"
+                />
+              </td>
+              <td>
+                ৳ {{ calculateProductTotal(product) }}
+              </td>
+              <td>
+                <button type="button" (click)="removeProduct(i)">
+                  Remove
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <button
+        type="button"
+        nz-button
+        class="primary-btn"
+        (click)="addProduct()"
+      >
+        Add Product
+      </button>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="invoice-footer">
+      <div class="summary">
+        <p>Tax: {{ taxRate * 100 }}%</p>
+        <p>Total Amount: {{ totalAmount | number: '1.2-2' }}</p>
+      </div>
+      <div class="action-buttons">
+        <button nz-button class="primary-btn" type="button" (click)="generatePDF()">Generate PDF</button>
+        <button  nz-button class="primary-btn" type="submit">Submit Invoice</button>
+      </div>
+    </footer>
+  </div>
+</form>

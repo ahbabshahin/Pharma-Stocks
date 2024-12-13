@@ -11,17 +11,13 @@ import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './secure/sidebar/sidebar.module';
 import { SidebarComponent } from './secure/sidebar/sidebar.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { CustomSerializer } from './store/router/custom-serializer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
 import { Config } from './config';
-import { InvoiceEffects } from './store/effects/invoice.effect';
-import { invoiceReducer } from './store/reducers/invoice.reducer';
-import { appReducer } from './store/app.state';
-
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -38,7 +34,7 @@ import { appReducer } from './store/app.state';
     SidebarComponent,
     HttpClientModule,
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
-    StoreModule.forRoot(appReducer, {
+    StoreModule.forRoot({}, {
       runtimeChecks: {
         strictActionImmutability: true,
         strictStateImmutability: true,
@@ -46,7 +42,7 @@ import { appReducer } from './store/app.state';
         strictActionTypeUniqueness: true,
       },
     }),
-    EffectsModule.forRoot([InvoiceEffects]),
+    EffectsModule.forRoot(),
     StoreRouterConnectingModule.forRoot({
       serializer: CustomSerializer,
     }),

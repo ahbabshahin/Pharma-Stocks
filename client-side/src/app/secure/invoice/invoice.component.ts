@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NewInvoiceComponent } from './new-invoice/new-invoice.component';
 import { InvoiceStoreService } from '../../service/invoice/invoice-store.service';
-
+import{ SubSink } from 'subsink';
+import { Invoice } from '../../store/models/invoice.model';
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
@@ -14,6 +15,13 @@ export class InvoiceComponent {
   products!: any[];
   totalAmount!: number;
   taxRate!: number;
+  subs = new SubSink();
+  params = {
+    page: 1,
+    limit: 10,
+    status: 'due',
+  };
+  invoices: Invoice[] = [];
 
   constructor(
     private drawerService: NzDrawerService,
@@ -26,15 +34,37 @@ export class InvoiceComponent {
     this.initialize();
   }
 
-  initialize(){
-    const params = {
-      page: 1,
-      limit: 10,
-      status: 'due',
-    };
-    this.invoiceStoreService.setLoader(true);
-    this.invoiceStoreService.loadInvoice(params)
+  initialize() {
+    this.loadInvoice();
+    this.isInvoiceLoaded();
+    this.getInvoices();
+  }
 
+  loadInvoice() {
+    this.invoiceStoreService.setLoader(true);
+    this.invoiceStoreService.loadInvoice(this.params);
+  }
+
+  getInvoices(){
+    this.subs.sink = this.invoiceStoreService
+      .getInvoices()
+      .subscribe({next:(res: Invoice[]) => {
+        this.invoices = res;
+      },
+      error:() =>{
+        console.log('error');
+      }
+    });
+  }
+
+  isInvoiceLoaded() {
+    this.subs.sink = this.invoiceStoreService
+      .getInvoiceLoaded()
+      .subscribe((loaded: boolean) => {
+        if (loaded) {
+          this.loadInvoice();
+        }
+      });
   }
 
   addInvoice() {

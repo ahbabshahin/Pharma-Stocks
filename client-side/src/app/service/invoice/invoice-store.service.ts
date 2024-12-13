@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { InvoiceState } from '../../store/reducers/invoice.reducer';
 import * as invoiceActions from '../../store/actions/invoice.action';
 import * as invoiceSelectors from '../../store/selectors/invoice.selector';
@@ -12,8 +12,8 @@ import { Observable } from 'rxjs';
 export class InvoiceStoreService {
   constructor(private store: Store<InvoiceState>) {}
 
-  dispatch = (action: any) => this.store.dispatch(action);
-  select = (action: any) => this.store.select(action);
+  dispatch = (action: Action) => this.store.dispatch(action);
+  select = <T>(action: any): Observable<T> => this.store.select(action);
 
   setLoader(status: boolean) {
     console.log('status: ', status);
@@ -26,8 +26,8 @@ export class InvoiceStoreService {
   loadInvoice(params: { [key: string]: any }) {
     this.dispatch(invoiceActions.loadInvoice({ params }));
   }
-  loadInvoiceSuccess(res: Invoice[]) {
-    this.dispatch(invoiceActions.loadInvoiceSuccess({ res }));
+  loadInvoiceSuccess(res: Invoice[], total: number) {
+    this.dispatch(invoiceActions.loadInvoiceSuccess({ res, total }));
   }
   loadInvoiceFail(error: string) {
     this.dispatch(invoiceActions.loadInvoiceFail({ error }));

@@ -8,6 +8,9 @@ import { SecureComponent } from './secure.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { invoiceReducer } from '../store/reducers/invoice.reducer';
+import { InvoiceEffects } from '../store/effects/invoice.effect';
+import { invoiceStateName } from '../store/app.state';
 
 @NgModule({
   declarations: [SecureComponent],

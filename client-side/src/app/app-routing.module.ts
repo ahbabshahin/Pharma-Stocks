@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./secure/sidebar/sidebar.module').then((m) => m.SidebarModule),
+      import('./secure/secure.module').then((m) => m.SecureModule),
   },
   { path: '', redirectTo: '/secure', pathMatch: 'full' }, // Default route
   { path: '**', redirectTo: '/secure' },
