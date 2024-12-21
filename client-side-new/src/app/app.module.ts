@@ -8,17 +8,18 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsConfig, StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from './app.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { IconsProviderModule } from './icons-provider.module';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
-
+import { HttpTokenInterceptor } from './interceptor/http.interceptor';
+import { Config } from './config';
+import { AppState } from './store/app.state';
+import { NzModalService } from 'ng-zorro-antd/modal';
 registerLocaleData(en);
 
 
@@ -35,14 +36,20 @@ registerLocaleData(en);
     EffectsModule.forRoot(),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     IconsProviderModule,
-    NzLayoutModule,
-    NzMenuModule,
     FormsModule,
     ToastrModule.forRoot(),
   ],
   exports: [RouterModule, RouterOutlet, HttpClientModule],
   bootstrap: [AppComponent],
   providers: [
+    Config,
+    AppState,
+    NzModalService,
+      {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpTokenInterceptor,
+      multi: true,
+    },
     { provide: NZ_I18N, useValue: en_US },
     provideAnimationsAsync(),
     provideHttpClient(),

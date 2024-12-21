@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { LoaderModalComponent } from '../../common-component/loader-modal/loader-modal.component';
-import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
   private loaderModal: NzModalRef<LoaderModalComponent> | null = null;
-  constructor(private modalService: NzModalService) {}
+  constructor(
+    private modalService: NzModalService,
+    private toastr:ToastrService,
+  ) {}
 
   presentLoading(loading_text: string = 'Please wait...') {
     if (this.loaderModal) return;
@@ -31,5 +35,14 @@ export class CommonService {
       this.loaderModal.destroy();
       this.loaderModal = null;
     }
+  }
+
+  showSuccessToast(message: string = 'Successful'){
+    this.toastr.success(message, 'Success');
+  }
+
+  showErrorToast(message: string = 'Something went wrong'){
+    console.log('message: ', message);
+    this.toastr.error(message, 'Error');
   }
 }

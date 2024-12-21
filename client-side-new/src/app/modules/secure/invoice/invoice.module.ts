@@ -10,6 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { invoiceReducer } from '../../../store/reducers/invoice.reducer';
 import { InvoiceEffects } from '../../../store/effects/invoice.effect';
+import { invoiceStateName } from '../../../store/app.state';
 
 @NgModule({
   declarations: [InvoiceComponent, NewInvoiceComponent],
@@ -19,7 +20,7 @@ import { InvoiceEffects } from '../../../store/effects/invoice.effect';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forFeature('invoice', invoiceReducer),
+    StoreModule.forFeature(invoiceStateName, invoiceReducer),
     EffectsModule.forFeature([InvoiceEffects])
   ],
 })
