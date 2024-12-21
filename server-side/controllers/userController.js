@@ -28,10 +28,10 @@ const registerUser = async (req, res) => {
 
 // Login user
 const loginUser = async (req, res) => {
-	const { email, password } = req.body;
+	const { userName, password } = req.body;
 
 	try {
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ userName });
 		if (!user) {
 			return res.status(400).json({ message: 'Invalid credentials' });
 		}
@@ -47,7 +47,7 @@ const loginUser = async (req, res) => {
 			{ expiresIn: process.env.JWT_LIFETIME }
 		);
 
-		res.cookie('token', token, { httpOnly: true }).json({
+		res.cookie('accessToken', token, { httpOnly: true }).json({
 			message: 'Logged in successfully',
 		});
 	} catch (error) {
@@ -57,8 +57,24 @@ const loginUser = async (req, res) => {
 
 // Logout user
 const logoutUser = (req, res) => {
-	res.clearCookie('token').json({ message: 'Logged out successfully' });
+	res.clearCookie('accessToken').json({ message: 'Logged out successfully' });
 };
+
+const getUser = async (req, res) => {
+	const { userId } = req.params || req.user.userId; // Use userId from params or the logged-in user
+
+	try {
+		const user = await User.findById(userId).select('-password'); // Exclude the password field
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		res.status(200).json({ user });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
+	}
+};
+
 
 // Update profile
 const updateUserProfile = async (req, res) => {
@@ -116,6 +132,7 @@ module.exports = {
 	registerUser,
 	loginUser,
 	logoutUser,
+	getUser,
 	updateUserProfile,
 	editUserRole,
 };
