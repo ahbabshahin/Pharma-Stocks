@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Config } from './config';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -34,14 +35,17 @@ import { EffectsModule } from '@ngrx/effects';
     SidebarComponent,
     HttpClientModule,
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
-    StoreModule.forRoot({}, {
-      runtimeChecks: {
-        strictActionImmutability: true,
-        strictStateImmutability: true,
-        strictActionWithinNgZone: true,
-        strictActionTypeUniqueness: true,
-      },
-    }),
+    StoreModule.forRoot(
+      {},
+      {
+        runtimeChecks: {
+          strictActionImmutability: true,
+          strictStateImmutability: true,
+          strictActionWithinNgZone: true,
+          strictActionTypeUniqueness: true,
+        },
+      }
+    ),
     EffectsModule.forRoot(),
     StoreRouterConnectingModule.forRoot({
       serializer: CustomSerializer,
@@ -57,6 +61,6 @@ import { EffectsModule } from '@ngrx/effects';
     SidebarModule,
   ],
   bootstrap: [AppComponent],
-  providers: [NzDrawerService, Config],
+  providers: [NzDrawerService, NzNotificationService, Config],
 })
 export class AppModule {}

@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 // Register user
 const registerUser = async (req, res) => {
-	const { username, email, password } = req.body;
+	const { name, userName, email, password } = req.body;
 
 	try {
 		let user = await User.findOne({ email });
@@ -14,7 +14,8 @@ const registerUser = async (req, res) => {
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 		user = new User({
-			username,
+			name,
+			userName,
 			email,
 			password: hashedPassword,
 		});
@@ -42,12 +43,13 @@ const loginUser = async (req, res) => {
 		}
 
 		const token = jwt.sign(
-			{ userId: user._id, role: user.role },
+			{ userId: user._id, role: user.role, name: user.name },
 			process.env.JWT_SECRET,
 			{ expiresIn: process.env.JWT_LIFETIME }
 		);
 
 		res.cookie('accessToken', token, { httpOnly: true }).json({
+			accessToken: token,
 			message: 'Logged in successfully',
 		});
 	} catch (error) {
@@ -61,7 +63,7 @@ const logoutUser = (req, res) => {
 };
 
 const getUser = async (req, res) => {
-	const { userId } = req.params || req.user.userId; // Use userId from params or the logged-in user
+	const { userId } = req.params || req.userId; // Use userId from params or the logged-in user
 
 	try {
 		const user = await User.findById(userId).select('-password'); // Exclude the password field
@@ -69,7 +71,7 @@ const getUser = async (req, res) => {
 			return res.status(404).json({ message: 'User not found' });
 		}
 
-		res.status(200).json({ user });
+		res.status(200).json({ body: user });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error' });
 	}
