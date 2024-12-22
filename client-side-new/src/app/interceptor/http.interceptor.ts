@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class HttpTokenInterceptor implements HttpInterceptor {
   // Mock function to retrieve the token (replace with your actual token retrieval logic)
   private getToken(): string | null {
-    return localStorage.getItem('jwtToken'); //
+    return sessionStorage.getItem('accessToken');
     // Assume token is stored in localStorage
   }
 

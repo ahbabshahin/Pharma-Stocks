@@ -76,6 +76,7 @@ nz-content {
 .inner-content {
   padding: 24px;
   background: #fff;
+  width: calc(90vw - 256px);
   height: 100%;
 }
 
@@ -83,3 +84,61 @@ nz-content {
   font-weight: bold;
   color: #1890ff;
 }
+// :host {
+//   display: flex;
+//   height: 100vh;
+//   text-rendering: optimizeLegibility;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+// }
+
+// .app-layout {
+//   display: flex;
+//   height: 100%;
+// }
+
+// .menu-sidebar {
+//   flex: 0 0 256px;
+//   min-width: 256px;
+//   background: #001529;
+//   color: #fff;
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   bottom: 0;
+//   z-index: 10;
+// }
+
+// .content-layout {
+//   margin-left: 256px;
+//   width: calc(100% - 256px);
+// }
+
+// nz-header {
+//   height: 64px;
+//   padding: 0;
+//   background: #fff;
+//   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+// }
+
+// nz-content {
+//   margin: 24px;
+//   padding: 24px;
+//   background: #fff;
+//   overflow-y: auto;
+//   height: calc(100vh - 64px); // Ensure it adjusts dynamically
+// }
+
+// .sidebar-logo {
+//   height: 64px;
+//   line-height: 64px;
+//   text-align: center;
+//   font-size: 16px;
+//   font-weight: bold;
+// }
+
+// .active-link {
+//   font-weight: bold;
+//   color: #1890ff;
+// }
+

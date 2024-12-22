@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
   // Mock function to check if the user is authenticated
   private isAuthenticated(): boolean {
     // Replace with your actual authentication logic
-    const token = localStorage.getItem('accessToken'); // Example using localStorage
+    const token = sessionStorage.getItem('accessToken'); // Example using localStorage
     return !!token; // Return true if a token exists, otherwise false
   }
 
@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
       return true; // Allow access
     } else {
       // Redirect to the login page if not authenticated
-      return this.router.createUrlTree(['/login'], {
+      return this.router.createUrlTree(['/auth'], {
         queryParams: { returnUrl: state.url }, // Optionally save the requested URL
       });
     }

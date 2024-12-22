@@ -10,13 +10,13 @@ import { authStateName } from '../../store/app.state';
 import { authReducer } from '../../store/reducers/auth.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from '../../store/effects/auth.effect';
-
+import * as authComponents from './index';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [...authComponents.components],
   imports: [CommonModule, AuthRoutingModule, SharedModule,
-    StoreModule.forFeature(authStateName, authReducer),
-    EffectsModule.forFeature([AuthEffects])
+    // StoreModule.forFeature(authStateName, authReducer),
+    // EffectsModule.forFeature([AuthEffects])
   ],
 })
 export class AuthModule {}

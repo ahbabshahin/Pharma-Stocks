@@ -2,33 +2,42 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SecureComponent } from './secure.component';
 import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
+import { AuthGuard } from '../../guard/auth.guard';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: SidebarComponent,
-     children: [
+    component: SecureComponent,
+    children: [
       {
         path: 'dashboard',
         loadChildren: () =>
-          import('./dashboard/dashboard.module').then(
-            (m) => m.DashboardModule
-          ),
+          import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+        canActivate: [AuthGuard],
       },
       {
         path: 'stocks',
         loadChildren: () =>
           import('./stocks/stocks.module').then((m) => m.StocksModule),
+        canActivate: [AuthGuard],
       },
       {
         path: 'invoice',
         loadChildren: () =>
           import('./invoice/invoice.module').then((m) => m.InvoiceModule),
+        canActivate: [AuthGuard],
       },
       {
         path: 'customer',
         loadChildren: () =>
           import('./customer/customer.module').then((m) => m.CustomerModule),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
       },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route

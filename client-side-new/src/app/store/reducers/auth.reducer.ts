@@ -19,7 +19,7 @@ export const defaultAuthInitialState: AuthState = {
   error: "",
 }
 
-export const authAdapter: EntityAdapter<User> = createEntityAdapter({
+export const authAdapter: EntityAdapter<User> = createEntityAdapter<User>({
   selectId: (user: User) => user._id as string,
 });
 
@@ -32,5 +32,20 @@ export const authReducer = createReducer(
       ...state,
       accessToken: action.res
     }
+  }),
+  on(authActions.loginFail, (state, action) =>{
+    return{
+      ...state,
+      error: action.error
+    }
+  }),
+  on(authActions.loadUserSuccess, (state, action) =>{
+    return authAdapter.setOne(action.res, state);
+  }),
+  on(authActions.loadUserFail, (state, action) =>{
+    return {
+      ...state,
+      error: action.error
+    };
   }),
 )

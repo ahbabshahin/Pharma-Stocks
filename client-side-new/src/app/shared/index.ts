@@ -11,6 +11,9 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+
 export const components = [
   FormsModule,
   ReactiveFormsModule,
@@ -26,4 +29,6 @@ export const components = [
   NzSliderModule,
   NzMenuModule,
   NzFormModule,
+  NzCardModule,
+  NzIconModule,
 ];

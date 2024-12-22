@@ -14,17 +14,17 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authStore: AuthStoreService,
-    private commonService: CommonService,
+    private commonService: CommonService
   ) {}
 
   ngOnInit() {
-    this.initialize()
+    this.initialize();
   }
-  initialize(){
+  initialize() {
     this.initializeForm();
   }
 
-  initializeForm(){
+  initializeForm() {
     this.loginForm = this.fb.group({
       userName: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -36,4 +36,6 @@ export class LoginComponent {
     this.commonService.presentLoading();
     this.authStore.login(payload);
   }
+
+  ngOnDestroy() {}
 }

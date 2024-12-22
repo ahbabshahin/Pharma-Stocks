@@ -3,7 +3,8 @@ import { Action, Store } from '@ngrx/store';
 import { AuthState } from '../../store/reducers/auth.reducer';
 import { Observable } from 'rxjs';
 import * as authActions from '../../store/actions/auth.action';
-import { LoginCred, RegisterCred } from '../../store/models/user.model';
+import * as authSelectors from '../../store/selectors/auth.selector';
+import { LoginCred, RegisterCred, User } from '../../store/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class AuthStoreService {
   }
 
   register(payload: RegisterCred) {
-    this.dispatch(authActions.register({ payload: payload }));
+    this.dispatch(authActions.register({ payload }));
   }
   registerSuccess(res: any) {
     this.dispatch(authActions.registerSuccess({ res }));
@@ -38,8 +39,18 @@ export class AuthStoreService {
     this.dispatch(authActions.registerFail({ error }));
   }
 
-  loadUser(payload: RegisterCred) {
-    this.dispatch(authActions.loadUser({ payload: payload }));
+  logout() {
+    this.dispatch(authActions.logout());
+  }
+  logoutSuccess(res: any) {
+    this.dispatch(authActions.logoutSuccess({ res }));
+  }
+  logoutFail(error: string) {
+    this.dispatch(authActions.logoutFail({ error }));
+  }
+
+  loadUser(id: string) {
+    this.dispatch(authActions.loadUser({ id }));
   }
   loadUserSuccess(res: any) {
     this.dispatch(authActions.loadUserSuccess({ res }));
@@ -47,4 +58,6 @@ export class AuthStoreService {
   loadUserFail(error: string) {
     this.dispatch(authActions.loadUserFail({ error }));
   }
+
+  getUser = (): Observable<User[]> => this.select(authSelectors.getUser);
 }

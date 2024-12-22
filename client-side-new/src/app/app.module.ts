@@ -18,8 +18,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { HttpTokenInterceptor } from './interceptor/http.interceptor';
 import { Config } from './config';
-import { AppState } from './store/app.state';
+import { AppState, authStateName } from './store/app.state';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { authReducer } from './store/reducers/auth.reducer';
+import { AuthEffects } from './store/effects/auth.effect';
 registerLocaleData(en);
 
 
@@ -32,11 +35,12 @@ registerLocaleData(en);
     RouterModule,
     RouterOutlet,
     HttpClientModule,
-    StoreModule.forRoot(),
-    EffectsModule.forRoot(),
+    StoreModule.forRoot({[authStateName]: authReducer}),
+    EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     IconsProviderModule,
     FormsModule,
+    BrowserAnimationsModule,
     ToastrModule.forRoot(),
   ],
   exports: [RouterModule, RouterOutlet, HttpClientModule],
@@ -45,7 +49,7 @@ registerLocaleData(en);
     Config,
     AppState,
     NzModalService,
-      {
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpTokenInterceptor,
       multi: true,
@@ -53,7 +57,7 @@ registerLocaleData(en);
     { provide: NZ_I18N, useValue: en_US },
     provideAnimationsAsync(),
     provideHttpClient(),
-    provideToastr(),
+    // provideToastr(),
   ],
 })
 export class AppModule {}

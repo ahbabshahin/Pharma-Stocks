@@ -49,7 +49,8 @@
       </div>
 
       <!-- Submit -->
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button nz-button class="primary-btn my-2" type="submit" [disabled]="loginForm.invalid">Login</button>
     </form>
+    <p>Don't have an account. Please register <a routerLink="/auth/register">here</a></p>
   </div>
 </div>

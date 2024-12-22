@@ -9,7 +9,7 @@ export class CommonService {
   private loaderModal: NzModalRef<LoaderModalComponent> | null = null;
   constructor(
     private modalService: NzModalService,
-    private toastr:ToastrService,
+    private toastr: ToastrService
   ) {}
 
   presentLoading(loading_text: string = 'Please wait...') {
@@ -37,12 +37,22 @@ export class CommonService {
     }
   }
 
-  showSuccessToast(message: string = 'Successful'){
+  showSuccessToast(message: string = 'Successful') {
     this.toastr.success(message, 'Success');
   }
 
-  showErrorToast(message: string = 'Something went wrong'){
+  showErrorToast(message: string = 'Something went wrong') {
     console.log('message: ', message);
     this.toastr.error(message, 'Error');
+  }
+
+  decodeJWT() {
+    const token = sessionStorage.getItem('accessToken');
+    if (token) {
+      const base64Url = token.split('.')[1]; // Get the payload part
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Replace URL-safe characters
+      const decodedPayload = JSON.parse(window.atob(base64)); // Decode and parse JSON
+      return decodedPayload;
+    }
   }
 }
