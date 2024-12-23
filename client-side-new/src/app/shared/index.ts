@@ -13,6 +13,7 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 export const components = [
   FormsModule,
@@ -31,4 +32,5 @@ export const components = [
   NzFormModule,
   NzCardModule,
   NzIconModule,
+  NzAutocompleteModule,
 ];

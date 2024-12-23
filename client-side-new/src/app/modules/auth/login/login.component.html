@@ -4,14 +4,43 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Email -->
       <div class="form-group">
-        <label for="email">Username</label>
-        <input
+        <label for="username">Username</label>
+        <!-- <input
           nz-input
           id="username"
           type="text"
           formControlName="userName"
           placeholder="Enter your username"
-        />
+        /> -->
+        <nz-input-group
+          [nzSuffix]="suffixTemplateInfo"
+          [nzPrefix]="prefixTemplateUser"
+        >
+          <input
+            type="text"
+            nz-input
+            formControlName="userName"
+            placeholder="Enter your username"
+            (input)="onInput($event)"
+            [nzAutocomplete]="auto"
+          />
+          <nz-autocomplete
+            [nzDataSource]="options"
+            nzBackfill
+            #auto
+          ></nz-autocomplete>
+        </nz-input-group>
+        <ng-template #prefixTemplateUser
+          ><span nz-icon nzType="user"></span
+        ></ng-template>
+        <ng-template #suffixTemplateInfo>
+          <span
+            nz-icon
+            nz-tooltip
+            nzTooltipTitle="Extra information"
+            nzType="info-circle"
+          ></span>
+        </ng-template>
         <div
           *ngIf="
             loginForm.get('email')?.touched && loginForm.get('email')?.invalid
@@ -29,13 +58,21 @@
       <!-- Password -->
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          nz-input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Enter your password"
-        />
+        <nz-input-group [nzSuffix]="suffixTemplate">
+          <input
+            [type]="passwordVisible ? 'text' : 'password'"
+            nz-input
+            placeholder="input password"
+            formControlName="password"
+          />
+        </nz-input-group>
+        <ng-template #suffixTemplate>
+          <span
+            nz-icon
+            [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordVisible = !passwordVisible"
+          ></span>
+        </ng-template>
         <div
           *ngIf="
             loginForm.get('password')?.touched &&
@@ -49,8 +86,18 @@
       </div>
 
       <!-- Submit -->
-      <button nz-button class="primary-btn my-2" type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button
+        nz-button
+        class="primary-btn my-2"
+        type="submit"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
     </form>
-    <p>Don't have an account. Please register <a routerLink="/auth/register">here</a></p>
+    <p>
+      Don't have an account. Please register
+      <a routerLink="/auth/register">here</a>
+    </p>
   </div>
 </div>

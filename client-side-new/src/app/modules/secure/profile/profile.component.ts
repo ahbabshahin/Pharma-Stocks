@@ -3,6 +3,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { SharedModule } from '../../../shared/shared.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthStoreService } from '../../../service/auth/auth-store.service';
+import { CommonService } from '../../../service/common/common.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -13,12 +15,26 @@ import { AuthStoreService } from '../../../service/auth/auth-store.service';
 })
 export class ProfileComponent {
 
-  constructor(private authStore: AuthStoreService){}
+  constructor(
+    private authStore: AuthStoreService,
+    private commonService: CommonService,
+    private router: Router,
+  ){}
 
   ngOnInit(){}
 
   async logout(){
-    this.authStore.logout();
+    const ok = await this.commonService.showConfirmModal('Are you sure you want to logout?');
+    console.log('ok: ', ok);
+    if(!ok) return;
+
+    // this.commonService.presentLoading();
+    // this.authStore.logout();
+    sessionStorage.removeItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
+    if(!token) {
+      this.router.navigate(['/auth']);
+    }else this.commonService.showErrorToast('Logout failed')
   }
 
   ngOnDestroy() {}

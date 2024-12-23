@@ -38,7 +38,6 @@ export const logout = createAction(
 );
 export const logoutSuccess = createAction(
   '[Auth logout] logout success',
-  props<{ res: string }>()
 );
 export const logoutFail = createAction(
   '[Auth logout] logout fail',

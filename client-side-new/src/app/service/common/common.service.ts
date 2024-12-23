@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoaderModalComponent } from '../../common-component/loader-modal/loader-modal.component';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ToastrService } from 'ngx-toastr';
+import { NzNotificationPlacement, NzNotificationService } from 'ng-zorro-antd/notification';
 @Injectable({
   providedIn: 'root',
 })
@@ -9,7 +10,8 @@ export class CommonService {
   private loaderModal: NzModalRef<LoaderModalComponent> | null = null;
   constructor(
     private modalService: NzModalService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private notification: NzNotificationService
   ) {}
 
   presentLoading(loading_text: string = 'Please wait...') {
@@ -37,13 +39,40 @@ export class CommonService {
     }
   }
 
+  showConfirmModal(title: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.modalService.confirm({
+        nzTitle: title,
+        nzOkText: 'Yes',
+        nzOkType: 'primary',
+        nzOkDanger: true,
+        nzCancelText: 'No',
+        nzClosable: false,
+        nzCentered: true,
+        nzOnOk: () => resolve(true),
+        nzOnCancel: () => resolve(false),
+      });
+    });
+  }
+
+  private showToast(
+    type: string,
+    msg: string,
+    duration: number,
+    placement: NzNotificationPlacement = 'topRight'
+  ): void {
+    this.notification.create(type, '', msg, {
+      nzDuration: duration,
+      nzPlacement: placement,
+    });
+  }
+
   showSuccessToast(message: string = 'Successful') {
-    this.toastr.success(message, 'Success');
+    this.showToast('success', message, 3000);
   }
 
   showErrorToast(message: string = 'Something went wrong') {
-    console.log('message: ', message);
-    this.toastr.error(message, 'Error');
+    this.showToast('error', message, 3000);
   }
 
   decodeJWT() {

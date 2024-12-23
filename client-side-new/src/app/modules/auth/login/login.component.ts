@@ -11,6 +11,9 @@ import { CommonService } from '../../../service/common/common.service';
 })
 export class LoginComponent {
   loginForm!: FormGroup;
+  passwordVisible: boolean = false;
+  options: string[] = [];
+
   constructor(
     private fb: FormBuilder,
     private authStore: AuthStoreService,
@@ -29,6 +32,11 @@ export class LoginComponent {
       userName: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
+  }
+
+  onInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.options = value ? [value, value + value, value + value + value] : [];
   }
 
   onSubmit() {

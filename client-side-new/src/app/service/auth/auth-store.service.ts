@@ -42,8 +42,8 @@ export class AuthStoreService {
   logout() {
     this.dispatch(authActions.logout());
   }
-  logoutSuccess(res: any) {
-    this.dispatch(authActions.logoutSuccess({ res }));
+  logoutSuccess() {
+    this.dispatch(authActions.logoutSuccess());
   }
   logoutFail(error: string) {
     this.dispatch(authActions.logoutFail({ error }));
