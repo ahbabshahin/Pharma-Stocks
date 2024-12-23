@@ -11,7 +11,7 @@ import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './secure/sidebar/sidebar.module';
 import { SidebarComponent } from './secure/sidebar/sidebar.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { FullRouterStateSerializer, RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { CustomSerializer } from './store/router/custom-serializer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
@@ -48,7 +48,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     ),
     EffectsModule.forRoot(),
     StoreRouterConnectingModule.forRoot({
-      serializer: CustomSerializer,
+      serializer: FullRouterStateSerializer,
+      stateKey: 'router',
     }),
     StoreRouterConnectingModule.forRoot(),
   ],
@@ -61,6 +62,13 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     SidebarModule,
   ],
   bootstrap: [AppComponent],
-  providers: [NzDrawerService, NzNotificationService, Config],
+  providers: [
+    NzDrawerService,
+    NzNotificationService,
+    {
+      provide: RouterStateSerializer,
+      useClass: CustomSerializer,
+    },
+  ],
 })
 export class AppModule {}

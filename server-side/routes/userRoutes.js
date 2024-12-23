@@ -20,7 +20,7 @@ router.post('/register', validateUser, registerUser);
 router.post('/login', loginUser);
 
 // Logout (Authenticated users only)
-router.post('/logout', authenticateUser, logoutUser);
+router.get('/logout', authenticateUser, logoutUser);
 
 router.get('/user/:userId', authenticateUser, getUser);
 
