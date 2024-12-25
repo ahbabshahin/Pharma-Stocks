@@ -1,4 +1,4 @@
-<nz-layout class="app-layout">
+<!-- <nz-layout class="app-layout">
   <nz-sider
     class="menu-sidebar"
     nzCollapsible
@@ -50,4 +50,38 @@
       </div>
     </nz-content>
   </nz-layout>
-</nz-layout>
+</nz-layout> -->
+
+<div class="sidebar">
+  <div class="profile-section">
+    <img src="assets/img/profile.jpg" alt="Profile Picture" class="profile-photo" />
+    <h3 class="username">{{(user$ | async)?.name | titlecase}}</h3>
+    <p class="user-role">{{(user$ | async)?.role | titlecase}}</p>
+    <!--
+    <a routerLink="/scan-earn" class="scan-earn">Scan & Earn</a>
+    <div class="barcode">
+      <img src="assets/barcode.png" alt="Barcode" class="barcode-img" />
+    </div> -->
+  </div>
+
+  <!-- <div class="business-info">
+    <p class="business-name"><strong>OrderPoz (yofoodie) (1)</strong></p>
+    <p class="business-address">
+      Hebridean Preserves And Pastries Ltd, 3 An Goirtean, Brevig...
+    </p>
+    <a routerLink="/change-business" class="change-business">
+      <i class="icon-business"></i> Change Business
+    </a>
+  </div> -->
+
+  <div class="nav-buttons">
+    <a *ngFor="let route of routes" [routerLink]="route?.path" class="nav-button"><i class="icon-launcher"></i>
+      {{route?.label | titlecase}}</a>
+  </div>
+
+  <div class="version-info">
+    <p>Version: 1.0.0</p>
+  </div>
+</div>
+
+

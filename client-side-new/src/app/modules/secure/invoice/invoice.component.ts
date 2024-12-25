@@ -73,8 +73,9 @@ export class InvoiceComponent {
       nzTitle: 'New Invoice',
       nzClosable: true,
       nzMaskClosable: false,
+      nzWidth: '100%',
       nzWrapClassName: 'full-drawer',
-      nzSize: 'large',
+      // nzSize: 'large',
       nzContent: NewInvoiceComponent,
     });
   }

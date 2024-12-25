@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './stocks.component.scss'
 })
 export class StocksComponent {
-
+ngOnInit() {
+console.log('Stocks component initialized');
+}
 }

@@ -23,6 +23,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { authReducer } from './store/reducers/auth.reducer';
 import { AuthEffects } from './store/effects/auth.effect';
+import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './modules/auth/auth.module';
 registerLocaleData(en);
 
 
@@ -42,13 +44,12 @@ registerLocaleData(en);
     FormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    SharedModule,
   ],
   exports: [RouterModule, RouterOutlet, HttpClientModule],
   bootstrap: [AppComponent],
   providers: [
-    Config,
     AppState,
-    NzModalService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpTokenInterceptor,

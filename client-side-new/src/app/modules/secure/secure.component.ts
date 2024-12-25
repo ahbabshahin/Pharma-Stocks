@@ -3,6 +3,8 @@ import { SubSink } from 'subsink';
 import { AuthStoreService } from '../../service/auth/auth-store.service';
 import { CommonService } from '../../service/common/common.service';
 import { User } from '../../store/models/user.model';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-secure',
@@ -18,7 +20,8 @@ export class SecureComponent {
   };
   constructor(
     private authStore: AuthStoreService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private drawerService: NzDrawerService,
   ){}
 
   ngOnInit() {
@@ -41,9 +44,20 @@ export class SecureComponent {
   }
 
   getUser(){
-    this.subs.sink = this.authStore.getUser().subscribe((res: User[]) =>{
+    this.subs.sink = this.authStore.getUser().subscribe((res: User) =>{
       console.log('user ', res);
     })
+  }
+
+  sidebar(){
+    this.drawerService.create({
+        // nzTitle: 'New Invoice',
+        nzClosable: true,
+        nzMaskClosable: false,
+        nzWrapClassName: 'md-drawer',
+        // nzSize: 'large',
+        nzContent: SidebarComponent,
+      });
   }
 
   ngOnDestroy(){

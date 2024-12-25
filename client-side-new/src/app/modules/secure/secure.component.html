@@ -1,2 +1,14 @@
-<app-sidebar></app-sidebar>
+<!-- <app-sidebar></app-sidebar> -->
+<nz-layout>
+  <nz-header>
+    <div class="header-content">
+      <h4>Pharma Stocks</h4>
+      <button (click)="sidebar()" class="sidebar mt-3" nz-button type="button">Menu</button>
+    </div>
+  </nz-header>
+  <nz-content class="my-2">
+    <router-outlet></router-outlet>
+  </nz-content>
+</nz-layout>
+
 <!-- <router-outlet ></router-outlet> -->

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { AuthState } from '../../store/reducers/auth.reducer';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import * as authActions from '../../store/actions/auth.action';
 import * as authSelectors from '../../store/selectors/auth.selector';
 import { LoginCred, RegisterCred, User } from '../../store/models/user.model';
@@ -59,5 +59,13 @@ export class AuthStoreService {
     this.dispatch(authActions.loadUserFail({ error }));
   }
 
-  getUser = (): Observable<User[]> => this.select(authSelectors.getUser);
+  getUsers = (): Observable<User[]> => this.select(authSelectors.getUser);
+
+  getUser(): Observable<User> {
+    return this.getUsers().pipe(
+      map((res: User[]) => {
+        return res?.[0];
+      })
+    );
+  }
 }

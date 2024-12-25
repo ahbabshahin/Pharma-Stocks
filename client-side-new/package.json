@@ -24,6 +24,7 @@
     "@ngrx/router-store": "^17.2.0",
     "@ngrx/store": "^17.2.0",
     "@ngrx/store-devtools": "^17.2.0",
+    "bootstrap": "^5.3.3",
     "ng-zorro-antd": "^17.3.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",

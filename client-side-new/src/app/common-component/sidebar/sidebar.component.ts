@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthStoreService } from '../../service/auth/auth-store.service';
+import { SubSink } from 'subsink';
+import { User } from '../../store/models/user.model';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,5 +15,33 @@ import { RouterModule } from '@angular/router';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
-  isCollapsed = false;
+  subs = new SubSink();
+  user$: Observable<User> = of();
+
+  constructor(private router: Router, private authStore: AuthStoreService,) {}
+
+  routes: { label: string; path: string }[] = [
+    { label: 'dashboard', path: '/dashboard' },
+    { label: 'stocks', path: '/stocks' },
+    { label: 'invoice', path: '/invoice' },
+    { label: 'customer', path: '/customer' },
+    { label: 'profile', path: '/profile' },
+  ];
+
+  ngOnInit(){
+    this.initialize();
+  }
+
+  initialize(){
+    this.getUser()
+  }
+
+  getUser(){
+    this.user$ = this.authStore.getUser();
+  }
+
+
+  ngOnDestroy(){
+
+  }
 }

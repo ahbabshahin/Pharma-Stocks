@@ -1,0 +1,92 @@
+     :host {
+       text-align: center;
+     }
+
+     //  nz-header,
+     //  nz-footer {
+     //    background: #7dbcea;
+     //    background: #20202048;
+     //    color: #fff;
+     //  }
+
+     .sidebar {
+       margin-top: 50%;
+     }
+
+     nz-footer {
+       line-height: 1.5;
+     }
+
+     //  nz-sider {
+     //    background: #3ba0e9;
+     //    color: #fff;
+     //    line-height: 120px;
+     //  }
+
+     nz-content {
+       //  background: rgba(16, 142, 233, 1);
+       background: #fff;
+       //  color: #fff;
+       min-height: 120px;
+       //  line-height: 120px;
+       height: 100% !important
+     }
+
+     nz-layout {
+       margin-bottom: 48px;
+     }
+
+     nz-layout nz-layout,
+     nz-layout:last-child {
+       margin: 0;
+     }
+
+     nz-header {
+       background: #20202048;
+       display: flex;
+       align-items: center;
+       height: 64px;
+     }
+
+     .header-content {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       width: 100%;
+       padding: 0 16px;
+     }
+
+     h4 {
+       margin: 0;
+       font-size: 1.5rem;
+       font-weight: bold;
+     }
+
+     .sidebar {
+       margin: 0;
+       position: relative;
+       top: 50%;
+       transform: translateY(-50%);
+     }
+
+     .md-drawer {
+       .ant-drawer {
+         width: 50% !important;
+         /* Makes the drawer take up half the screen width */
+         max-width: 600px;
+         /* Optional: Set a maximum width */
+         min-width: 400px;
+         /* Optional: Set a minimum width */
+       }
+
+       .ant-drawer-body {
+         padding: 16px;
+         /* Add padding for content inside the drawer */
+       }
+
+       .ant-drawer-header {
+         font-size: 18px;
+         /* Customize header font size */
+         font-weight: bold;
+       }
+     }
