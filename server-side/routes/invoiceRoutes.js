@@ -14,10 +14,10 @@ const {
 } = require('../middleware/authentication');
 
 // Create an invoice authenticateUser
-router.post('/', createInvoice);
+router.post('/', authenticateUser, createInvoice);
 
 // Get all invoices with pagination and filtering
-router.get('/', getAllInvoices);
+router.get('/', authenticateUser, getAllInvoices);
 
 // Get a single invoice by ID
 router.get('/:id', authenticateUser, getInvoice);
