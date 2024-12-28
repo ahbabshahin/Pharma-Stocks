@@ -18,13 +18,13 @@ const router = express.Router();
 router.post(
 	'/',
 	authenticateUser,
-	authorizePermissions('admin'),
+	// authorizePermissions('admin'),
 	createProduct
 );
 router.get('/', authenticateUser, getAllProducts);
 router.get('/search', authenticateUser, searchStock); // Add search route
 router.get('/:productId', authenticateUser, getProductById);
-router.patch('/:productId/stock', authenticateUser, updateProductStock);
+router.patch('/:productId', authenticateUser, updateProductStock);
 router.delete(
 	'/:productId',
 	authenticateUser,

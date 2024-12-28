@@ -17,7 +17,7 @@ const createProduct = async (req, res) => {
 		await newProduct.save();
 		res.status(201).json({
 			message: 'Product created successfully',
-			product: newProduct,
+			body: newProduct,
 		});
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
@@ -37,10 +37,10 @@ const getAllProducts = async (req, res) => {
 			.sort({ createdAt: -1 }); // Sort by creation date, descending
 
 		res.status(200).json({
-			totalProducts,
+			total: totalProducts,
 			totalPages: Math.ceil(totalProducts / limit),
 			currentPage: Number(page),
-			products,
+			body: products,
 		});
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
@@ -90,7 +90,7 @@ const updateProductStock = async (req, res) => {
 		await product.save();
 		res.status(200).json({
 			message: 'Stock updated successfully',
-			product,
+			body: product,
 		});
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
@@ -135,7 +135,7 @@ const updateStockForStore = async (req, res) => {
 		await product.save();
 		res.status(200).json({
 			message: 'Store stock updated successfully',
-			product,
+			body: product,
 		});
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
@@ -173,7 +173,7 @@ const searchStock = async (req, res) => {
 			return res.status(404).json({ message: 'No products found' });
 		}
 
-		res.status(200).json({ products });
+		res.status(200).json({ body: products });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
 	}
