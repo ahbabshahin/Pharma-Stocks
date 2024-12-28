@@ -6,6 +6,7 @@ import { AuthStoreService } from '../../service/auth/auth-store.service';
 import { SubSink } from 'subsink';
 import { User } from '../../store/models/user.model';
 import { Observable, of } from 'rxjs';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,7 +19,11 @@ export class SidebarComponent {
   subs = new SubSink();
   user$: Observable<User> = of();
 
-  constructor(private router: Router, private authStore: AuthStoreService,) {}
+  constructor(
+    private router: Router,
+    private authStore: AuthStoreService,
+    private drawerRef: NzDrawerRef,
+  ) {}
 
   routes: { label: string; path: string }[] = [
     { label: 'dashboard', path: '/dashboard' },
@@ -38,6 +43,11 @@ export class SidebarComponent {
 
   getUser(){
     this.user$ = this.authStore.getUser();
+  }
+
+  onRouteChange(path: string){
+    this.router.navigate([path]);
+    this.drawerRef.close();
   }
 
 

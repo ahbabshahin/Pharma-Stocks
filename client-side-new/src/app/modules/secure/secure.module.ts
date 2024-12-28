@@ -8,6 +8,11 @@ import { SidebarComponent } from '../../common-component/sidebar/sidebar.compone
 
 @NgModule({
   declarations: [SecureComponent],
-  imports: [CommonModule, SecureRoutingModule,  SharedModule, SidebarComponent],
+  imports: [
+    CommonModule,
+    SecureRoutingModule,
+    SharedModule,
+    SidebarComponent,
+  ],
 })
 export class SecureModule {}

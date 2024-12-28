@@ -75,7 +75,8 @@
   </div> -->
 
   <div class="nav-buttons">
-    <a *ngFor="let route of routes" [routerLink]="route?.path" class="nav-button"><i class="icon-launcher"></i>
+    <a *ngFor="let route of routes" (click)="onRouteChange(route.path)" class="nav-button"><i
+        class="icon-launcher"></i>
       {{route?.label | titlecase}}</a>
   </div>
 

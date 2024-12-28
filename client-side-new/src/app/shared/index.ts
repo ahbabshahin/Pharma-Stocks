@@ -29,6 +29,7 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzWaterMarkModule } from 'ng-zorro-antd/water-mark';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 export const components = [
   FormsModule,
@@ -63,4 +64,5 @@ export const components = [
   NzWaterMarkModule,
   NzSpinModule,
   NzDrawerModule,
+  NzEmptyModule,
 ];
