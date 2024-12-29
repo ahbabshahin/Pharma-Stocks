@@ -17,10 +17,9 @@ export class StockApiService {
   }
 
   updateStock(payload: Stock) {
-    return this.http.patch(
-      `${this.env.rootURL}/v1/stock/${payload?._id}`,
-      payload
-    ).pipe(map((res: any) => res?.body));
+    return this.http
+      .patch(`${this.env.rootURL}/v1/stock/product/${payload?._id}`, payload)
+      .pipe(map((res: any) => res?.body));
   }
 
   deleteStock(id: string) {

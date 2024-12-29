@@ -5,6 +5,7 @@ import { CommonService } from '../../service/common/common.service';
 import { User } from '../../store/models/user.model';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
+import { Business } from '../../store/models/business.model';
 
 @Component({
   selector: 'app-secure',
@@ -18,6 +19,7 @@ export class SecureComponent {
     userId: string,
     role: string
   };
+  business!: Business;
   constructor(
     private authStore: AuthStoreService,
     private commonService: CommonService,
@@ -30,6 +32,16 @@ export class SecureComponent {
   }
 
   initialize(){
+    this.business = {
+      name: 'Nutri-Heal Pharma Ltd',
+      contact: '01854462840',
+      address: 'Airport road, Sylhet 3100',
+      description: 'Marketing Agent',
+      post_code: '3100',
+    };
+
+    if (!localStorage.getItem('business'))
+      localStorage.setItem('business', JSON.stringify(this.business));
     // this.getUser();
     this.decodedToken = this.commonService.decodeJWT();
     console.log('token ', this.decodedToken);

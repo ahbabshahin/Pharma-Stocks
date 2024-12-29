@@ -75,6 +75,40 @@ export class CommonService {
     this.showToast('error', message, 3000);
   }
 
+  showSuccessModal(
+    message: string = 'Successful',
+    title: string = 'Success',
+  ) {
+    this.modalService.success({
+      nzTitle: title,
+      nzContent: message,
+      nzClosable: false,
+      nzCentered: true,
+    });
+  }
+  showErrorModal(
+    message: string = 'Something went wrong',
+    title: string = 'Error',
+  ) {
+    this.modalService.error({
+      nzTitle: title,
+      nzContent: message,
+      nzClosable: false,
+      nzCentered: true,
+    });
+  }
+  showWarningModal(
+    message: string = 'Please follow the instructions',
+    title: string = 'Warning',
+  ) {
+    this.modalService.warning({
+      nzTitle: title,
+      nzContent: message,
+      nzClosable: false,
+      nzCentered: true,
+    });
+  }
+
   decodeJWT() {
     const token = sessionStorage.getItem('accessToken');
     if (token) {

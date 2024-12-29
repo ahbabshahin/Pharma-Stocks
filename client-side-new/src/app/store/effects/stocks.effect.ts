@@ -27,6 +27,7 @@ export class StockEffects {
                 this.stockStore.loadStockSuccess(res.body ?? []);
             }),
             catchError(() => {
+              this.stockStore.loadStockFail('Stock load failed');
               this.commonService.showErrorToast('Stock load failed');
               return of();
             })
@@ -47,11 +48,13 @@ export class StockEffects {
                 this.stockStore.addStockSuccess(res);
                 this.commonService.showSuccessToast('Stock add successful');
               } else {
+              this.stockStore.addStockFail('Stock add failed');
                 this.commonService.showErrorToast('Stock add failed');
               }
               this.commonService.dismissLoading();
             }),
             catchError(() => {
+              this.stockStore.addStockFail('Stock add failed');
               this.commonService.dismissLoading();
               this.commonService.showErrorToast('Stock add failed');
               return of();
@@ -79,11 +82,14 @@ export class StockEffects {
                 this.stockStore.updateStockSuccess(response);
                 this.commonService.showSuccessToast('Stock update successful');
               } else {
+              this.stockStore.updateStockFail('Stock update failed');
                 this.commonService.showErrorToast('Stock update failed');
               }
               this.commonService.dismissLoading();
             }),
             catchError(() => {
+              this.stockStore.updateStockFail('Stock update failed');
+
               this.commonService.dismissLoading();
               this.commonService.showErrorToast('Stock update failed');
               return of();
@@ -106,6 +112,7 @@ export class StockEffects {
               this.commonService.dismissLoading();
             }),
             catchError(() => {
+              this.stockStore.deleteStockFail('Stock delete failed');
               this.commonService.dismissLoading();
               this.commonService.showErrorToast('Stock delete failed');
               return of();
@@ -130,6 +137,7 @@ export class StockEffects {
               }
             }),
             catchError(() => {
+              this.stockStore.searchStockFail('Stock search failed');
               this.commonService.showErrorToast('Stock load failed');
               return of();
             })

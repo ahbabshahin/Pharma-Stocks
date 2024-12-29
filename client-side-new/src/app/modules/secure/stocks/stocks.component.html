@@ -1,24 +1,79 @@
 <div class="d-flex justify-content-end my-2 mx-2">
-  <button type="button" nz-button class="primary-btn" (click)="addStock()">Add Stock</button>
+  <button
+    type="button"
+    nz-button
+    class="primary-btn"
+    nzShape="round"
+    (click)="addStock()"
+  >
+    Add Stock
+  </button>
 </div>
-<app-global-loader *ngIf="(loader$ | async)"></app-global-loader>
+
+<!-- <div class="container">
+<div class="row">
+  <div class="col-md-6">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+      <input nzAllowClear type="text" nzSize="large" [(ngModel)]="searchText" nz-input
+        placeholder="input search text" />
+    </nz-input-group>
+  </div>
+</div>
+</div> -->
+<ng-template #suffixButton>
+  <button nz-button nzType="primary" nzSearch (click)="search()"><span nz-icon nzType="search" nzSize="large"></span></button>
+</ng-template>
+<app-global-loader *ngIf="loader$ | async"></app-global-loader>
 <ng-container *ngIf="!(loader$ | async)">
   <div class="container" *ngIf="stocks?.length">
-    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+    <div class="row">
       <ng-container *ngFor="let list of stocks; let i = index">
-        <div nz-col class="gutter-row" [nzSpan]="6">
-
-          <nz-card class="m-2" style="width:300px;" nzTitle="Card title">
-            <p>Card content</p>
-            <p>Card content</p>
-            <p>Card content</p>
+        <div class="col-md-4 my-2" >
+          <nz-card
+            style="width: 300px"
+            nzHoverable="true"
+            [nzTitle]="list?.name"
+            [nzActions]="[edit, view, delete]"
+          >
+            <p *ngIf="list?.brand">Brand: {{ list?.brand }}</p>
+            <p *ngIf="list?.quantity">Quantity: {{ list?.quantity }}</p>
+            <p *ngIf="list?.price">
+              Price: ৳ {{ list?.price | number : "1.2-2" }}
+            </p>
+            <p *ngIf="list?.lowStockThreshold">
+              Low stock limit: {{ list?.lowStockThreshold }}
+            </p>
           </nz-card>
         </div>
+        <ng-template #edit>
+          <span (click)="addStock(list)" nz-icon nzType="edit"></span>
+        </ng-template>
+        <ng-template #view>
+          <span  nz-icon nzType="eye"></span>
+        </ng-template>
+        <ng-template #delete>
+          <span (click)="deleteStock(list._id)" nz-icon nzType="delete"></span>
+        </ng-template>
       </ng-container>
     </div>
   </div>
-  <app-global-no-data *ngIf="!stocks?.length" bodyText="No stock found"></app-global-no-data>
+  <app-global-no-data
+    *ngIf="!stocks?.length"
+    bodyText="No stock found"
+  ></app-global-no-data>
 </ng-container>
+
+<!-- <ng-template #actions let-stock="stock">
+<ng-template #edit let-list="list">
+  <span (click)="addStock(stock)" nz-icon nzType="edit"></span>
+</ng-template>
+<ng-template #view>
+  <span nz-icon nzType="eye"></span>
+</ng-template>
+<ng-template #delete>
+  <span nz-icon nzType="delete"></span>
+</ng-template>
+</ng-template> -->
 <ng-template #extraTemplate>
   <a>More</a>
 </ng-template>

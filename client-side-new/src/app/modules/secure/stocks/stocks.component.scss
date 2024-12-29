@@ -1,3 +1,33 @@
  p {
    margin: 0;
  }
+.md-drawer {
+  .ant-drawer {
+    width: 50% !important;
+    /* Makes the drawer take up half the screen width */
+    max-width: 600px;
+    /* Optional: Set a maximum width */
+    min-width: 400px;
+    /* Optional: Set a minimum width */
+  }
+
+  .ant-drawer-body {
+    padding: 16px;
+    /* Add padding for content inside the drawer */
+  }
+
+  .ant-drawer-header {
+    font-size: 18px;
+    /* Customize header font size */
+    font-weight: bold;
+  }
+}
+
+// input {
+//   border: 1px solid #c7d0d9 !important;
+//   width: 100%;
+//   border-radius: .8rem !important;
+//   background: #fff !important;
+//   height: 2.5rem;
+//   font-size: 14px;
+// }

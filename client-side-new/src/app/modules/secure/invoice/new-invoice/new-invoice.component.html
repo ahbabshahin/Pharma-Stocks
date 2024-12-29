@@ -1,9 +1,9 @@
-<div class="theme-toggle">
+<!-- <div class="theme-toggle">
   <label>
     <input type="checkbox" (change)="toggleTheme()" />
     Dark Mode
   </label>
-</div>
+</div> -->
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="invoice-container">
@@ -13,10 +13,10 @@
         <img src="path/to/logo.png" alt="Company Logo" />
       </div>
       <div class="company-details">
-        <h1>Your Company Name</h1>
+        <h1>{{business?.name}}</h1>
         <address>
-          Golapgonj, Sylhet, Bangladesh<br />
-          Phone: 0176*****67
+          {{business?.address}}<br />
+          Phone: {{business?.contact}}
         </address>
       </div>
     </header>
@@ -40,7 +40,7 @@
           Invoice #: <span>{{ invoiceNumber || 'N/A' }}</span>
         </p>
         <p>
-          Date: <span>{{ createdAt | date }}</span>
+          Date: <span>{{ date | date: 'dd-MM-yyyy' }}</span>
         </p>
         <p>
           Status:

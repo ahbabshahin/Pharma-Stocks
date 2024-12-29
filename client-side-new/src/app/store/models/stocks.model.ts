@@ -1,10 +1,10 @@
 export interface Stock {
   _id: string;
-  productName: string;
-  productQuantity: string;
-  productPrice: string;
+  name: string;
+  quantity: number;
+  price: number;
   brand: string;
-  productDosage: string;
+  dosage: string;
   lowStockThreshold: number;
   isLowStock?: boolean;
 }

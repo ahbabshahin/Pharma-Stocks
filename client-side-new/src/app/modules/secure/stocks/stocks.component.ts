@@ -20,12 +20,14 @@ export class StocksComponent {
     limit: 10,
   };
   stocks: Stock[] = [];
+  searchText: string = '';
 
   constructor(
     private stockStore: StockStoreService,
     private commonService: CommonService,
     private drawerService: NzDrawerService,
   ) {}
+
   ngOnInit() {
     this.initialize();
   }
@@ -33,6 +35,7 @@ export class StocksComponent {
   initialize() {
     this.getLoader();
     this.isStockLoaded();
+    this.getStocks();
   }
 
   isStockLoaded() {
@@ -57,21 +60,38 @@ export class StocksComponent {
     this.subs.sink = this.stockStore.getStocks().subscribe({
       next: (res: Stock[]) => {
         if (res?.length) this.stocks = res;
+        console.log('this.stocks: ', this.stocks);
       },
       error: () => {},
     });
   }
 
   addStock(stock?: Stock) {
+    console.log('stock: ', stock);
      this.drawerService.create({
-      nzTitle: 'New Invoice',
+      nzTitle: 'New Stock',
       nzClosable: true,
       nzMaskClosable: false,
       nzWidth: '50%',
-      // nzWrapClassName: 'full-drawer',
+      // nzWrapClassName: 'md-drawer',
       nzContent: NewStockComponent,
+      nzData: {stock}
     });
   }
 
-  ngOnDestroy() {}
+  async deleteStock(id: string){
+    const ok = await this.commonService.showConfirmModal('Are you sure you want to delete this product?');
+    if (!ok) return;
+
+    this.commonService.presentLoading();
+    this.stockStore.deleteStock(id);
+  }
+
+  search(){
+    console.log('search ', this.searchText);
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }

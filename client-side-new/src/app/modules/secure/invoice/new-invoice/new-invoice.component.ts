@@ -3,6 +3,8 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 import { Invoice } from '../../../../store/models/invoice.model';
+import { Business } from '../../../../store/models/business.model';
+import { CommonService } from '../../../../service/common/common.service';
 
 @Component({
   selector: 'app-new-invoice',
@@ -16,10 +18,12 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   taxRate: number = 0.15; // Default tax rate
   form!: FormGroup;
   isDarkTheme = false;
+  business!: Business;
+  date: Date = new Date()
   constructor(
     private formBuilder: FormBuilder,
     private invoiceStore: InvoiceStoreService,
-    private toastr: ToastrService,
+    private commonService: CommonService,
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +32,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    let business: string = localStorage.getItem('business') as string;
+    if(business)
+      this.business = JSON.parse(business)
+    else this.commonService.showErrorToast('Business not found');
     this.initializeForm();
   }
 
