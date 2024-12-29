@@ -6,7 +6,8 @@ const {
 	updateProductStock,
 	deleteProduct,
 	updateStockForStore,
-	searchStock, // Import the search function
+	searchStock,
+	updateProduct, // Import the search function
 } = require('../controllers/stockController');
 const {
 	authenticateUser,
@@ -25,6 +26,7 @@ router.get('/', authenticateUser, getAllProducts);
 router.get('/search', authenticateUser, searchStock); // Add search route
 router.get('/:productId', authenticateUser, getProductById);
 router.patch('/:productId', authenticateUser, updateProductStock);
+router.patch('/product/:productId', authenticateUser, updateProduct);
 router.delete(
 	'/:productId',
 	authenticateUser,

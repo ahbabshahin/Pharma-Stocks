@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const stockSchema = new mongoose.Schema({
-	productName: {
+	name: {
 		type: String,
 		required: [true, 'Product name is required'],
 	},
-	productQuantity: {
+	quantity: {
 		type: Number,
 		required: [true, 'Product quantity is required'],
 		min: [0, 'Product quantity must be greater than 0'],
 	},
-	productPrice: {
+	price: {
 		type: Number,
 		required: [true, 'Product price is required'],
 		min: [0, 'Product price must be greater than 0'],
@@ -17,7 +17,7 @@ const stockSchema = new mongoose.Schema({
 	brand: {
 		type: String,
 	},
-	productDosage: {
+	dosage: {
 		type: String,
 	},
 	lowStockThreshold: {
@@ -33,7 +33,7 @@ const stockSchema = new mongoose.Schema({
 // Pre-save hook to check for low stock
 stockSchema.pre('save', function (next) {
 	// Check if the product quantity is below the threshold
-	if (this.productQuantity <= this.lowStockThreshold) {
+	if (this.quantity < this.lowStockThreshold) {
 		this.isLowStock = true;
 	} else {
 		this.isLowStock = false;

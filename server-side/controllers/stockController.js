@@ -3,16 +3,11 @@ const CustomError = require('../errors');
 
 // Create a new product
 const createProduct = async (req, res) => {
-	const { productName, productQuantity, productPrice, productDosage } =
+	const { name, quantity, price, dosage } =
 		req.body;
 
 	try {
-		const newProduct = new Stock({
-			productName,
-			productQuantity,
-			productPrice,
-			productDosage,
-		});
+		const newProduct = new Stock(req?.body);
 
 		await newProduct.save();
 		res.status(201).json({
@@ -63,6 +58,41 @@ const getProductById = async (req, res) => {
 	}
 };
 
+const updateProduct = async (req, res) => {
+	const { productId } = req.params;
+	const updates = req.body; // The fields to update
+
+	try {
+		// Find the product by ID
+		const product = await Stock.findById(productId);
+
+		if (!product) {
+			return res.status(404).json({ message: 'Product not found' });
+		}
+
+		// Update product fields dynamically
+		Object.keys(updates).forEach((key) => {
+			if (key in product) {
+				product[key] = updates[key];
+			}
+		});
+
+		await product.save();
+
+		res.status(200).json({
+			message: 'Product updated successfully',
+			body: product,
+		});
+	} catch (error) {
+		if (error.name === 'ValidationError') {
+			return res
+				.status(400)
+				.json({ message: 'Invalid data provided', error });
+		}
+		res.status(500).json({ message: 'Server error', error });
+	}
+};
+
 // Update product stock (e.g., after a sale or return)
 const updateProductStock = async (req, res) => {
 	const { productId } = req.params;
@@ -75,16 +105,16 @@ const updateProductStock = async (req, res) => {
 		}
 
 		if (soldQuantity) {
-			product.productQuantity -= soldQuantity;
+			product.quantity -= soldQuantity;
 		}
 
 		if (returnedQuantity) {
-			product.productQuantity += returnedQuantity;
+			product.quantity += returnedQuantity;
 		}
 
 		// Ensure stock does not fall below zero
-		if (product.productQuantity < 0) {
-			product.productQuantity = 0;
+		if (product.quantity < 0) {
+			product.quantity = 0;
 		}
 
 		await product.save();
@@ -152,18 +182,18 @@ const searchStock = async (req, res) => {
 
 	if (query) {
 		searchCriteria.$or.push(
-			{ productName: { $regex: query, $options: 'i' } },
-			{ productDosage: { $regex: query, $options: 'i' } },
+			{ name: { $regex: query, $options: 'i' } },
+			{ dosage: { $regex: query, $options: 'i' } },
 			{ brand: { $regex: query, $options: 'i' } }
 		);
 	}
 
 	if (quantity) {
-		searchCriteria.productQuantity = quantity; // Filter by quantity
+		searchCriteria.quantity = quantity; // Filter by quantity
 	}
 
 	if (price) {
-		searchCriteria.productPrice = price; // Filter by price
+		searchCriteria.price = price; // Filter by price
 	}
 
 	try {
@@ -183,6 +213,7 @@ module.exports = {
 	createProduct,
 	getAllProducts,
 	getProductById,
+	updateProduct,
 	updateProductStock,
 	deleteProduct,
 	updateStockForStore,

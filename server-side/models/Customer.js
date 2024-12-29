@@ -6,7 +6,7 @@ const customerSchema = new mongoose.Schema({
 		unique: true,
 		minlength: [3, 'Name must be at least 3 characters long'],
 	},
-	phoneNumber: {
+	contacts: {
 		type: String,
 		required: [true, 'Phone number is required'],
 		unique: true,
