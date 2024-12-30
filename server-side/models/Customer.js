@@ -4,7 +4,10 @@ const customerSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'Name is required'],
 		unique: true,
-		minlength: [3, 'Name must be at least 3 characters long'],
+		minlength: [2, 'Name must be at least 2 characters long'],
+	},
+	email:{
+		type: String
 	},
 	contacts: {
 		type: String,
@@ -15,6 +18,9 @@ const customerSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'Address is required'],
 		minlength: [3, 'Address must be at least 3 characters long'],
+	},
+	img: {
+		type:String
 	},
 	invoices: [
 		{

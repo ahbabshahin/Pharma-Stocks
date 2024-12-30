@@ -31,7 +31,7 @@ const getAllCustomers = async (req, res) => {
 			.limit(Number(limit));
 
 		const totalCustomers = await Customer.countDocuments();
-		res.status(200).json({ customers, total: totalCustomers, page });
+		res.status(200).json({ body: customers, total: totalCustomers, page });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
 	}
@@ -49,7 +49,7 @@ const getCustomer = async (req, res) => {
 			);
 		}
 
-		res.status(200).json({ customer });
+		res.status(200).json({ body: customer });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
 	}
@@ -78,7 +78,7 @@ const updateCustomer = async (req, res) => {
 		await customer.save();
 		res.status(200).json({
 			message: 'Customer updated successfully',
-			customer,
+			body: customer,
 		});
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
@@ -152,7 +152,7 @@ const searchCustomers = async (req, res) => {
 			return res.status(404).json({ message: 'No customers found' });
 		}
 
-		res.status(200).json({ customers });
+		res.status(200).json({ body: customers });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
 	}
