@@ -21,6 +21,7 @@ const connectDB = require('./db/connect');
 const userRouter = require('./routes/userRoutes');
 const stockRouter = require('./routes/stockRoutes');
 const invoiceRouter = require('./routes/invoiceRoutes');
+const customerRouter = require('./routes/customerRoutes');
 
 app.use(morgan('tiny'));
 app.use(express.json());
@@ -40,6 +41,7 @@ app.get('/api/v1', (req, res) => {
 app.use('/v1/auth', userRouter);
 app.use('/v1/stock', stockRouter);
 app.use('/v1/invoice', invoiceRouter);
+app.use('/v1/customer', customerRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

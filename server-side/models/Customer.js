@@ -16,6 +16,11 @@ const customerSchema = new mongoose.Schema({
 		required: [true, 'Address is required'],
 		minlength: [3, 'Address must be at least 3 characters long'],
 	},
+	invoices: [
+		{
+			type: String,
+		},
+	],
 });
 
-module.exports = mongoose.model('Customer', customerSchema);
+module.exports = mongoose.model('customer', customerSchema);
