@@ -10,6 +10,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomerEffects } from '../../../store/effects/customer.effect';
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
+import { LoaderComponent } from "../../../common-component/loader/loader.component";
+import { CommonComponentModule } from '../../../common-component/common-component.module';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { CustomerStoreService } from '../../../service/customer/customer-store.s
     SharedModule,
     StoreModule.forFeature(customerStateName, customerReducer),
     EffectsModule.forFeature(CustomerEffects),
-  ],
+    CommonComponentModule,
+],
   providers: [CustomerApiService, CustomerStoreService,],
 })
 export class CustomerModule {}

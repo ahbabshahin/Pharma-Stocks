@@ -1,13 +1,35 @@
-<div class="container my-3">
-  <div class="row">
-    <div class="col-md-4">
-      <nz-card nzHoverable="true" style="width: 240px">
-        <nz-card-meta nzTitle="Europe Street beat" nzDescription="www.instagram.com"></nz-card-meta>
-      </nz-card>
-    </div>
-  </div>
+<div class="d-flex justify-content-end my-2 mx-2">
+  <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addCustomer()">
+    Add Customer
+  </button>
 </div>
 
+<app-global-loader *ngIf="(loader$ | async)"></app-global-loader>
+
+<ng-container *ngIf="!(loader$ | async)">
+<div class="container my-3" *ngIf="customers?.length">
+  <div class="row">
+    <ng-container *ngFor="let list of customers; let i = index;">
+    <div class="col-md-4">
+      <nz-card nzHoverable="true" style="width: 240px" [nzActions]="[edit, view, delete]">
+        <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
+        <p>Phone Number: {{list?.contacts}}</p>
+      </nz-card>
+    </div>
+    <ng-template #edit>
+      <span (click)="addCustomer(list)" nz-icon nzType="edit"></span>
+    </ng-template>
+    <ng-template #view>
+      <span nz-icon nzType="eye"></span>
+    </ng-template>
+    <ng-template #delete>
+      <span (click)="deleteCustomer(list)" nz-icon nzType="delete"></span>
+    </ng-template>
+    </ng-container>
+  </div>
+</div>
+<app-global-no-data *ngIf="!customers?.length" bodyText="No customer found"></app-global-no-data>
+</ng-container>
 <ng-template #coverTemplate>
   <img
     alt="example"

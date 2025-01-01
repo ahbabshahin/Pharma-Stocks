@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { AuthState } from '../../store/reducers/auth.reducer';
-import { map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import * as authActions from '../../store/actions/auth.action';
 import * as authSelectors from '../../store/selectors/auth.selector';
 import { LoginCred, RegisterCred, User } from '../../store/models/user.model';
@@ -67,5 +67,13 @@ export class AuthStoreService {
         return res?.[0];
       })
     );
+  }
+
+  isAdminUser(): Observable<boolean> {
+      return this.getUser().pipe(
+        map((user: User) => {
+          return user?.role === 'admin';
+        })
+      )
   }
 }
