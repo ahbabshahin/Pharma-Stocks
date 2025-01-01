@@ -6,7 +6,7 @@ const createCustomer = async (req, res) => {
 	const { name, contacts, address } = req.body;
 
 	try {
-		const isContactUnique = await Customer.find({contacts});
+		const isContactUnique = await Customer.findOne({contacts});
 		if(isContactUnique){
 			return res
 				.status(400)
