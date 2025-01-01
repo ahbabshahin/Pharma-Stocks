@@ -78,11 +78,14 @@ export class CustomerEffects {
               this.customerStore.updateCustomerSuccess(response);
               this.commonService.dismissLoading();
             }),
-            catchError(() => {
+            catchError((err) => {
               this.customerStore.updateCustomerFail('Customer update failed');
+              const errorMessage =
+                err?.error?.message || 'Customer update failed';
+              this.commonService.showErrorModal(errorMessage);
               this.commonService.dismissLoading();
 
-              return of();
+              return of(err);
             })
           );
         })

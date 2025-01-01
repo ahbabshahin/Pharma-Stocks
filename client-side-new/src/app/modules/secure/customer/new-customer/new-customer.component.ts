@@ -27,6 +27,7 @@ export class NewCustomerComponent {
 
   initialize(){
     this.initializeForm();
+    if(this.customer) this.populateForm();
   }
 
   initializeForm(){
@@ -38,14 +39,26 @@ export class NewCustomerComponent {
     });
   }
 
+  populateForm(){
+    this.form.patchValue({
+      ...this.customer
+    });
+  }
+
   onSubmit(){
     console.log('form ', this.form.value);
     let formRes: Customer = this.form?.value;
-    const payload: Customer = formRes;
+    let payload: Customer = formRes;
 
     this.commonService.presentLoading()
     if(this.customer){
+      payload = {
+        ...this.customer,
+        ...payload,
+      }
 
+      // console.log('payload ', payload);
+      this.customerStore.updateCustomer(payload);
     }else{
       this.customerStore.addCustomer(payload)
     }
