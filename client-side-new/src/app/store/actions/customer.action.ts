@@ -9,11 +9,11 @@ export const setCustomerSubLoader = createAction(
 
 export const loadCustomer = createAction(
   '[Customer] load customer',
-  props<{ params: {[key: string]: any} }>()
+  props<{ params: { [key: string]: any }; isMore: boolean }>()
 );
 export const loadCustomerSuccess = createAction(
   '[Customer] load customer success',
-  props<{ res: Customer[] }>()
+  props<{ res: Customer[], total: number, isMore: boolean }>()
 );
 export const loadCustomerFail = createAction(
   '[Customer] load customer fail',

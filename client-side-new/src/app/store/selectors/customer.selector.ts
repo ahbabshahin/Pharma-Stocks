@@ -20,6 +20,11 @@ export const getCustomerLoaded = createSelector(
   (state: CustomerState) => state.loaded
 );
 
+export const getCustomerTotal = createSelector(
+  getCustomerState,
+  (state: CustomerState) => state.total
+);
+
 export const getCustomerError = createSelector(
   getCustomerState,
   (state: CustomerState) => state.error

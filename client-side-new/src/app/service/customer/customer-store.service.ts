@@ -20,11 +20,11 @@ export class CustomerStoreService {
   }
 
   // Load Customers
-  loadCustomer(params: { [key: string]: any }) {
-    this.dispatch(customerActions.loadCustomer({ params }));
+  loadCustomer(params: { [key: string]: any }, isMore: boolean) {
+    this.dispatch(customerActions.loadCustomer({ params, isMore }));
   }
-  loadCustomerSuccess(res: Customer[]) {
-    this.dispatch(customerActions.loadCustomerSuccess({ res }));
+  loadCustomerSuccess(res: Customer[], total: number, isMore: boolean) {
+    this.dispatch(customerActions.loadCustomerSuccess({ res, total, isMore }));
   }
   loadCustomerFail(error: string) {
     this.dispatch(customerActions.loadCustomerFail({ error }));
@@ -84,6 +84,9 @@ export class CustomerStoreService {
 
   getCustomerLoaded = (): Observable<boolean> =>
     this.select(customerSelectors.getCustomerLoaded);
+
+  getCustomerTotal = (): Observable<number> =>
+    this.select(customerSelectors.getCustomerTotal);
 
   getCustomerError = (): Observable<string> =>
     this.select(customerSelectors.getCustomerError);

@@ -24,9 +24,15 @@ export class CustomerEffects {
         mergeMap((action) => {
           return this.customerApi.getCustomers(action.params).pipe(
             map((res: any) => {
-              this.customerStore.loadCustomerSuccess(res?.body ?? []);
+              this.customerStore.loadCustomerSuccess(
+                res?.body ?? [],
+                res?.total ?? 0,
+                action.isMore
+              );
+              if(action.isMore) this.customerStore.setCustomerSubLoader(false);
             }),
             catchError(() => {
+              if (action.isMore) this.customerStore.setCustomerSubLoader(false);
               this.customerStore.loadCustomerFail('Customer load failed');
               return of();
             })

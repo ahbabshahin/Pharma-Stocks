@@ -7,6 +7,7 @@ export interface CustomerState extends EntityState<Customer>{
   loader: boolean;
   subLoader: boolean;
   loaded: boolean;
+  total: number;
   error: string;
 }
 
@@ -21,6 +22,7 @@ const defaustCustomer: CustomerState = {
   loader: false,
   subLoader: false,
   loaded: false,
+  total: 0,
   error: "",
 }
 
@@ -33,15 +35,20 @@ export const customerReducer = createReducer(
     on(customerActions.loadCustomer, (state, action) => {
       return {
         ...state,
-        loader: true,
+        loader: action.isMore ? false: true,
         loaded: false,
       };
     }),
     on(customerActions.loadCustomerSuccess, (state, action) => {
-      return customerAdapter.setAll(action.res, {
+      let response = action?.res;
+      if(action.isMore) {
+        response = [...selectAll(state), ...action?.res];
+      }
+      return customerAdapter.setAll(response, {
         ...state,
         loader: false,
         loaded: true,
+        total: action.total
       });
     }),
     on(customerActions.loadCustomerFail, (state, action) => {
@@ -52,8 +59,15 @@ export const customerReducer = createReducer(
         error: action.error,
       };
     }),
+    on(customerActions.setCustomerSubLoader, (state, action) =>{
+      return {
+        ...state,
+        subLoader: action.status
+      }
+    }),
     on(customerActions.addCustomerSuccess, (state, action) => {
-      return customerAdapter.addOne(action.res, state);
+      let response = [action.res, ...selectAll(state)];
+      return customerAdapter.setAll(response, state);
     }),
     on(customerActions.addCustomerFail, (state, action) => {
       return {

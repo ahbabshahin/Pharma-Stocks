@@ -21,7 +21,10 @@ export class CustomerComponent {
   };
   customers: Customer[] = [];
   loader$: Observable<boolean> = of(true);
+  subLoader$: Observable<boolean> = of(false);
   isAdmin$: Observable<boolean> = of(false);
+  isMore: boolean = false;
+  total: number = 0;
 
   constructor(
     private commonService: CommonService,
@@ -59,18 +62,27 @@ export class CustomerComponent {
 
   getLoader() {
     this.loader$ = this.customerStore.getCustomerLoader();
+    this.subLoader$ = this.customerStore.getCustomerSubLoader();
   }
 
   loadCustomer() {
-    this.customerStore.loadCustomer(this.params);
+    this.customerStore.loadCustomer(this.params, this.isMore);
   }
 
   getCustomer() {
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
         this.customers = res;
+        if(this.isMore) this.isMore = false;
       },
       error: () => {},
+    });
+    this.subs.sink = this.customerStore
+      .getCustomerTotal()
+      .subscribe({next:(total: number) => {
+        this.total = total;
+      },
+    error: () => {}
     });
   }
 
@@ -87,12 +99,26 @@ export class CustomerComponent {
   }
 
   async deleteCustomer(customer: Customer) {
-    const ok = await this.commonService.showConfirmModal(`Are you sure you want to delete ${customer?.name}?`);
+    const ok = await this.commonService.showConfirmModal(
+      `Are you sure you want to delete ${customer?.name}?`
+    );
 
-    if(!ok) return;
+    if (!ok) return;
 
     this.commonService.presentLoading();
     this.customerStore.deleteCustomer(customer._id as string);
+  }
+
+  loadMore(){
+    if(this.customers?.length < this.total){
+      this.params = {
+        ...this.params,
+        page: this.params.page + 1
+      }
+      this.isMore = true;
+      this.loadCustomer();
+      this.customerStore.setCustomerSubLoader(true);
+    }
   }
 
   ngOnDestroy() {
