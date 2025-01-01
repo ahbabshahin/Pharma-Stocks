@@ -3,7 +3,6 @@ const customerSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, 'Name is required'],
-		unique: true,
 		minlength: [2, 'Name must be at least 2 characters long'],
 	},
 	email:{
@@ -29,4 +28,5 @@ const customerSchema = new mongoose.Schema({
 	],
 });
 
-module.exports = mongoose.model('customer', customerSchema);
+module.exports =
+	mongoose.models.Customer || mongoose.model('Customer', customerSchema);

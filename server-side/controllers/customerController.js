@@ -38,7 +38,7 @@ const getAllCustomers = async (req, res) => {
 			.limit(Number(limit));
 
 		const totalCustomers = await Customer.countDocuments();
-		res.status(200).json({ body: customers, total: totalCustomers, page });
+		res.status(200).json({ body: customers, total: totalCustomers, page: Number(page) });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
 	}
