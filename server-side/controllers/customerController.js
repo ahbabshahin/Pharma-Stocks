@@ -6,11 +6,18 @@ const createCustomer = async (req, res) => {
 	const { name, contacts, address } = req.body;
 
 	try {
+		const isContactUnique = await Customer.find({contacts});
+		if(isContactUnique){
+			return res
+				.status(400)
+				.json({ message: 'Duplicate value for contacts' });
+		}else{
 		const customer = await Customer.create({ name, contacts, address });
 		res.status(201).json({
 			message: 'Customer created successfully',
-			customer,
+			body: customer,
 		});
+	}
 	} catch (error) {
 		if (error.code === 11000) {
 			return res
@@ -90,19 +97,23 @@ const deleteCustomer = async (req, res) => {
 	const { id } = req.params;
 
 	try {
-		const customer = await Customer.findById(id);
+		const customer = await Customer.findByIdAndDelete(id);
 		if (!customer) {
-			throw new CustomError.NotFoundError(
-				`No customer found with ID: ${id}`
-			);
+			return res
+				.status(404)
+				.json({ message: `No customer found with ID: ${id}` });
 		}
 
-		await customer.remove();
-		res.status(204).send();
+		res.status(200).json({ message: 'Customer deleted successfully' });
 	} catch (error) {
-		res.status(500).json({ message: 'Server error', error });
+		console.error('Error deleting customer:', error);
+		res.status(500).json({
+			message: 'Server error',
+			error: error.message || 'Unknown error',
+		});
 	}
 };
+
 
 // Update customer's invoices array
 const updateCustomerInvoices = async (req, res) => {
