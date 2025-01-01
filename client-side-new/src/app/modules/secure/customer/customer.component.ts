@@ -76,7 +76,7 @@ export class CustomerComponent {
 
   addCustomer(customer?: Customer) {
     this.drawerService.create({
-      nzTitle: 'New Stock',
+      nzTitle: 'New Customer',
       nzClosable: true,
       nzMaskClosable: false,
       nzWidth: '50%',

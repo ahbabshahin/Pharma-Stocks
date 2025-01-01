@@ -47,10 +47,13 @@ export class CustomerEffects {
               this.customerStore.addCustomerSuccess(res);
               this.commonService.dismissLoading();
             }),
-            catchError(() => {
+            catchError((err) => {
+              const errorMessage =
+                err?.error?.message || 'Customer addition failed';
               this.customerStore.addCustomerFail('Customer addition failed');
+              this.commonService.showErrorModal(errorMessage);
               this.commonService.dismissLoading();
-              return of();
+              return of(err);
             })
           );
         })
@@ -97,9 +100,12 @@ export class CustomerEffects {
             map(() => {
               this.customerStore.deleteCustomerSuccess(action.id);
               this.commonService.dismissLoading();
+              this.commonService.showSuccessToast('Customer delete successful');
+
             }),
             catchError(() => {
               this.customerStore.deleteCustomerFail('Customer deletion failed');
+              this.commonService.showErrorToast('Customer delete failed');
               this.commonService.dismissLoading();
               return of();
             })
