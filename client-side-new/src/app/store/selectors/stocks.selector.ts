@@ -19,6 +19,11 @@ export const getStockLoaded = createSelector(
   (state: StockState) => state.loaded
 );
 
+export const getTotalStock = createSelector(
+  getStockState,
+  (state: StockState) => state.total
+);
+
 export const getStockError = createSelector(
   getStockState,
   (state: StockState) => state.error

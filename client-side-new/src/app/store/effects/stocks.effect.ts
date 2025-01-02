@@ -24,10 +24,16 @@ export class StockEffects {
         mergeMap((action) => {
           return this.stockApi.getStocks(action.params).pipe(
             map((res: any) => {
-                this.stockStore.loadStockSuccess(res.body ?? []);
+                this.stockStore.loadStockSuccess(
+                  res.body ?? [],
+                  res?.total,
+                  action.isMore
+                );
+              if(action.isMore) this.stockStore.setStockSubLoader(false);
             }),
             catchError(() => {
               this.stockStore.loadStockFail('Stock load failed');
+              if (action.isMore) this.stockStore.setStockSubLoader(false);
               this.commonService.showErrorToast('Stock load failed');
               return of();
             })
@@ -131,7 +137,7 @@ export class StockEffects {
           return this.stockApi.searchStock(action.params).pipe(
             map((res: any) => {
               if (res?.body?.length) {
-                this.stockStore.loadStockSuccess(res.body);
+                this.stockStore.searchStockSuccess(res.body);
               } else {
                 this.commonService.showErrorToast('Stock load failed');
               }

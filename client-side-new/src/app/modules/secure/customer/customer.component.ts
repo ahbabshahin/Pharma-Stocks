@@ -75,7 +75,9 @@ export class CustomerComponent {
         this.customers = res;
         if(this.isMore) this.isMore = false;
       },
-      error: () => {},
+      error: () => {
+        if (this.isMore) this.isMore = false;
+      },
     });
     this.subs.sink = this.customerStore
       .getCustomerTotal()

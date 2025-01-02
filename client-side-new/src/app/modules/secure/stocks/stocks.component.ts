@@ -21,6 +21,9 @@ export class StocksComponent {
   };
   stocks: Stock[] = [];
   searchText: string = '';
+  total: number = 0;
+  subLoader$: Observable<boolean> = of(false);
+  isMore: boolean = false;
 
   constructor(
     private stockStore: StockStoreService,
@@ -50,10 +53,11 @@ export class StocksComponent {
 
   getLoader() {
     this.loader$ = this.stockStore.getStockLoader();
+    this.subLoader$ = this.stockStore.getStockSubLoader();
   }
 
   loadStock() {
-    this.stockStore.loadStock(this.params);
+    this.stockStore.loadStock(this.params, this.isMore);
   }
 
   getStocks() {
@@ -61,6 +65,16 @@ export class StocksComponent {
       next: (res: Stock[]) => {
         if (res?.length) this.stocks = res;
         console.log('this.stocks: ', this.stocks);
+        if (this.isMore) this.isMore = false;
+      },
+      error: () => {
+        if (this.isMore) this.isMore = false;
+      },
+    });
+
+    this.subs.sink = this.stockStore.getTotalStock().subscribe({
+      next: (total: number) => {
+        this.total = total;
       },
       error: () => {},
     });
@@ -89,6 +103,18 @@ export class StocksComponent {
 
   search(){
     console.log('search ', this.searchText);
+  }
+
+  loadMore(){
+    if(this.stocks?.length < this.total){
+      this.params = {
+        ...this.params,
+        page: this.params.page + 1
+      }
+      this.stockStore.setStockSubLoader(true);
+      this.isMore = true;
+      this.loadStock();
+    }
   }
 
   ngOnDestroy() {

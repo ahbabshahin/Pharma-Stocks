@@ -7,6 +7,7 @@ export interface StockState extends EntityState<Stock> {
   loader: boolean;
   subLoader: boolean;
   loaded: boolean;
+  total: number;
   error: string;
 }
 
@@ -20,6 +21,7 @@ const defaultStock: StockState = {
   loader: false,
   subLoader: false,
   loaded: false,
+  total: 0,
   error: "",
 }
 
@@ -32,15 +34,18 @@ export const stockReducer = createReducer(
   on(stockActions.loadStock, (state, action) => {
     return {
       ...state,
-      loader: true,
+      loader: action.isMore ? false: true,
       loaded: false,
     };
   }),
   on(stockActions.loadStockSuccess, (state, action) => {
-    return stockAdapter.setAll(action.res, {
+    let response = action.res;
+    if(action.isMore) response = [...selectAll(state), ...action.res]
+    return stockAdapter.setAll(response, {
       ...state,
       loader: false,
       loaded: true,
+      total: action.total
     });
   }),
   on(stockActions.loadStockFail, (state, action) => {
@@ -50,6 +55,12 @@ export const stockReducer = createReducer(
       loaded: false,
       error: action.error,
     };
+  }),
+  on(stockActions.setStockSubLoader, (state, action) =>{
+    return {
+      ...state,
+      subLoader: action.status,
+    }
   }),
   on(stockActions.addStockSuccess, (state, action) => {
     return stockAdapter.addOne(action.res, state);

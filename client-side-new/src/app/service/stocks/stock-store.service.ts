@@ -18,11 +18,11 @@ export class StockStoreService {
     this.dispatch(stockActions.setStockSubLoader({ status }));
   }
 
-  loadStock(params: { [key: string]: any }) {
-    this.dispatch(stockActions.loadStock({ params }));
+  loadStock(params: { [key: string]: any }, isMore: boolean) {
+    this.dispatch(stockActions.loadStock({ params, isMore }));
   }
-  loadStockSuccess(res: Stock[]) {
-    this.dispatch(stockActions.loadStockSuccess({ res }));
+  loadStockSuccess(res: Stock[], total: number, isMore: boolean) {
+    this.dispatch(stockActions.loadStockSuccess({ res, total, isMore }));
   }
   loadStockFail(error: string) {
     this.dispatch(stockActions.loadStockFail({ error }));
@@ -79,9 +79,11 @@ export class StockStoreService {
   getStockLoaded = (): Observable<boolean> =>
     this.select(stockSelectors.getStockLoaded);
 
+  getTotalStock = (): Observable<number> =>
+    this.select(stockSelectors.getTotalStock);
+
   getStockError = (): Observable<string> =>
     this.select(stockSelectors.getStockError);
 
-  getStocks = (): Observable<Stock[]> =>
-    this.select(stockSelectors.getStocks);
+  getStocks = (): Observable<Stock[]> => this.select(stockSelectors.getStocks);
 }

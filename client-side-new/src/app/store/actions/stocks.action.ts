@@ -9,11 +9,11 @@ export const setStockSubLoader = createAction(
 
 export const loadStock = createAction(
   '[Stock] load stock',
-  props<{ params: { [key: string]: any } }>()
+  props<{ params: { [key: string]: any }, isMore: boolean }>()
 );
 export const loadStockSuccess = createAction(
   '[Stock] load stock success',
-  props<{ res: Stock[] }>()
+  props<{ res: Stock[], total: number, isMore: boolean }>()
 );
 export const loadStockFail = createAction(
   '[Stock] load stock fail',
