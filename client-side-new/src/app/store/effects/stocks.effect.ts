@@ -139,12 +139,13 @@ export class StockEffects {
               if (res?.body?.length) {
                 this.stockStore.searchStockSuccess(res.body);
               } else {
-                this.commonService.showErrorToast('Stock load failed');
+                this.commonService.showErrorToast('Stock search failed');
               }
             }),
-            catchError(() => {
-              this.stockStore.searchStockFail('Stock search failed');
-              this.commonService.showErrorToast('Stock load failed');
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'Stock search failed';
+              this.stockStore.searchStockFail(errorMessage);
+              this.commonService.showErrorToast(errorMessage);
               return of();
             })
           );

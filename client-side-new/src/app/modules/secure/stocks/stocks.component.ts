@@ -103,6 +103,14 @@ export class StocksComponent {
 
   search(){
     console.log('search ', this.searchText);
+    this.searchText = this.searchText?.trim();
+    if (this.searchText !== '') {
+      let params = {
+        query: this.searchText?.trim(),
+      };
+
+      this.stockStore.searchStock(params);
+    }
   }
 
   loadMore(){

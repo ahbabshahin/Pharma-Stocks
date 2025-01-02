@@ -93,21 +93,18 @@ export const stockReducer = createReducer(
     return {
       ...state,
       loader: true,
-      loaded: false,
     };
   }),
   on(stockActions.searchStockSuccess, (state, action) => {
     return stockAdapter.setAll(action.res, {
       ...state,
       loader: false,
-      loaded: true,
     });
   }),
   on(stockActions.searchStockFail, (state, action) => {
     return {
       ...state,
       loader: false,
-      loaded: false,
       error: action.error
     };
   })
