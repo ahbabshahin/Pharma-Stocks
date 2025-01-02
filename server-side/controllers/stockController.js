@@ -203,7 +203,10 @@ const searchStock = async (req, res) => {
 			return res.status(404).json({ message: 'No products found' });
 		}
 
-		res.status(200).json({ body: products });
+		res.status(200).json({
+			body: products,
+			message: 'Product search successful',
+		});
 	} catch (error) {
 		res.status(500).json({ message: 'Server error', error });
 	}
