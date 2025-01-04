@@ -1,10 +1,3 @@
-<!-- <div class="theme-toggle">
-  <label>
-    <input type="checkbox" (change)="toggleTheme()" />
-    Dark Mode
-  </label>
-</div> -->
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="invoice-container">
     <!-- Header Section -->
@@ -13,10 +6,10 @@
         <img src="path/to/logo.png" alt="Company Logo" />
       </div>
       <div class="company-details">
-        <h1>{{business?.name}}</h1>
+        <h1>{{ business.name }}</h1>
         <address>
-          {{business?.address}}<br />
-          Phone: {{business?.contact}}
+          {{ business.address }}<br />
+          Phone: {{ business.contact }}
         </address>
       </div>
     </header>
@@ -29,18 +22,38 @@
       </div>
       <div class="info-group">
         <h3>To:</h3>
-        <input
+        <!-- <input
+          nz-input
+          [nzBorderless]="true"
           formControlName="customer"
           placeholder="Enter Customer Name"
           aria-label="Customer Name"
-        />
+        /> -->
+        <nz-select
+          nzShowSearch
+          nzServerSearch
+          nzPlaceHolder="Enter customer name"
+          formControlName="customer"
+          [nzBorderless]="true"
+          [(ngModel)]="selectedCustomer"
+          [nzShowArrow]="false"
+          [nzFilterOption]="nzFilterOption"
+          (nzOnSearch)="searchCustomer($event)"
+        >
+          <nz-option
+            *ngFor="let prod of products"
+            [nzLabel]="prod.name"
+            [nzValue]="prod._id"
+          >
+          </nz-option>
+        </nz-select>
       </div>
       <div class="info-group invoice-meta">
         <p>
-          Invoice #: <span>{{ invoiceNumber || 'N/A' }}</span>
+          Invoice #: <span>{{ invoiceNumber || "N/A" }}</span>
         </p>
         <p>
-          Date: <span>{{ date | date: 'dd-MM-yyyy' }}</span>
+          Date: <span>{{ date | date : "dd-MM-yyyy" }}</span>
         </p>
         <p>
           Status:
@@ -67,19 +80,39 @@
         <tbody>
           <ng-container
             formArrayName="products"
-            *ngFor="let product of products.controls; let i = index"
+            *ngFor="let product of productsFormArray.controls; let i = index"
           >
             <tr [formGroupName]="i">
               <td>
-                <input
+                <!-- <input
+                  nz-input
+                  [nzBorderless]="true"
                   formControlName="name"
-                  type="text"
-                  placeholder="Product Name"
+                  placeholder="Enter Product Name"
                   aria-label="Product Name"
-                />
+                /> -->
+                <nz-select
+                  nzShowSearch
+                  nzServerSearch
+                  nzPlaceHolder="Enter product name"
+                  formControlName="name"
+                  [nzBorderless]="true"
+
+                  [nzShowArrow]="false"
+                  [nzFilterOption]="nzFilterOption"
+                  (nzOnSearch)="searchProduct($event, i)"
+                >
+                  <nz-option
+                    *ngFor="let prod of products"
+                    [nzLabel]="prod.name"
+                    [nzValue]="prod"
+                  ></nz-option>
+                </nz-select>
               </td>
               <td>
                 <input
+                  nz-input
+                  [nzBorderless]="true"
                   formControlName="quantity"
                   type="number"
                   placeholder="Qty"
@@ -89,6 +122,9 @@
               </td>
               <td>
                 <input
+                  nz-input
+                  [disabled]="true"
+                  [nzBorderless]="true"
                   formControlName="price"
                   type="number"
                   placeholder="Price"
@@ -97,37 +133,53 @@
                   aria-label="Price"
                 />
               </td>
+              <td>৳ {{ calculateProductTotal(product) }}</td>
               <td>
-                ৳ {{ calculateProductTotal(product) }}
-              </td>
-              <td>
-                <button type="button" (click)="removeProduct(i)">
-                  Remove
+                <button
+                  *ngIf="i !== 0"
+                  nz-button
+                  nzShape="round"
+                  type="button"
+                  (click)="removeProduct(i)"
+                >
+                  <span nz-icon nzType="delete" nzTheme="outline"></span>
                 </button>
               </td>
             </tr>
           </ng-container>
         </tbody>
       </table>
-      <button
-        type="button"
-        nz-button
-        class="primary-btn"
-        (click)="addProduct()"
-      >
-        Add Product
-      </button>
+
+      <div class="my-2">
+        <button
+          type="button"
+          nz-button
+          class="primary-btn"
+          (click)="addProduct()"
+        >
+          Add Product
+        </button>
+      </div>
     </section>
 
     <!-- Footer Section -->
     <footer class="invoice-footer">
       <div class="summary">
         <p>Tax: {{ taxRate * 100 }}%</p>
-        <p>Total Amount: {{ totalAmount | number: '1.2-2' }}</p>
+        <p>Total Amount: {{ totalAmount | number : "1.2-2" }}</p>
       </div>
       <div class="action-buttons">
-        <button nz-button class="primary-btn" type="button" (click)="generatePDF()">Generate PDF</button>
-        <button  nz-button class="primary-btn" type="submit">Submit Invoice</button>
+        <!-- <button
+          nz-button
+          class="primary-btn"
+          type="button"
+          (click)="generatePDF()"
+        >
+          Generate PDF
+        </button> -->
+        <button nz-button class="primary-btn" type="submit">
+          Submit Invoice
+        </button>
       </div>
     </footer>
   </div>

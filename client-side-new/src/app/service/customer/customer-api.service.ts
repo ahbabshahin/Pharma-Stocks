@@ -28,6 +28,8 @@ export class CustomerApiService {
   }
 
   searchCustomer(params: { [key: string]: any }) {
-    return this.http.get(`${this.env.rootURL}`, { params }).pipe(map((res: any) => res?.body));
+    return this.http
+      .get(`${this.env.rootURL}/v1/customer/search`, { params })
+      .pipe(map((res: any) => res?.body));
   }
 }

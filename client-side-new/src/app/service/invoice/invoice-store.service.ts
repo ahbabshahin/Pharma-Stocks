@@ -6,9 +6,7 @@ import { Invoice } from '../../store/models/invoice.model';
 import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs';
 import { InvoiceState } from '../../store/reducers/invoice.reducer';
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class InvoiceStoreService {
   constructor(private store: Store<InvoiceState>) {}
 

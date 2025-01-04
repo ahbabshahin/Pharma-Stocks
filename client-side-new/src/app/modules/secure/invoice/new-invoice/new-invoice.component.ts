@@ -1,10 +1,13 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 import { Invoice } from '../../../../store/models/invoice.model';
 import { Business } from '../../../../store/models/business.model';
 import { CommonService } from '../../../../service/common/common.service';
+import { Stock } from '../../../../store/models/stocks.model';
+import { StockApiService } from '../../../../service/stocks/stock-api.service';
+import { SubSink } from 'subsink';
+import { CustomerApiService } from '../../../../service/customer/customer-api.service';
 
 @Component({
   selector: 'app-new-invoice',
@@ -12,29 +15,33 @@ import { CommonService } from '../../../../service/common/common.service';
   styleUrls: ['./new-invoice.component.scss'],
 })
 export class NewInvoiceComponent implements OnInit, OnDestroy {
-  createdAt!: Date;
+  subs = new SubSink();
   status!: boolean;
   invoiceNumber: number = 1;
   taxRate: number = 0.15; // Default tax rate
   form!: FormGroup;
   isDarkTheme = false;
   business!: Business;
-  date: Date = new Date()
+  date: Date = new Date();
+  nzFilterOption = (): boolean => false;
+  products: Stock[] = [];
+  selectedValue!: Stock;
+  selectedCustomer: any = null;
   constructor(
     private formBuilder: FormBuilder,
     private invoiceStore: InvoiceStoreService,
     private commonService: CommonService,
+    private customerApi: CustomerApiService,
+    private stockApi: StockApiService
   ) {}
 
   ngOnInit(): void {
-    // Add a default product row
     this.initialize();
   }
 
   initialize() {
     let business: string = localStorage.getItem('business') as string;
-    if(business)
-      this.business = JSON.parse(business)
+    if (business) this.business = JSON.parse(business);
     else this.commonService.showErrorToast('Business not found');
     this.initializeForm();
   }
@@ -48,7 +55,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     this.addProduct();
   }
 
-  get products(): FormArray {
+  get productsFormArray(): FormArray {
     return this.form.get('products') as FormArray;
   }
 
@@ -58,11 +65,11 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [0, [Validators.required, Validators.min(0)]],
     });
-    this.products.push(productGroup);
+    this.productsFormArray.push(productGroup);
   }
 
   removeProduct(index: number): void {
-    this.products.removeAt(index);
+    this.productsFormArray.removeAt(index);
   }
 
   calculateProductTotal(product: any): number {
@@ -72,7 +79,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   get totalAmount(): number {
-    return this.products.controls.reduce((total, product) => {
+    return this.productsFormArray.controls.reduce((total, product) => {
       return total + this.calculateProductTotal(product);
     }, 0);
   }
@@ -81,8 +88,60 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     document.body.classList.toggle('dark-mode');
   }
 
-  generatePDF(): void {
-    // PDF generation logic
+  searchCustomer(e: any) {
+    console.log('e: ', e);
+    let searchTerm = e.trim();
+    if (searchTerm !== '') {
+      let params = {
+        name: e,
+      };
+      this.subs.sink = this.customerApi
+        .searchCustomer(params)
+        .subscribe((res: any) => {
+          console.log('res: ', res);
+          this.products = res?.body;
+        });
+    }
+  }
+
+  searchProduct(e: any, indx: number) {
+    console.log('e: ', e);
+    let searchTerm = e.trim();
+    if (searchTerm !== '') {
+      let params = {
+        query: e,
+      };
+      this.subs.sink = this.stockApi
+        .searchStock(params)
+        .subscribe((res: any) => {
+          console.log('res: ', res);
+          this.products = res?.body;
+        });
+    }
+    //  this.productsFormArray?.controls[indx]?.value;
+    console.log(
+      'this.productsFormArray?.controls[indx]?.value: ',
+      this.productsFormArray?.controls[indx]?.value?.name
+    );
+
+    if(this.productsFormArray?.controls[indx]?.value?.name) this.onProductSelect(
+      this.productsFormArray?.controls[indx]?.value?.name,
+      indx
+    );
+  }
+
+  onProductSelect(selectedProduct: Stock, index: number): void {
+    console.log('selectedProduct: ', selectedProduct);
+    console.log('index: ', index);
+    const productGroup = this.productsFormArray.at(index);
+    if (productGroup) {
+      this.productsFormArray.at(index).patchValue({
+        name: selectedProduct?.name,
+        price: selectedProduct?.price,
+        quantity: 1, // Default to 1 when a product is selected
+      });
+      console.log('this.productsFormArray.at(index): ', this.productsFormArray.at(index));
+    }
   }
 
   onSubmit(): void {
@@ -101,5 +160,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }

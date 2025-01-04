@@ -4,9 +4,7 @@ import { Invoice } from '../../store/models/invoice.model';
 import { map, Observable } from 'rxjs';
 import { Config } from '../../config';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class InvoiceApiService {
   constructor(private http: HttpClient, private env: Config) {}
 

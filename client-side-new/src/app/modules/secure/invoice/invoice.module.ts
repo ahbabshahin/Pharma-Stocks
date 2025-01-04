@@ -11,6 +11,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { invoiceReducer } from '../../../store/reducers/invoice.reducer';
 import { InvoiceEffects } from '../../../store/effects/invoice.effect';
 import { invoiceStateName } from '../../../store/app.state';
+import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
+import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
+import { StockApiService } from '../../../service/stocks/stock-api.service';
+import { CustomerApiService } from '../../../service/customer/customer-api.service';
 
 @NgModule({
   declarations: [InvoiceComponent, NewInvoiceComponent],
@@ -21,7 +25,13 @@ import { invoiceStateName } from '../../../store/app.state';
     FormsModule,
     ReactiveFormsModule,
     StoreModule.forFeature(invoiceStateName, invoiceReducer),
-    EffectsModule.forFeature([InvoiceEffects])
+    EffectsModule.forFeature([InvoiceEffects]),
+  ],
+  providers: [
+    InvoiceApiService,
+    InvoiceStoreService,
+    StockApiService,
+    CustomerApiService,
   ],
 })
 export class InvoiceModule {}
