@@ -7,6 +7,7 @@ export interface AuthState extends EntityState<User>{
   loader: boolean,
   loaded: boolean,
   accessToken: string,
+  userRole: any;
   error: string,
 }
 
@@ -16,6 +17,7 @@ export const defaultAuthInitialState: AuthState = {
   loader: false,
   loaded: false,
   accessToken: '',
+  userRole: undefined,
   error: "",
 }
 
@@ -40,7 +42,14 @@ export const authReducer = createReducer(
     }
   }),
   on(authActions.loadUserSuccess, (state, action) =>{
-    return authAdapter.setOne(action.res, state);
+    let user = action?.res;
+    console.log('user: ', user);
+    let userRole: string = user?.role as string;
+    console.log('userRole:', userRole);
+    return authAdapter.setOne(action.res, {
+      ...state,
+      userRole: userRole?.trim(),
+    });
   }),
   on(authActions.loadUserFail, (state, action) =>{
     return {

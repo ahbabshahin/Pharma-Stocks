@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { AuthState } from '../../store/reducers/auth.reducer';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { filter, firstValueFrom, map, Observable } from 'rxjs';
 import * as authActions from '../../store/actions/auth.action';
 import * as authSelectors from '../../store/selectors/auth.selector';
 import { LoginCred, RegisterCred, User } from '../../store/models/user.model';
@@ -60,7 +60,8 @@ export class AuthStoreService {
   }
 
   getUsers = (): Observable<User[]> => this.select(authSelectors.getUser);
-
+  getUserRole = (): Observable<any> =>
+    this.select(authSelectors.getUserRole);
   getUser(): Observable<User> {
     return this.getUsers().pipe(
       map((res: User[]) => {
@@ -69,11 +70,19 @@ export class AuthStoreService {
     );
   }
 
-  isAdminUser(): Observable<boolean> {
-      return this.getUser().pipe(
-        map((user: User) => {
-          return user?.role === 'admin';
-        })
+  isAdminUser(): Promise<boolean> {
+    return firstValueFrom(
+      this.getUserRole().pipe(
+        filter((role: string | null | undefined) => !!role), // Wait until role is not null or undefined
+        map((role: any) => role === 'admin')
       )
+    );
   }
+
+  // isAdminUser = async (): Promise<boolean> => {
+  //   const type = await this.select(authSelectors.getUserRole).toPromise();
+  //   console.log('type: ', type);
+  //   if (type === 'admin') return true;
+  //   return false;
+  // };
 }
