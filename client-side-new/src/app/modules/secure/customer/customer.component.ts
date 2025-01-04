@@ -22,7 +22,7 @@ export class CustomerComponent {
   customers: Customer[] = [];
   loader$: Observable<boolean> = of(true);
   subLoader$: Observable<boolean> = of(false);
-  isAdmin$: Observable<boolean> = of(false);
+  isAdmin: boolean = false;
   isMore: boolean = false;
   total: number = 0;
 
@@ -37,11 +37,11 @@ export class CustomerComponent {
     this.initialize();
   }
 
-  initialize() {
-    this.isAdminUser();
+  async initialize() {
     this.getLoader();
     this.isCustomerLoaed();
     this.getCustomer();
+    await this.isAdminUser();
   }
 
   isCustomerLoaed() {
@@ -56,8 +56,8 @@ export class CustomerComponent {
 
   async isAdminUser() {
     console.log('admin');
-    this.isAdmin$ = this.authStore.isAdminUser();
-    console.log('this.isAdmin: ', this.isAdmin$);
+    this.isAdmin = await this.authStore.isAdminUser();
+    console.log('this.isAdmin: ', this.isAdmin);
   }
 
   getLoader() {

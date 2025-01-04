@@ -9,6 +9,11 @@ export const getAccessToken = createSelector(
   (state: AuthState) => state.accessToken
 );
 
+export const getUserRole = createSelector(
+  getAuthState,
+  (state: AuthState) => state.userRole
+)
+
 export const getUser = createSelector(
   getAuthState,
   authAdapter.getSelectors().selectAll
