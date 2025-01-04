@@ -146,17 +146,19 @@ const updateCustomerInvoices = async (req, res) => {
 };
 
 const searchCustomers = async (req, res) => {
-	const { name } = req.query; // Get the search query from query parameters
-
-	if (!name) {
-		throw new CustomError.BadRequestError(
-			'Search query "name" is required'
-		);
-	}
-
 	try {
+		const { name } = req.query; // Get the search query from query parameters
+		console.log('name: ', name);
+
+		if (!name) {
+			return res
+				.status(400)
+				.json({ message: 'Search query "name" is required' });
+		}
+
+		// Perform case-insensitive partial match
 		const customers = await Customer.find({
-			name: { $regex: name, $options: 'i' }, // Case-insensitive partial match
+			name: { $regex: name, $options: 'i' },
 		});
 
 		if (customers.length === 0) {
@@ -165,7 +167,8 @@ const searchCustomers = async (req, res) => {
 
 		res.status(200).json({ body: customers });
 	} catch (error) {
-		res.status(500).json({ message: 'Server error', error });
+		console.error('Error in searchCustomers:', error);
+		res.status(500).json({ message: 'Server error', error: error.message });
 	}
 };
 
