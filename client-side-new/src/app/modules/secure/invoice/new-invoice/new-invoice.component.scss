@@ -54,15 +54,6 @@
   }
 }
 
-.dark-mode {
-  background: #121212;
-  color: #fff;
-
-  input, select, textarea {
-    background: #222;
-    color: #fff;
-  }
+nz-select {
+  width: 200px;
 }
-    nz-select {
-      width: 200px;
-    }
