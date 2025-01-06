@@ -1,5 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="invoice-container">
+    <div id="print-section">
     <!-- Header Section -->
     <header class="invoice-header">
       <div class="logo">
@@ -24,7 +25,7 @@
         <h3>To:</h3>
                 <div class="form-group mtop_0">
                   <input placeholder="Enter customer name" nz-input [nzBorderless]="true" formControlName="customer"
-                    [nzAutocomplete]="auto" (input)="searchCustomer($event)" />
+                    [nzAutocomplete]="autoC" (input)="searchCustomer($event)" />
                   <!--
               <ng-container *ngFor="let validation of validationMessages?.itemName">
                 <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
@@ -33,7 +34,7 @@
                 </p>
               </ng-container> -->
 
-                  <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                  <nz-autocomplete #autoC [nzDefaultActiveFirstOption]="false">
                     <ng-container *ngIf="customers.length > 0">
                       <nz-auto-option *ngFor="let customer of customers" [nzValue]="customer?.name"
                         (click)="onCustomerSelect(customer)">
@@ -172,7 +173,9 @@
         <p> Discount: {{ taxRate * 100 }}%</p>
         <p>Total Amount: {{ totalAmount | number : "1.2-2" }}</p>
       </div>
-      <div class="action-buttons">
+    </footer>
+  </div>
+      <div class="action-buttons d-flex justify-content-end">
         <!-- <button
           nz-button
           class="primary-btn"
@@ -181,10 +184,12 @@
         >
           Generate PDF
         </button> -->
-        <button nz-button class="primary-btn" type="submit">
-          Submit Invoice
-        </button>
-      </div>
-    </footer>
+      <button
+        [useExistingCss]="true"
+        printSectionId="print-section" ngxPrint nz-button class="primary-btn"
+        type="submit">
+        Submit Invoice
+      </button>
+    </div>
   </div>
 </form>

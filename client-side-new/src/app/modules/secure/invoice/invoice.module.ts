@@ -15,6 +15,7 @@ import { InvoiceApiService } from '../../../service/invoice/invoice-api.service'
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
 import { StockApiService } from '../../../service/stocks/stock-api.service';
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   declarations: [InvoiceComponent, NewInvoiceComponent],
@@ -26,6 +27,7 @@ import { CustomerApiService } from '../../../service/customer/customer-api.servi
     ReactiveFormsModule,
     StoreModule.forFeature(invoiceStateName, invoiceReducer),
     EffectsModule.forFeature([InvoiceEffects]),
+    NgxPrintModule,
   ],
   providers: [
     InvoiceApiService,

@@ -100,7 +100,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         .searchCustomer(params)
         .subscribe((res: any) => {
           console.log('res: ', res);
-          this.products = res?.body;
+          this.customers = res;
         });
     }
   }
@@ -163,7 +163,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         customer: formRes?.customer,
       };
 
-      this.invoiceStore.addInvoice(payload);
+      // this.invoiceStore.addInvoice(payload);
     }
   }
 
