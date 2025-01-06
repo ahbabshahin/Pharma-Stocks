@@ -146,20 +146,23 @@ const updateCustomerInvoices = async (req, res) => {
 };
 
 const searchCustomers = async (req, res) => {
+	const { name } = req.query; // Get the search query from query parameters
+	console.log('name: ', name);
+
+	if (!name) {
+		return res
+			.status(400)
+			.json({ message: 'Search query "name" is required' });
+	}
+
+	const searchCriteria = {
+		$or: [],
+	};
+	searchCriteria.$or.push({ name: { $regex: name, $options: 'i' } });
+
 	try {
-		const { name } = req.query; // Get the search query from query parameters
-		console.log('name: ', name);
-
-		if (!name) {
-			return res
-				.status(400)
-				.json({ message: 'Search query "name" is required' });
-		}
-
 		// Perform case-insensitive partial match
-		const customers = await Customer.find({
-			name: { $regex: name, $options: 'i' },
-		});
+		const customers = await Customer.find(searchCriteria);
 
 		if (customers.length === 0) {
 			return res.status(404).json({ message: 'No customers found' });

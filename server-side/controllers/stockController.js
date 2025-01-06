@@ -173,7 +173,7 @@ const updateStockForStore = async (req, res) => {
 };
 
 const searchStock = async (req, res) => {
-	const { query, quantity, price, brand } = req.query; // Get the search query and additional filters from query parameters
+	const { query, quantity, price, } = req.query; // Get the search query and additional filters from query parameters
 
 	// Build the search criteria
 	const searchCriteria = {
