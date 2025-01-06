@@ -22,31 +22,28 @@
       </div>
       <div class="info-group">
         <h3>To:</h3>
-        <!-- <input
-          nz-input
-          [nzBorderless]="true"
-          formControlName="customer"
-          placeholder="Enter Customer Name"
-          aria-label="Customer Name"
-        /> -->
-        <nz-select
-          nzShowSearch
-          nzServerSearch
-          nzPlaceHolder="Enter customer name"
-          formControlName="customer"
-          [nzBorderless]="true"
-          [(ngModel)]="selectedCustomer"
-          [nzShowArrow]="false"
-          [nzFilterOption]="nzFilterOption"
-          (nzOnSearch)="searchCustomer($event)"
-        >
-          <nz-option
-            *ngFor="let prod of products"
-            [nzLabel]="prod.name"
-            [nzValue]="prod._id"
-          >
-          </nz-option>
-        </nz-select>
+                <div class="form-group mtop_0">
+                  <input placeholder="Enter customer name" nz-input [nzBorderless]="true" formControlName="customer"
+                    [nzAutocomplete]="auto" (input)="searchCustomer($event)" />
+                  <!--
+              <ng-container *ngFor="let validation of validationMessages?.itemName">
+                <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
+                  class="s_error">
+                  {{ validation.message }}
+                </p>
+              </ng-container> -->
+
+                  <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                    <ng-container *ngIf="customers.length > 0">
+                      <nz-auto-option *ngFor="let customer of customers" [nzValue]="customer?.name"
+                        (click)="onCustomerSelect(customer)">
+                        <div class="d-flex jc-between gap-2">
+                          <span>{{ customer?.name | titlecase }}</span>
+                        </div>
+                      </nz-auto-option>
+                    </ng-container>
+                  </nz-autocomplete>
+                </div>
       </div>
       <div class="info-group invoice-meta">
         <p>
@@ -84,30 +81,37 @@
           >
             <tr [formGroupName]="i">
               <td>
-                <!-- <input
-                  nz-input
-                  [nzBorderless]="true"
-                  formControlName="name"
-                  placeholder="Enter Product Name"
-                  aria-label="Product Name"
-                /> -->
-                <nz-select
-                  nzShowSearch
-                  nzServerSearch
-                  nzPlaceHolder="Enter product name"
-                  formControlName="name"
-                  [nzBorderless]="true"
+                <div class="form-group mtop_0">
+                  <input
+                    placeholder="Minirin"
+                    nz-input
+                    [nzBorderless]="true"
+                    formControlName="name"
+                    [nzAutocomplete]="auto"
+                    (input)="searchProduct($event)"
+                  />
+                  <!--
+              <ng-container *ngFor="let validation of validationMessages?.itemName">
+                <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
+                  class="s_error">
+                  {{ validation.message }}
+                </p>
+              </ng-container> -->
 
-                  [nzShowArrow]="false"
-                  [nzFilterOption]="nzFilterOption"
-                  (nzOnSearch)="searchProduct($event, i)"
-                >
-                  <nz-option
-                    *ngFor="let prod of products"
-                    [nzLabel]="prod.name"
-                    [nzValue]="prod"
-                  ></nz-option>
-                </nz-select>
+                  <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                    <ng-container *ngIf="products.length > 0">
+                        <nz-auto-option
+                          *ngFor="let item of products"
+                          [nzValue]="item?.name"
+                          (click)="onProductSelect(item, i)"
+                        >
+                          <div class="d-flex jc-between gap-2">
+                            <span>{{ item?.name | titlecase }}</span>
+                          </div>
+                        </nz-auto-option>
+                    </ng-container>
+                  </nz-autocomplete>
+                </div>
               </td>
               <td>
                 <input
@@ -165,7 +169,7 @@
     <!-- Footer Section -->
     <footer class="invoice-footer">
       <div class="summary">
-        <p>Tax: {{ taxRate * 100 }}%</p>
+        <p> Discount: {{ taxRate * 100 }}%</p>
         <p>Total Amount: {{ totalAmount | number : "1.2-2" }}</p>
       </div>
       <div class="action-buttons">

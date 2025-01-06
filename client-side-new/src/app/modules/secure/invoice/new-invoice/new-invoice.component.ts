@@ -8,6 +8,7 @@ import { Stock } from '../../../../store/models/stocks.model';
 import { StockApiService } from '../../../../service/stocks/stock-api.service';
 import { SubSink } from 'subsink';
 import { CustomerApiService } from '../../../../service/customer/customer-api.service';
+import { Customer } from '../../../../store/models/customer.model';
 
 @Component({
   selector: 'app-new-invoice',
@@ -25,8 +26,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   date: Date = new Date();
   nzFilterOption = (): boolean => false;
   products: Stock[] = [];
-  selectedValue!: Stock;
-  selectedCustomer: any = null;
+  customers: Customer[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private invoiceStore: InvoiceStoreService,
@@ -90,10 +90,11 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
   searchCustomer(e: any) {
     console.log('e: ', e);
-    let searchTerm = e.trim();
+    let searchTerm = e?.target?.value?.trim();
+    console.log('searchTerm: ', searchTerm);
     if (searchTerm !== '') {
       let params = {
-        name: e,
+        name: searchTerm,
       };
       this.subs.sink = this.customerApi
         .searchCustomer(params)
@@ -104,9 +105,13 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchProduct(e: any, indx: number) {
+  onCustomerSelect(customer: Customer){
+    this.form?.get('customer')?.patchValue(customer?.name);
+  }
+
+  searchProduct(e: any) {
     console.log('e: ', e);
-    let searchTerm = e.trim();
+    let searchTerm = e?.target?.value.trim();
     if (searchTerm !== '') {
       let params = {
         query: e,
@@ -119,16 +124,18 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         });
     }
     //  this.productsFormArray?.controls[indx]?.value;
-    console.log(
-      'this.productsFormArray?.controls[indx]?.value: ',
-      this.productsFormArray?.controls[indx]?.value?.name
-    );
+    // console.log(
+    //   'this.productsFormArray?.controls[indx]?.value: ',
+    //   this.productsFormArray?.controls[indx]?.value?.name
+    // );
 
-    if(this.productsFormArray?.controls[indx]?.value?.name) this.onProductSelect(
-      this.productsFormArray?.controls[indx]?.value?.name,
-      indx
-    );
+    // if(this.productsFormArray?.controls[indx]?.value?.name) this.onProductSelect(
+    //   this.productsFormArray?.controls[indx]?.value?.name,
+    //   indx
+    // );
   }
+
+
 
   onProductSelect(selectedProduct: Stock, index: number): void {
     console.log('selectedProduct: ', selectedProduct);
