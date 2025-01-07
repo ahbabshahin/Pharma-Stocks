@@ -44,14 +44,45 @@
     }
   }
 
-  .invoice-footer {
-    margin-top: 16px;
-    text-align: right;
+.invoice-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 
-    .action-buttons button {
-      margin-left: 8px;
+  .summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    /* Vertically align label and input */
+    gap: 8px;
+    /* Space between items */
+
+    .discount {
+      display: flex;
+      align-items: flex-end;
+
+      label {
+        margin-right: 8px;
+        /* Space between label and input */
+      }
+
+      input {
+        width: 50px;
+        /* Adjust input width */
+        text-align: right;
+        /* Align text inside the input */
+      }
+    }
+
+    p {
+      margin-left: 16px;
+      /* Space between discount and total amount */
+      margin: 0;
+      /* Remove extra margins from text */
     }
   }
+}
 }
 
 nz-select {

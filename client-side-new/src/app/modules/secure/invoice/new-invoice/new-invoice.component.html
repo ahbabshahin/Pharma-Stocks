@@ -1,36 +1,42 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="invoice-container">
     <div id="print-section">
-    <!-- Header Section -->
-    <header class="invoice-header">
-      <div class="logo">
-        <img src="assets/img/company_logo.jpeg" alt="Company Logo" />
-      </div>
-      <div class="company-details">
-        <h1>{{ business.name | titlecase}}</h1>
-        <address>
-          {{ business.address | titlecase}}<br />
-          Phone: {{ business.contact }}
-        </address>
-      </div>
-    </header>
-
-    <!-- Invoice Information -->
-    <section class="invoice-info">
-      <div class="info-group">
-        <h3>From:</h3>
-        <p>{{ business.name | titlecase}}</p>
-        <address>
-          {{ business.address | titlecase}}<br />
-          Phone: {{ business.contact }}
-        </address>
+      <!-- Header Section -->
+      <header class="invoice-header">
+        <div class="logo">
+          <img src="assets/img/company_logo.jpeg" alt="Company Logo" />
         </div>
-      <div class="info-group">
-        <h3>To:</h3>
-                <div class="form-group mtop_0">
-                  <input placeholder="Enter customer name" nz-input [nzBorderless]="true" formControlName="customer"
-                    [nzAutocomplete]="autoC" (input)="searchCustomer($event)" />
-                  <!--
+        <div class="company-details">
+          <h1>{{ business.name | titlecase }}</h1>
+          <address>
+            {{ business.address | titlecase }}<br />
+            Phone: {{ business.contact }}
+          </address>
+        </div>
+      </header>
+
+      <!-- Invoice Information -->
+      <section class="invoice-info">
+        <div class="info-group">
+          <h3>From:</h3>
+          <p>{{ business.name | titlecase }}</p>
+          <address>
+            {{ business.address | titlecase }}<br />
+            Phone: {{ business.contact }}
+          </address>
+        </div>
+        <div class="info-group" formGroupName="customer">
+          <h3>To:</h3>
+          <div class="form-group mtop_0">
+            <input
+              placeholder="Enter customer name"
+              nz-input
+              [nzBorderless]="true"
+              formControlName="name"
+              [nzAutocomplete]="autoC"
+              (input)="searchCustomer($event)"
+            />
+            <!--
               <ng-container *ngFor="let validation of validationMessages?.itemName">
                 <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
                   class="s_error">
@@ -38,64 +44,67 @@
                 </p>
               </ng-container> -->
 
-                  <nz-autocomplete #autoC [nzDefaultActiveFirstOption]="false">
-                    <ng-container *ngIf="customers.length > 0">
-                      <nz-auto-option *ngFor="let customer of customers" [nzValue]="customer?.name"
-                        (click)="onCustomerSelect(customer)">
-                        <div class="d-flex jc-between gap-2">
-                          <span>{{ customer?.name | titlecase }}</span>
-                        </div>
-                      </nz-auto-option>
-                    </ng-container>
-                  </nz-autocomplete>
-                </div>
-      </div>
-      <div class="info-group invoice-meta">
-        <p>
-          Invoice #: <span>{{ invoiceNumber || "N/A" }}</span>
-        </p>
-        <p>
-          Date: <span>{{ date | date : "dd-MM-yyyy" }}</span>
-        </p>
-        <p>
-          Status:
-          <nz-select formControlName="status" aria-label="Invoice Status">
-            <nz-option nzValue="due" nzLabel="Due"></nz-option>
-            <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
-          </nz-select>
-        </p>
-      </div>
-    </section>
+            <nz-autocomplete #autoC [nzDefaultActiveFirstOption]="false">
+              <ng-container *ngIf="customers.length > 0">
+                <nz-auto-option
+                  *ngFor="let customer of customers"
+                  [nzValue]="customer?.name"
+                  (click)="onCustomerSelect(customer)"
+                >
+                  <div class="d-flex jc-between gap-2">
+                    <span>{{ customer?.name | titlecase }}</span>
+                  </div>
+                </nz-auto-option>
+              </ng-container>
+            </nz-autocomplete>
+          </div>
+        </div>
+        <div class="info-group invoice-meta">
+          <p>
+            Invoice #: <span>{{ invoiceNumber || "N/A" }}</span>
+          </p>
+          <p>
+            Date: <span>{{ date | date : "dd-MM-yyyy" }}</span>
+          </p>
+          <p>
+            Status:
+            <nz-select formControlName="status" aria-label="Invoice Status">
+              <nz-option nzValue="due" nzLabel="Due"></nz-option>
+              <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
+            </nz-select>
+          </p>
+        </div>
+      </section>
 
-    <!-- Product List -->
-    <section class="product-list">
-      <table>
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container
-            formArrayName="products"
-            *ngFor="let product of productsFormArray.controls; let i = index"
-          >
-            <tr [formGroupName]="i">
-              <td>
-                <div class="form-group mtop_0">
-                  <input
-                    placeholder="Minirin"
-                    nz-input
-                    [nzBorderless]="true"
-                    formControlName="name"
-                    [nzAutocomplete]="auto"
-                    (input)="searchProduct($event)"
-                  />
-                  <!--
+      <!-- Product List -->
+      <section class="product-list">
+        <table>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container
+              formArrayName="products"
+              *ngFor="let product of productsFormArray.controls; let i = index"
+            >
+              <tr [formGroupName]="i">
+                <td>
+                  <div class="form-group mtop_0">
+                    <input
+                      placeholder="Minirin"
+                      nz-input
+                      [nzBorderless]="true"
+                      formControlName="name"
+                      [nzAutocomplete]="auto"
+                      (input)="searchProduct($event)"
+                    />
+                    <!--
               <ng-container *ngFor="let validation of validationMessages?.itemName">
                 <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
                   class="s_error">
@@ -103,8 +112,8 @@
                 </p>
               </ng-container> -->
 
-                  <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
-                    <ng-container *ngIf="products.length > 0">
+                    <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                      <ng-container *ngIf="products.length > 0">
                         <nz-auto-option
                           *ngFor="let item of products"
                           [nzValue]="item?.name"
@@ -114,73 +123,102 @@
                             <span>{{ item?.name | titlecase }}</span>
                           </div>
                         </nz-auto-option>
-                    </ng-container>
-                  </nz-autocomplete>
-                </div>
-              </td>
-              <td>
-                <input
-                  nz-input
-                  [nzBorderless]="true"
-                  formControlName="quantity"
-                  type="number"
-                  placeholder="Qty"
-                  min="1"
-                  aria-label="Quantity"
-                />
-              </td>
-              <td>
-                <input
-                  nz-input
-                  [disabled]="true"
-                  [nzBorderless]="true"
-                  formControlName="price"
-                  type="number"
-                  placeholder="Price"
-                  min="0"
-                  step="0.01"
-                  aria-label="Price"
-                />
-              </td>
-              <td>৳ {{ calculateProductTotal(product) }}</td>
-              <td>
-                <button
-                  *ngIf="i !== 0"
-                  nz-button
-                  nzShape="round"
-                  type="button"
-                  (click)="removeProduct(i)"
-                >
-                  <span nz-icon nzType="delete" nzTheme="outline"></span>
-                </button>
-              </td>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
+                      </ng-container>
+                    </nz-autocomplete>
+                  </div>
+                </td>
+                <td>
+                  <input
+                    nz-input
+                    [nzBorderless]="true"
+                    formControlName="quantity"
+                    type="number"
+                    placeholder="Qty"
+                    min="1"
+                    aria-label="Quantity"
+                  />
+                </td>
+                <td>
+                  <input
+                    nz-input
+                    [disabled]="true"
+                    [nzBorderless]="true"
+                    formControlName="price"
+                    type="number"
+                    placeholder="Price"
+                    min="0"
+                    step="0.01"
+                    aria-label="Price"
+                  />
+                </td>
+                <td>৳ {{ calculateProductTotal(product) }}</td>
+                <td>
+                  <button
+                    *ngIf="i !== 0"
+                    nz-button
+                    nzShape="round"
+                    type="button"
+                    (click)="removeProduct(i)"
+                  >
+                    <span nz-icon nzType="delete" nzTheme="outline"></span>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
 
-      <div class="my-2">
-        <button
-          type="button"
-          nz-button
-          class="primary-btn"
-          (click)="addProduct()"
-        >
-          Add Product
-        </button>
-      </div>
-    </section>
+        <div class="my-2">
+          <button
+            type="button"
+            nz-button
+            class="primary-btn"
+            (click)="addProduct()"
+          >
+            Add Product
+          </button>
+        </div>
+      </section>
 
-    <!-- Footer Section -->
-    <footer class="invoice-footer">
-      <div class="summary">
-        <p> Discount: {{ taxRate * 100 }}%</p>
-        <p>Total Amount: {{ totalAmount | number : "1.2-2" }}</p>
-      </div>
-    </footer>
+      <!-- Footer Section -->
+      <!-- <footer class="invoice-footer">
+        <div class="summary">
+          <p>
+            Discount:
+          </p>
+          <div class="discount">
+            <input
+              nz-input
+              [nzBorderless]="true"
+              formControlName="discount"
+              type="number"
+              placeholder="Discount"
+              min="0"
+              step="0.01"
+              aria-label="Discount"
+            /> %
+        </div>
+          <p>Total Amount: {{ totalAmount | number : "1.2-2" }}</p>
+        </div>
+      </footer> -->
+<footer class="invoice-footer">
+  <div class="summary">
+    <div class="discount">
+      <label for="discount">Discount:</label>
+      <input id="discount" nz-input [nzBorderless]="true" formControlName="discount" type="number"
+        placeholder="Discount" min="0" step="0.01" aria-label="Discount" />
+      %
+    </div>
+    <p>Sub Amount: ৳ {{ subTotalAmount | number : "1.2-2" }}</p>
+    <hr/>
+    <p>Total Amount: ৳ {{ totalAmount | number : "1.2-2" }}</p>
   </div>
-      <div class="action-buttons d-flex justify-content-end">
-        <!-- <button
+</footer>
+
+
+    </div>
+    <div class="action-buttons d-flex justify-content-end">
+      <!-- <button
           nz-button
           class="primary-btn"
           type="button"
@@ -188,9 +226,7 @@
         >
           Generate PDF
         </button> -->
-      <button
-         nz-button class="primary-btn"
-        type="submit">
+      <button nz-button class="primary-btn" type="submit">
         Submit Invoice
       </button>
     </div>
