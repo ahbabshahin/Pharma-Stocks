@@ -36,13 +36,13 @@ export class InvoiceComponent {
   }
 
   initialize() {
-    this.loadInvoice();
+    // this.loadInvoice();
     this.isInvoiceLoaded();
     this.getInvoices();
   }
 
   loadInvoice() {
-    this.invoiceStoreService.setLoader(true);
+    // this.invoiceStoreService.setLoader(true);
     this.invoiceStoreService.loadInvoice(this.params);
   }
 
@@ -62,7 +62,7 @@ export class InvoiceComponent {
     this.subs.sink = this.invoiceStoreService
       .getInvoiceLoaded()
       .subscribe((loaded: boolean) => {
-        if (loaded) {
+        if (!loaded) {
           this.loadInvoice();
         }
       });
@@ -81,4 +81,8 @@ export class InvoiceComponent {
   }
 
   generatePDF() {}
+
+  ngOnDestroy(){
+    this.subs.unsubscribe();
+  }
 }

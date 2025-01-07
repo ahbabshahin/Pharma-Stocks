@@ -21,12 +21,12 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   invoiceNumber: number = 1;
   taxRate: number = 0.15; // Default tax rate
   form!: FormGroup;
-  isDarkTheme = false;
   business!: Business;
   date: Date = new Date();
-  nzFilterOption = (): boolean => false;
   products: Stock[] = [];
   customers: Customer[] = [];
+  invoice!: Invoice;
+  invoiceForm!: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
     private invoiceStore: InvoiceStoreService,
@@ -163,7 +163,14 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         customer: formRes?.customer,
       };
 
-      // this.invoiceStore.addInvoice(payload);
+      this.commonService.presentLoading();
+      if(this.invoice){
+        this.invoiceStore.updateInvoice(payload);
+      }else{
+        this.invoiceStore.addInvoice(payload);
+      }
+    }else{
+      this.commonService.showWarningModal('Form is invalid')
     }
   }
 

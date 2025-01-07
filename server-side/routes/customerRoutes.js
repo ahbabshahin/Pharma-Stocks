@@ -20,6 +20,8 @@ router
 	.route('/')
 	.post(authenticateUser, createCustomer)
 	.get(authenticateUser, authorizePermissions('admin'), getAllCustomers);
+	
+router.get('/search', authenticateUser, searchCustomers); // Add search route
 
 	router.get('/search', authenticateUser, searchCustomers); // Add search route
 	
