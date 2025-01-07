@@ -36,7 +36,12 @@ const invoiceSchema = new mongoose.Schema({
 		default: 'due',
 	},
 	customer: {
-		type: String,
+		id: {
+			type: String,
+		},
+		name: {
+			type: String,
+		},
 	},
 	createdAt: {
 		type: Date,
@@ -53,4 +58,6 @@ invoiceSchema.pre('save', function (next) {
 	next();
 });
 
-module.exports = mongoose.model('Invoice', invoiceSchema);
+// module.exports = mongoose.model('Invoice', invoiceSchema);
+module.exports =
+	mongoose.models.Invoice || mongoose.model('Invoice', invoiceSchema);
