@@ -5,11 +5,15 @@ const { isTokenValid } = require('../utils');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
-const calculateTotal = (products, taxRate) => {
+const calculateTotal = (products, discountRate) => {
 	const subtotal = products.reduce((acc, product) => {
 		return acc + product.price * product.quantity;
 	}, 0);
-	const total = subtotal + subtotal * taxRate;
+
+	// Calculate discount and deduct it from subtotal
+	const discountAmount = subtotal * discountRate;
+	const total = subtotal - discountAmount;
+
 	return { subtotal, total };
 };
 
@@ -23,50 +27,68 @@ const createInvoice = async (req, res) => {
 		);
 	}
 
-	// Check stock availability for each product
-	for (const product of products) {
-		const stock = await Stock.findOne({ _id: product._id });
-
-		if (!stock) {
+	try {
+		// Check if the customer exists
+		const existingCustomer = await Customer.findById(customer);
+		if (!existingCustomer) {
 			throw new CustomError.NotFoundError(
-				`Product "${product.name}" not found in stock`
+				`Customer with ID "${customer}" not found`
 			);
 		}
 
-		if (product.quantity > stock.productQuantity) {
-			throw new CustomError.BadRequestError(
-				`Insufficient stock for product "${product.name}". Available quantity: ${stock.productQuantity}`
+		// Check stock availability for each product
+		for (const product of products) {
+			const stock = await Stock.findOne({ _id: product._id });
+
+			if (!stock) {
+				throw new CustomError.NotFoundError(
+					`Product "${product.name}" not found in stock`
+				);
+			}
+
+			if (product.quantity > stock.productQuantity) {
+				throw new CustomError.BadRequestError(
+					`Insufficient stock for product "${product.name}". Available quantity: ${stock.productQuantity}`
+				);
+			}
+		}
+
+		// Deduct stock quantities
+		for (const product of products) {
+			await Stock.findOneAndUpdate(
+				{ productName: product.name },
+				{ $inc: { productQuantity: -product.quantity } },
+				{ new: true }
 			);
 		}
+
+		// Calculate total and subtotal
+		const { subtotal, total } = calculateTotal(products, 0.15);
+
+		// Create the invoice
+		const invoice = await Invoice.create({
+			user: req.user.userId,
+			products,
+			customer,
+			totalAmount: total,
+		});
+
+		// Update the customer's invoices array
+		existingCustomer.invoices.push(invoice._id);
+		await existingCustomer.save();
+
+		// Generate PDF if requested
+		if (sendPDF) {
+			await generatePDF(invoice);
+		}
+
+		res.status(201).json({ body: invoice });
+	} catch (error) {
+		console.error('Error creating invoice:', error);
+		res.status(500).json({ message: 'Server error', error });
 	}
-
-	// Deduct stock quantities
-	for (const product of products) {
-		await Stock.findOneAndUpdate(
-			{ productName: product.name },
-			{ $inc: { productQuantity: -product.quantity } },
-			{ new: true }
-		);
-	}
-
-	// Calculate total and subtotal
-	const { subtotal, total } = calculateTotal(products, 0.15);
-
-	// Create the invoice
-	const invoice = await Invoice.create({
-		user: req.user.userId,
-		products,
-		customer,
-		totalAmount: total,
-	});
-
-	// Generate PDF if requested
-	if (sendPDF) {
-		await generatePDF(invoice);
-	}
-
-	res.status(201).json({ invoice });
 };
+
 
 // Get All Invoices with Pagination and Filtering
 const getAllInvoices = async (req, res) => {
@@ -121,7 +143,7 @@ const updateInvoice = async (req, res) => {
 	invoice.status = status;
 	await invoice.save();
 
-	res.status(200).json({ invoice });
+	res.status(200).json({ body: invoice });
 };
 
 // Delete Invoice

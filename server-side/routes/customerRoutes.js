@@ -20,6 +20,8 @@ router
 	.route('/')
 	.post(authenticateUser, createCustomer)
 	.get(authenticateUser, authorizePermissions('admin'), getAllCustomers);
+	
+router.get('/search', authenticateUser, searchCustomers); // Add search route
 
 router
 	.route('/:id')
@@ -32,7 +34,6 @@ router
 	.post(authenticateUser, updateCustomerInvoices);
 
 // router.route('/search').get(authenticateUser, searchCustomers);
-router.get('/search', authenticateUser, searchCustomers); // Add search route
 
 
 module.exports = router;
