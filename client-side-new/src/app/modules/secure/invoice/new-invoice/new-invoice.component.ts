@@ -48,9 +48,13 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
   initializeForm() {
     this.form = this.formBuilder.group({
-      customer: ['', [Validators.required]],
+      customer: this.formBuilder.group({
+        id: ['', [Validators.required]],
+        name: ['', [Validators.required]],
+      }),
       status: ['due', Validators.required],
       products: this.formBuilder.array([]),
+      discount: [15, [Validators.required, Validators.min(0), Validators.max(100)]],
     });
     this.addProduct();
   }
@@ -61,6 +65,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
   addProduct(): void {
     const productGroup = this.formBuilder.group({
+      _id: ['', [Validators.required]],
       name: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [0, [Validators.required, Validators.min(0)]],
@@ -79,6 +84,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   get totalAmount(): number {
+    let discount = (this.subTotalAmount * this.form.get('discount')?.value) / 100;
+    return this.subTotalAmount - discount;
+  }
+  get subTotalAmount(): number {
     return this.productsFormArray.controls.reduce((total, product) => {
       return total + this.calculateProductTotal(product);
     }, 0);
@@ -106,7 +115,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   onCustomerSelect(customer: Customer){
-    this.form?.get('customer')?.patchValue(customer?.name);
+    this.form?.get('customer')?.patchValue({
+      id: customer._id,
+      name: customer?.name
+    });
   }
 
   searchProduct(e: any) {
@@ -123,16 +135,6 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
           this.products = res?.body;
         });
     }
-    //  this.productsFormArray?.controls[indx]?.value;
-    // console.log(
-    //   'this.productsFormArray?.controls[indx]?.value: ',
-    //   this.productsFormArray?.controls[indx]?.value?.name
-    // );
-
-    // if(this.productsFormArray?.controls[indx]?.value?.name) this.onProductSelect(
-    //   this.productsFormArray?.controls[indx]?.value?.name,
-    //   indx
-    // );
   }
 
 
@@ -143,6 +145,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     const productGroup = this.productsFormArray.at(index);
     if (productGroup) {
       this.productsFormArray.at(index).patchValue({
+        _id: selectedProduct._id,
         name: selectedProduct?.name,
         price: selectedProduct?.price,
         quantity: 1, // Default to 1 when a product is selected
@@ -157,8 +160,8 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       const formRes = this.form.value;
       let payload: Invoice = {
         products: formRes?.products,
-        taxRate: this.taxRate,
-        totalAmount: this.totalAmount,
+        discount: this.taxRate,
+        totalAmount: this.subTotalAmount,
         status: formRes?.status,
         customer: formRes?.customer,
       };
