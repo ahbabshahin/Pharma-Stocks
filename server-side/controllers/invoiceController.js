@@ -4,6 +4,7 @@ const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const Customer = require('../models/Customer');
 
 const calculateTotal = (products, discountRate) => {
 	const subtotal = products.reduce((acc, product) => {
@@ -11,7 +12,7 @@ const calculateTotal = (products, discountRate) => {
 	}, 0);
 
 	// Calculate discount and deduct it from subtotal
-	const discountAmount = subtotal * discountRate;
+	const discountAmount = (subtotal * discountRate) / 100;
 	const total = subtotal - discountAmount;
 
 	return { subtotal, total };
@@ -29,7 +30,7 @@ const createInvoice = async (req, res) => {
 
 	try {
 		// Check if the customer exists
-		const existingCustomer = await Customer.findById(customer);
+		const existingCustomer = await Customer.findById(customer?.id);
 		if (!existingCustomer) {
 			throw new CustomError.NotFoundError(
 				`Customer with ID "${customer}" not found`
@@ -167,7 +168,7 @@ const generatePDF = (invoice) => {
 
 	doc.pipe(writeStream);
 	doc.fontSize(20).text(`Invoice ID: ${invoice._id}`);
-	doc.text(`Customer: ${invoice.customer}`);
+	doc.text(`Customer: ${invoice.customer?.name}`);
 	doc.text(`Status: ${invoice.status}`);
 	doc.text(`Total Amount: ${invoice.totalAmount}`);
 	doc.text(`Created At: ${invoice.createdAt}`);
