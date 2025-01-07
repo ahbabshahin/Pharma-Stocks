@@ -52,7 +52,8 @@ export const invoiceReducer = createReducer(
   on(invoiceActions.loadInvoice, (state, action) => {
     return {
       ...state,
-      loaded: true,
+      loaded: false,
+      loader: true,
       error: '',
     };
   }),
@@ -60,7 +61,8 @@ export const invoiceReducer = createReducer(
     console.log('action.res: ', action.res);
     return invoiceAdapter.setAll(action.res, {
       ...state,
-      loaded: false,
+      loaded: true,
+      loader: false,
     });
   }),
   on(invoiceActions.loadInvoiceFail, (state, { error }) => ({

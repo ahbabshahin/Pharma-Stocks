@@ -14,7 +14,14 @@ export class InvoiceApiService {
     });
   }
 
-  addInvoice(payload: any) {
-    return this.http.post(`${this.env.rootURL}/v1/invoice`, payload);
+  addInvoice(payload: Invoice) {
+    return this.http.post(`${this.env.rootURL}/v1/invoice`, payload).pipe(map((res: any) => res?.body));
+  }
+
+  updateInvoice(payload: Invoice){
+    return this.http.patch(
+      `${this.env.rootURL}/v1/invoice/${payload?._id}`,
+      payload
+    ).pipe(map((res: any) => res?.body));
   }
 }

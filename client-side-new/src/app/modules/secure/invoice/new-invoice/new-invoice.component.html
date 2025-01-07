@@ -4,12 +4,12 @@
     <!-- Header Section -->
     <header class="invoice-header">
       <div class="logo">
-        <img src="path/to/logo.png" alt="Company Logo" />
+        <img src="assets/img/company_logo.jpeg" alt="Company Logo" />
       </div>
       <div class="company-details">
-        <h1>{{ business.name }}</h1>
+        <h1>{{ business.name | titlecase}}</h1>
         <address>
-          {{ business.address }}<br />
+          {{ business.address | titlecase}}<br />
           Phone: {{ business.contact }}
         </address>
       </div>
@@ -19,8 +19,12 @@
     <section class="invoice-info">
       <div class="info-group">
         <h3>From:</h3>
-        <p>Sender Details</p>
-      </div>
+        <p>{{ business.name | titlecase}}</p>
+        <address>
+          {{ business.address | titlecase}}<br />
+          Phone: {{ business.contact }}
+        </address>
+        </div>
       <div class="info-group">
         <h3>To:</h3>
                 <div class="form-group mtop_0">
@@ -185,11 +189,13 @@
           Generate PDF
         </button> -->
       <button
-        [useExistingCss]="true"
-        printSectionId="print-section" ngxPrint nz-button class="primary-btn"
+         nz-button class="primary-btn"
         type="submit">
         Submit Invoice
       </button>
     </div>
   </div>
 </form>
+
+<!-- [useExistingCss]="true"
+        printSectionId="print-section" ngxPrint -->
