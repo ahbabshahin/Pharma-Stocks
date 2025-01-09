@@ -5,7 +5,10 @@ export interface Invoice {
   discount: number;
   totalAmount: number;
   status: string;
-  customer: string;
+  customer: {
+    id: string;
+    name: string
+  };
 }
 
 export interface Product {
