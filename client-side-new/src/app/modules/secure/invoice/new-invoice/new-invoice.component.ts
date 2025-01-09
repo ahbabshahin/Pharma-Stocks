@@ -9,6 +9,7 @@ import { StockApiService } from '../../../../service/stocks/stock-api.service';
 import { SubSink } from 'subsink';
 import { CustomerApiService } from '../../../../service/customer/customer-api.service';
 import { Customer } from '../../../../store/models/customer.model';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-new-invoice',
@@ -27,12 +28,14 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   customers: Customer[] = [];
   invoice!: Invoice;
   invoiceForm!: FormGroup;
+
   constructor(
     private formBuilder: FormBuilder,
     private invoiceStore: InvoiceStoreService,
     private commonService: CommonService,
     private customerApi: CustomerApiService,
-    private stockApi: StockApiService
+    private stockApi: StockApiService,
+    private drawerRef: NzDrawerRef
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +47,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     if (business) this.business = JSON.parse(business);
     else this.commonService.showErrorToast('Business not found');
     this.initializeForm();
+    if (this.invoice) this.populateForm();
   }
 
   initializeForm() {
@@ -54,9 +58,22 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       }),
       status: ['due', Validators.required],
       products: this.formBuilder.array([]),
-      discount: [15, [Validators.required, Validators.min(0), Validators.max(100)]],
+      discount: [
+        15,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
     });
     this.addProduct();
+  }
+
+  populateForm() {
+    this.form.patchValue({
+      customer: this.invoice?.customer,
+      status: this.invoice?.status,
+      discount: this.invoice?.discount,
+    });
+
+    this.populateProduct();
   }
 
   get productsFormArray(): FormArray {
@@ -73,6 +90,18 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     this.productsFormArray.push(productGroup);
   }
 
+  populateProduct(){
+    this.invoice?.products.forEach((product) => {
+      const productGroup = this.formBuilder.group({
+        _id: product?._id,
+        name: product?.name,
+        quantity: product?.quantity,
+        price: product?.price,
+      });
+      this.productsFormArray.push(productGroup);
+    });
+  }
+
   removeProduct(index: number): void {
     this.productsFormArray.removeAt(index);
   }
@@ -84,7 +113,8 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   get totalAmount(): number {
-    let discount = (this.subTotalAmount * this.form.get('discount')?.value) / 100;
+    let discount =
+      (this.subTotalAmount * this.form.get('discount')?.value) / 100;
     return this.subTotalAmount - discount;
   }
   get subTotalAmount(): number {
@@ -114,10 +144,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCustomerSelect(customer: Customer){
+  onCustomerSelect(customer: Customer) {
     this.form?.get('customer')?.patchValue({
       id: customer._id,
-      name: customer?.name
+      name: customer?.name,
     });
   }
 
@@ -137,8 +167,6 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   onProductSelect(selectedProduct: Stock, index: number): void {
     console.log('selectedProduct: ', selectedProduct);
     console.log('index: ', index);
@@ -150,7 +178,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         price: selectedProduct?.price,
         quantity: 1, // Default to 1 when a product is selected
       });
-      console.log('this.productsFormArray.at(index): ', this.productsFormArray.at(index));
+      console.log(
+        'this.productsFormArray.at(index): ',
+        this.productsFormArray.at(index)
+      );
     }
   }
 
@@ -167,13 +198,14 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       };
 
       this.commonService.presentLoading();
-      if(this.invoice){
+      if (this.invoice) {
         this.invoiceStore.updateInvoice(payload);
-      }else{
+      } else {
         this.invoiceStore.addInvoice(payload);
       }
-    }else{
-      this.commonService.showWarningModal('Form is invalid')
+      this.drawerRef.close();
+    } else {
+      this.commonService.showWarningModal('Form is invalid');
     }
   }
 
