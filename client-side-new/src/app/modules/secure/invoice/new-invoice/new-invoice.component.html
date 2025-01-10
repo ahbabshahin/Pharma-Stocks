@@ -25,7 +25,7 @@
             Phone: {{ business.contact }}
           </address>
         </div>
-        <div class="info-group" formGroupName="customer">
+        <div class="info-group">
           <h3>To:</h3>
           <div class="form-group mtop_0">
             <input
@@ -33,6 +33,7 @@
               nz-input
               [nzBorderless]="true"
               formControlName="name"
+              [(ngModel)]="customer.name"
               [nzAutocomplete]="autoC"
               (input)="searchCustomer($event)"
             />
@@ -58,6 +59,10 @@
               </ng-container>
             </nz-autocomplete>
           </div>
+          <address>
+            <span *ngIf="customer?.address">{{customer.address}}</span> <br />
+            <span *ngIf="customer?.contacts">Phone: {{customer.contacts}} </span>
+          </address>
         </div>
         <div class="info-group invoice-meta">
           <p>
