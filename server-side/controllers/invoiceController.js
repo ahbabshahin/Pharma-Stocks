@@ -30,7 +30,7 @@ const createInvoice = async (req, res) => {
 
 	try {
 		// Check if the customer exists
-		const existingCustomer = await Customer.findById(customer?.id);
+		const existingCustomer = await Customer.findById(customer);
 		if (!existingCustomer) {
 			throw new CustomError.NotFoundError(
 				`Customer with ID "${customer}" not found`
