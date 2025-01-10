@@ -28,6 +28,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   customers: Customer[] = [];
   invoice!: Invoice;
   invoiceForm!: FormGroup;
+  customer!: Customer;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,10 +53,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
   initializeForm() {
     this.form = this.formBuilder.group({
-      customer: this.formBuilder.group({
-        id: ['', [Validators.required]],
-        name: ['', [Validators.required]],
-      }),
+      customer: ['', [Validators.required]],
       status: ['due', Validators.required],
       products: this.formBuilder.array([]),
       discount: [
@@ -145,10 +143,8 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   onCustomerSelect(customer: Customer) {
-    this.form?.get('customer')?.patchValue({
-      id: customer._id,
-      name: customer?.name,
-    });
+    this.form?.get('customer')?.patchValue(customer?._id);
+    this.customer = customer;
   }
 
   searchProduct(e: any) {

@@ -36,12 +36,7 @@ const invoiceSchema = new mongoose.Schema({
 		default: 'due',
 	},
 	customer: {
-		id: {
 			type: String,
-		},
-		name: {
-			type: String,
-		},
 	},
 	createdAt: {
 		type: Date,
