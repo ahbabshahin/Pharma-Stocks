@@ -10,6 +10,7 @@ import { SubSink } from 'subsink';
 import { CustomerApiService } from '../../../../service/customer/customer-api.service';
 import { Customer } from '../../../../store/models/customer.model';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
 
 @Component({
   selector: 'app-new-invoice',
@@ -35,6 +36,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     private invoiceStore: InvoiceStoreService,
     private commonService: CommonService,
     private customerApi: CustomerApiService,
+    private customerStore: CustomerStoreService,
     private stockApi: StockApiService,
     private drawerRef: NzDrawerRef
   ) {}
@@ -44,6 +46,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    this.getcustomers();
     let business: string = localStorage.getItem('business') as string;
     if (business) this.business = JSON.parse(business);
     else this.commonService.showErrorToast('Business not found');
@@ -88,7 +91,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     this.productsFormArray.push(productGroup);
   }
 
-  populateProduct(){
+  populateProduct() {
     this.invoice?.products.forEach((product) => {
       const productGroup = this.formBuilder.group({
         _id: product?._id,
@@ -121,8 +124,15 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
-  toggleTheme(): void {
-    document.body.classList.toggle('dark-mode');
+  getcustomers() {
+    this.subs.sink = this.customerStore.getCustomers().subscribe({
+      next: (res: Customer[]) => {
+        this.customers = res;
+      },
+      error: () => {
+        console.log('error');
+      },
+    });
   }
 
   searchCustomer(e: any) {
