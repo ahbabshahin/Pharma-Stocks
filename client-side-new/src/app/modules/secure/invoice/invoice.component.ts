@@ -4,6 +4,7 @@ import { NewInvoiceComponent } from './new-invoice/new-invoice.component';
 import{ SubSink } from 'subsink';
 import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
+import { CustomerStoreService } from '../../../service/customer/customer-store.service';
 
 @Component({
   selector: 'app-invoice',
@@ -27,6 +28,7 @@ export class InvoiceComponent {
   constructor(
     private drawerService: NzDrawerService,
     private invoiceStoreService: InvoiceStoreService,
+    private customerStore: CustomerStoreService
   ) {}
 
   ngOnInit() {
@@ -36,7 +38,7 @@ export class InvoiceComponent {
   }
 
   initialize() {
-    // this.loadInvoice();
+    this.isCustomerLoaded();
     this.isInvoiceLoaded();
     this.getInvoices();
   }
@@ -46,15 +48,14 @@ export class InvoiceComponent {
     this.invoiceStoreService.loadInvoice(this.params);
   }
 
-  getInvoices(){
-    this.subs.sink = this.invoiceStoreService
-      .getInvoices()
-      .subscribe({next:(res: Invoice[]) => {
+  getInvoices() {
+    this.subs.sink = this.invoiceStoreService.getInvoices().subscribe({
+      next: (res: Invoice[]) => {
         this.invoices = res;
       },
-      error:() =>{
+      error: () => {
         console.log('error');
-      }
+      },
     });
   }
 
@@ -64,6 +65,24 @@ export class InvoiceComponent {
       .subscribe((loaded: boolean) => {
         if (!loaded) {
           this.loadInvoice();
+        }
+      });
+  }
+
+  loadCustomer() {
+    let params = {
+      page: 1,
+      limit: 100,
+    };
+    this.customerStore.loadCustomer(params, false);
+  }
+
+  isCustomerLoaded() {
+    this.subs.sink = this.customerStore
+      .getCustomerLoaded()
+      .subscribe((loaded: boolean) => {
+        if (!loaded) {
+          this.loadCustomer();
         }
       });
   }
@@ -82,7 +101,7 @@ export class InvoiceComponent {
 
   generatePDF() {}
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subs.unsubscribe();
   }
 }

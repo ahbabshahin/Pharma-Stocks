@@ -16,6 +16,7 @@ import { InvoiceStoreService } from '../../../service/invoice/invoice-store.serv
 import { StockApiService } from '../../../service/stocks/stock-api.service';
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { NgxPrintModule } from 'ngx-print';
+import { CustomerStoreService } from '../../../service/customer/customer-store.service';
 
 @NgModule({
   declarations: [InvoiceComponent, NewInvoiceComponent],
@@ -34,6 +35,7 @@ import { NgxPrintModule } from 'ngx-print';
     InvoiceStoreService,
     StockApiService,
     CustomerApiService,
+    CustomerStoreService,
   ],
 })
 export class InvoiceModule {}
