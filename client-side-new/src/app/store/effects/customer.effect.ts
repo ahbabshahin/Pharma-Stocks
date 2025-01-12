@@ -22,6 +22,7 @@ export class CustomerEffects {
       this.actions$.pipe(
         ofType(customerActions.loadCustomer),
         mergeMap((action) => {
+        console.log('action ', action);
           return this.customerApi.getCustomers(action.params).pipe(
             map((res: any) => {
               this.customerStore.loadCustomerSuccess(

@@ -39,12 +39,12 @@ export class CustomerComponent {
 
   async initialize() {
     this.getLoader();
-    this.isCustomerLoaed();
+    this.isCustomerLoaded();
     this.getCustomer();
     await this.isAdminUser();
   }
 
-  isCustomerLoaed() {
+  isCustomerLoaded() {
     this.subs.sink = this.customerStore
       .getCustomerLoaded()
       .subscribe((loaded: boolean) => {
