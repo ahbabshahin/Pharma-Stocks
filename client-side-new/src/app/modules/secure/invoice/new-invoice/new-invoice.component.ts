@@ -21,7 +21,6 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   status!: boolean;
   invoiceNumber: number = 1;
-  taxRate: number = 0.15; // Default tax rate
   form!: FormGroup;
   business!: Business;
   date: Date = new Date();
@@ -52,6 +51,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     if (business) this.business = JSON.parse(business);
     else this.commonService.showErrorToast('Business not found');
     this.initializeForm();
+
     if (this.invoice) this.populateForm();
   }
 
@@ -65,6 +65,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
     });
+    if(!this.invoice)
     this.addProduct();
   }
 
@@ -74,7 +75,9 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       status: this.invoice?.status,
       discount: this.invoice?.discount,
     });
+    const customer = this.customers.find((item) => item?._id == this.invoice?.customer);
 
+    if(customer) this.customer = customer;
     this.populateProduct();
   }
 
@@ -101,7 +104,9 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         price: product?.price,
       });
       this.productsFormArray.push(productGroup);
+      this.calculateProductTotal(productGroup);
     });
+
   }
 
   removeProduct(index: number): void {
@@ -201,7 +206,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       const formRes = this.form.value;
       let payload: Invoice = {
         products: formRes?.products,
-        discount: this.taxRate,
+        discount: formRes?.discount,
         totalAmount: this.subTotalAmount,
         status: formRes?.status,
         customer: formRes?.customer,
