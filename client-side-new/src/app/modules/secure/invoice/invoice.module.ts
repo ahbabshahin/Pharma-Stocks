@@ -17,6 +17,7 @@ import { StockApiService } from '../../../service/stocks/stock-api.service';
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { NgxPrintModule } from 'ngx-print';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
+import { CommonComponentModule } from '../../../common-component/common-component.module';
 
 @NgModule({
   declarations: [InvoiceComponent, NewInvoiceComponent],
@@ -29,6 +30,7 @@ import { CustomerStoreService } from '../../../service/customer/customer-store.s
     StoreModule.forFeature(invoiceStateName, invoiceReducer),
     EffectsModule.forFeature([InvoiceEffects]),
     NgxPrintModule,
+    CommonComponentModule,
   ],
   providers: [
     InvoiceApiService,

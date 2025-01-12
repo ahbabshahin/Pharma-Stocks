@@ -5,14 +5,12 @@ export interface Invoice {
   discount: number;
   totalAmount: number;
   status: string;
-  customer: {
-    id: string;
-    name: string
-  };
+  customer: string;
+  createdAt?: string;
 }
 
 export interface Product {
-  name: String;
+  name: string;
   quantity: number;
   price: number;
   _id: string;

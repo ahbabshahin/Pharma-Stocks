@@ -1,8 +1,85 @@
-<div nz-flex nzJustify="flex-end">
-  <button class="mt-20"  type="button" nz-button class="primary-btn" (click)="addInvoice()">
+<div class="d-flex justify-content-end my-2 mx-2">
+  <button
+    class="mt-20"
+    type="button"
+    nz-button
+    class="primary-btn"
+    (click)="addInvoice()"
+  >
     New Invoice
   </button>
 </div>
 
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A nulla eum aspernatur ipsa odio saepe possimus dicta temporibus molestias amet in odit, repellendus distinctio tempore quae est eius animi ad!</p>
-
+<app-global-loader *ngIf="loader$ | async"></app-global-loader>
+<ng-container *ngIf="!(loader$ | async)">
+  <div class="container" *ngIf="invoices?.length">
+    <div class="row">
+      <ng-container *ngFor="let list of invoices; let i = index">
+        <div class="col-md-12 my-2">
+          <nz-collapse nzAccordion>
+            <nz-collapse-panel
+              [nzHeader]="
+                ((customers | find : '_id' : list.customer)?.name ||
+                  'Unknown Customer') +
+                ' ' +
+                (list?.createdAt
+                  ? (list.createdAt | date : 'dd-MM-yyyy')
+                  : '') +
+                ' - ' +
+                (list?.status | titlecase)
+              "
+              [nzExtra]="edit"
+            >
+              <p class="box" *ngFor="let product of list?.products">
+                <span>Product: {{ product?.name | titlecase }} </span>
+                <br />
+                <span>Quantity: {{ product?.quantity }} </span>
+                <br />
+                <span>Price: ৳ {{ product?.price | number : "1.2-2" }} </span>
+              </p>
+              <hr />
+              <p>
+                Total: ৳ {{ list?.totalAmount | number : "1.2-2" }}
+              </p></nz-collapse-panel
+            >
+          </nz-collapse>
+        </div>
+        <ng-template #edit>
+          <span (click)="addInvoice(list)" nz-icon nzType="edit"></span>
+        </ng-template>
+        <ng-template #view>
+          <span nz-icon nzType="eye"></span>
+        </ng-template>
+        <ng-template #delete>
+          <span (click)="deleteInvoice(list)" nz-icon nzType="delete"></span>
+        </ng-template>
+      </ng-container>
+    </div>
+    <p
+      *ngIf="invoices?.length"
+      class="d-flex justify-content-end align-items-center my-2 mx-2"
+    >
+      Showing product(s) {{ invoices.length }} out of {{ total }}
+    </p>
+    <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
+    <div
+      *ngIf="invoices.length > params.limit && invoices.length < total"
+      class="d-flex justify-content-center align-items-center my-2 mx-2"
+    >
+      <button
+        [disabled]="subLoader$ | async"
+        (click)="loadMore()"
+        type="button"
+        nz-button
+        nzShape="round"
+        class="w-50"
+      >
+        load more
+      </button>
+    </div>
+  </div>
+  <app-global-no-data
+    *ngIf="!invoices?.length"
+    bodyText="No invoice found"
+  ></app-global-no-data>
+</ng-container>
