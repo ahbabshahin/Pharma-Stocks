@@ -28,24 +28,27 @@
         <div class="info-group">
           <h3>To:</h3>
           <div class="form-group mtop_0">
-            <input
-              placeholder="Enter customer name"
-              nz-input
+            <nz-select
+              nzShowSearch
+              nzAllowClear
               [nzBorderless]="true"
-              formControlName="name"
-              [(ngModel)]="customer.name"
-              [nzAutocomplete]="autoC"
-              (input)="searchCustomer($event)"
-            />
-            <!--
-              <ng-container *ngFor="let validation of validationMessages?.itemName">
-                <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
-                  class="s_error">
-                  {{ validation.message }}
-                </p>
-              </ng-container> -->
+              nzPlaceHolder="Select Customer"
+              [(ngModel)]="customer"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onCustomerSelect($event)"
+            >
+              <nz-option
+                *ngFor="let customer of customers; let i = index"
+                nzCustomContent
+                [nzLabel]="customer.name"
+                [nzValue]="customer"
+              >
+                <!-- <span nz-icon nzType="windows"></span> -->
+                {{ customer?.name | titlecase }} ({{ customer?.contacts }})
+              </nz-option>
+            </nz-select>
 
-            <nz-autocomplete #autoC [nzDefaultActiveFirstOption]="false">
+            <!-- <nz-autocomplete #autoC [nzDefaultActiveFirstOption]="false">
               <ng-container *ngIf="customers.length > 0">
                 <nz-auto-option
                   *ngFor="let customer of customers"
@@ -57,11 +60,14 @@
                   </div>
                 </nz-auto-option>
               </ng-container>
-            </nz-autocomplete>
+            </nz-autocomplete> -->
           </div>
+
           <address>
-            <span *ngIf="customer?.address">{{customer.address}}</span> <br />
-            <span *ngIf="customer?.contacts">Phone: {{customer.contacts}} </span>
+            <span *ngIf="customer?.address">{{ customer.address }}</span> <br />
+            <span *ngIf="customer?.contacts"
+              >Phone: {{ customer.contacts }}
+            </span>
           </address>
         </div>
         <div class="info-group invoice-meta">
@@ -133,6 +139,14 @@
                   </div>
                 </td>
                 <td>
+                  <!-- <nz-input-number
+                    [nzBorderless]="true"
+                    formControlName="quantity"
+                    [nzMin]="1"
+                    [nzMax]="stock?.quantity ? stock.quantity : 1"
+
+                    [nzStep]="1"
+                  ></nz-input-number> -->
                   <input
                     nz-input
                     [nzBorderless]="true"
@@ -140,6 +154,7 @@
                     type="number"
                     placeholder="Qty"
                     min="1"
+                    max="2"
                     aria-label="Quantity"
                   />
                 </td>
@@ -206,21 +221,28 @@
           <p>Total Amount: {{ totalAmount | number : "1.2-2" }}</p>
         </div>
       </footer> -->
-<footer class="invoice-footer">
-  <div class="summary">
-    <div class="discount">
-      <label for="discount">Discount:</label>
-      <input id="discount" nz-input [nzBorderless]="true" formControlName="discount" type="number"
-        placeholder="Discount" min="0" step="0.01" aria-label="Discount" />
-      %
-    </div>
-    <p>Sub Amount: ৳ {{ subTotalAmount | number : "1.2-2" }}</p>
-    <hr/>
-    <p>Total Amount: ৳ {{ totalAmount | number : "1.2-2" }}</p>
-  </div>
-</footer>
-
-
+      <footer class="invoice-footer">
+        <div class="summary">
+          <div class="discount">
+            <label for="discount">Discount:</label>
+            <input
+              id="discount"
+              nz-input
+              [nzBorderless]="true"
+              formControlName="discount"
+              type="number"
+              placeholder="Discount"
+              min="0"
+              step="0.01"
+              aria-label="Discount"
+            />
+            %
+          </div>
+          <p>Sub Amount: ৳ {{ subTotalAmount | number : "1.2-2" }}</p>
+          <hr />
+          <p>Total Amount: ৳ {{ totalAmount | number : "1.2-2" }}</p>
+        </div>
+      </footer>
     </div>
     <div class="action-buttons d-flex justify-content-end">
       <!-- <button

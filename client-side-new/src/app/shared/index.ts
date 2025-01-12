@@ -30,6 +30,7 @@ import { NzWaterMarkModule } from 'ng-zorro-antd/water-mark';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 export const components = [
   FormsModule,
@@ -65,4 +66,5 @@ export const components = [
   NzSpinModule,
   NzDrawerModule,
   NzEmptyModule,
+  NzInputNumberModule,
 ];

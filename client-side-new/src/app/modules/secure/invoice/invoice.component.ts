@@ -5,6 +5,7 @@ import{ SubSink } from 'subsink';
 import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
+import { CustomerApiService } from '../../../service/customer/customer-api.service';
 
 @Component({
   selector: 'app-invoice',
@@ -28,7 +29,8 @@ export class InvoiceComponent {
   constructor(
     private drawerService: NzDrawerService,
     private invoiceStoreService: InvoiceStoreService,
-    private customerStore: CustomerStoreService
+    private customerStore: CustomerStoreService,
+    private customerApi: CustomerApiService,
   ) {}
 
   ngOnInit() {
@@ -74,13 +76,25 @@ export class InvoiceComponent {
       page: 1,
       limit: 100,
     };
-    this.customerStore.loadCustomer(params, false);
-  }
+    this.subs.sink = this.customerApi.getCustomers(params).subscribe({
+      next: (res: any) => {
+        this.customerStore.loadCustomerSuccess(
+          res?.body ?? [],
+          res?.total ?? 0,
+          false
+        );
+      },
+      error: () => {
+        this.customerStore.loadCustomerFail('Customer load failed');
+      },
+    });
+}
 
   isCustomerLoaded() {
     this.subs.sink = this.customerStore
       .getCustomerLoaded()
       .subscribe((loaded: boolean) => {
+        console.log('loaded: ', loaded);
         if (!loaded) {
           this.loadCustomer();
         }

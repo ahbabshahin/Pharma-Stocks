@@ -30,6 +30,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   invoice!: Invoice;
   invoiceForm!: FormGroup;
   customer!: Customer;
+  stock!: Stock;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,7 +47,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
-    this.getcustomers();
+    this.getCustomers();
     let business: string = localStorage.getItem('business') as string;
     if (business) this.business = JSON.parse(business);
     else this.commonService.showErrorToast('Business not found');
@@ -124,9 +125,11 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
-  getcustomers() {
+  getCustomers() {
+    console.log('customer');
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
+        console.log('res: ', res);
         this.customers = res;
       },
       error: () => {
@@ -176,6 +179,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   onProductSelect(selectedProduct: Stock, index: number): void {
     console.log('selectedProduct: ', selectedProduct);
     console.log('index: ', index);
+    this.stock = selectedProduct;
     const productGroup = this.productsFormArray.at(index);
     if (productGroup) {
       this.productsFormArray.at(index).patchValue({
