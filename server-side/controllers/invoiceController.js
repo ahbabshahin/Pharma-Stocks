@@ -20,7 +20,8 @@ const calculateTotal = (products, discountRate) => {
 
 // Create Invoice
 const createInvoice = async (req, res) => {
-	const { products, customer, sendPDF } = req.body;
+	const { products, customer, sendPDF, status } = req.body;
+	console.log('products: ', products);
 
 	if (!products || !customer) {
 		throw new CustomError.BadRequestError(
@@ -37,28 +38,28 @@ const createInvoice = async (req, res) => {
 			);
 		}
 
-		// Check stock availability for each product
+		// Check stock availability and update quantities
 		for (const product of products) {
-			const stock = await Stock.findOne({ _id: product._id });
+			const stock = await Stock.findById(product._id);
+			console.log('stock: ', stock);
 
 			if (!stock) {
-				throw new CustomError.NotFoundError(
-					`Product "${product.name}" not found in stock`
-				);
+				res.status(404).json({
+					message: `Product "${product.name}" not found in stock`,
+				});
+			} else if (product.quantity > stock.quantity) {
+				res.status(500).json({
+					message: `Insufficient stock for product "${product.name}". Available quantity: ${stock.quantity}`,
+				});
 			}
 
-			if (product.quantity > stock.productQuantity) {
-				throw new CustomError.BadRequestError(
-					`Insufficient stock for product "${product.name}". Available quantity: ${stock.productQuantity}`
-				);
-			}
-		}
+			// Calculate the new stock quantity
+			const updatedQuantity = stock.quantity - product.quantity;
 
-		// Deduct stock quantities
-		for (const product of products) {
-			await Stock.findOneAndUpdate(
-				{ productName: product.name },
-				{ $inc: { productQuantity: -product.quantity } },
+			// Update stock directly with `$set`
+			await Stock.findByIdAndUpdate(
+				product._id,
+				{ $set: { quantity: updatedQuantity } },
 				{ new: true }
 			);
 		}
@@ -69,6 +70,7 @@ const createInvoice = async (req, res) => {
 		// Create the invoice
 		const invoice = await Invoice.create({
 			user: req.user.userId,
+			status,
 			products,
 			customer,
 			totalAmount: total,
@@ -90,7 +92,6 @@ const createInvoice = async (req, res) => {
 	}
 };
 
-
 // Get All Invoices with Pagination and Filtering
 const getAllInvoices = async (req, res) => {
 	const { page = 1, limit = 10, status, user, customer } = req.query;
@@ -106,7 +107,11 @@ const getAllInvoices = async (req, res) => {
 		.populate('user', 'username email'); // Optional: populate user data
 
 	const totalInvoices = await Invoice.countDocuments(queryObject);
-	res.status(200).json({ body: invoices, total: totalInvoices, page: Number(page) });
+	res.status(200).json({
+		body: invoices,
+		total: totalInvoices,
+		page: Number(page),
+	});
 };
 
 // Get Single Invoice
