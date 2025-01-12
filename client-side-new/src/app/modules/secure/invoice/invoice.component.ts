@@ -6,6 +6,8 @@ import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
+import { Observable, of } from 'rxjs';
+import { Customer } from '../../../store/models/customer.model';
 
 @Component({
   selector: 'app-invoice',
@@ -13,40 +15,39 @@ import { CustomerApiService } from '../../../service/customer/customer-api.servi
   styleUrl: './invoice.component.scss',
 })
 export class InvoiceComponent {
-  createdAt!: Date;
-  status!: boolean;
-  products!: any[];
-  totalAmount!: number;
-  taxRate!: number;
   subs = new SubSink();
   params = {
     page: 1,
     limit: 10,
     status: 'due',
   };
+  loader$: Observable<boolean> = of(true);
+  subLoader$: Observable<boolean> = of(false);
   invoices: Invoice[] = [];
+  total:number = 0;
+  isMore: boolean = false;
+  customers: Customer[] = [];
 
   constructor(
     private drawerService: NzDrawerService,
     private invoiceStoreService: InvoiceStoreService,
     private customerStore: CustomerStoreService,
-    private customerApi: CustomerApiService,
+    private customerApi: CustomerApiService
   ) {}
 
   ngOnInit() {
-    this.createdAt = new Date();
-    this.status = true;
     this.initialize();
   }
 
   initialize() {
+    this.getLoader();
     this.isCustomerLoaded();
+    this.getCustomers();
     this.isInvoiceLoaded();
     this.getInvoices();
   }
 
   loadInvoice() {
-    // this.invoiceStoreService.setLoader(true);
     this.invoiceStoreService.loadInvoice(this.params);
   }
 
@@ -71,6 +72,11 @@ export class InvoiceComponent {
       });
   }
 
+  getLoader(){
+    this.loader$ = this.invoiceStoreService.getInvoiceLoader();
+    this.subLoader$ = this.invoiceStoreService.getInvoiceSubLoader();
+  }
+
   loadCustomer() {
     let params = {
       page: 1,
@@ -88,7 +94,7 @@ export class InvoiceComponent {
         this.customerStore.loadCustomerFail('Customer load failed');
       },
     });
-}
+  }
 
   isCustomerLoaded() {
     this.subs.sink = this.customerStore
@@ -101,7 +107,20 @@ export class InvoiceComponent {
       });
   }
 
-  addInvoice() {
+    getCustomers() {
+    console.log('customer');
+    this.subs.sink = this.customerStore.getCustomers().subscribe({
+      next: (res: Customer[]) => {
+        console.log('res: ', res);
+        this.customers = res;
+      },
+      error: () => {
+        console.log('error');
+      },
+    });
+  }
+
+  addInvoice(invoice?: Invoice) {
     this.drawerService.create({
       nzTitle: 'New Invoice',
       nzClosable: true,
@@ -110,7 +129,16 @@ export class InvoiceComponent {
       nzWrapClassName: 'full-drawer',
       // nzSize: 'large',
       nzContent: NewInvoiceComponent,
+      nzData: { invoice },
     });
+  }
+
+  deleteInvoice(list?: Invoice){
+
+  }
+
+  loadMore(){
+
   }
 
   generatePDF() {}
