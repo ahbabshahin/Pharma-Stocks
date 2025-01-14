@@ -54,9 +54,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    /* Vertically align label and input */
     gap: 8px;
-    /* Space between items */
 
     .discount {
       display: flex;
@@ -64,22 +62,17 @@
 
       label {
         margin-right: 8px;
-        /* Space between label and input */
       }
 
       input {
         width: 50px;
-        /* Adjust input width */
         text-align: right;
-        /* Align text inside the input */
       }
     }
 
     p {
       margin-left: 16px;
-      /* Space between discount and total amount */
       margin: 0;
-      /* Remove extra margins from text */
     }
   }
 }

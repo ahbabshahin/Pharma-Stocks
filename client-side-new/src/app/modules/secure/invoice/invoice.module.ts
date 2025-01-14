@@ -18,9 +18,10 @@ import { CustomerApiService } from '../../../service/customer/customer-api.servi
 import { NgxPrintModule } from 'ngx-print';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
 import { CommonComponentModule } from '../../../common-component/common-component.module';
+import { ViewInvoiceComponent } from './view-invoice/view-invoice.component';
 
 @NgModule({
-  declarations: [InvoiceComponent, NewInvoiceComponent],
+  declarations: [InvoiceComponent, NewInvoiceComponent, ViewInvoiceComponent],
   imports: [
     CommonModule,
     InvoiceRoutingModule,
