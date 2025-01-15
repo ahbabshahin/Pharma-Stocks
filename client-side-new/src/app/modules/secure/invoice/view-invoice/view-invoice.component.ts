@@ -3,6 +3,8 @@ import { Business } from '../../../../store/models/business.model';
 import { Customer } from '../../../../store/models/customer.model';
 import { Invoice } from '../../../../store/models/invoice.model';
 import { CommonService } from '../../../../service/common/common.service';
+import { NewInvoiceComponent } from '../new-invoice/new-invoice.component';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-view-invoice',
@@ -20,7 +22,10 @@ export class ViewInvoiceComponent {
   discount!: number;
   totalAmount!: number;
 
-  constructor(private commonService: CommonService) {}
+  constructor(
+    private commonService: CommonService,
+    private drawerService: NzDrawerService
+  ) {}
 
   ngOnInit() {
     this.initialize();
@@ -47,5 +52,20 @@ export class ViewInvoiceComponent {
       return total + this.calculateProductTotal(product);
     }, 0);
   }
+
+  updateInvoice() {
+    this.drawerService.create({
+      nzTitle: 'New Invoice',
+      nzClosable: true,
+      nzMaskClosable: false,
+      nzWidth: '100%',
+      nzWrapClassName: 'full-drawer',
+      // nzSize: 'large',
+      nzContent: NewInvoiceComponent,
+      nzData: { invoice: this.invoice },
+    });
+  }
   printInvoice() {}
+
+  ngOnDestroy(){}
 }

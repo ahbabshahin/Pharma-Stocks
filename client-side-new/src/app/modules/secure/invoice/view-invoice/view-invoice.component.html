@@ -1,3 +1,8 @@
+<div class="d-flex justify-content-end my-2 mx-2">
+  <button class="mt-20" type="button" nz-button class="primary-btn" (click)="updateInvoice()">
+    Update Invoice
+  </button>
+</div>
 <div class="invoice-container">
   <!-- Header Section -->
   <header class="invoice-header">
@@ -54,7 +59,7 @@
           <td>{{ product.name | titlecase }}</td>
           <td>{{ product.quantity }}</td>
           <td>{{ product.price | number: "1.2-2" }}</td>
-          <!-- <td>{{ calculateProductTotal(product) }}</td> -->
+          <td>{{ calculateProductTotal(product) }}</td>
         </tr>
       </tbody>
     </table>
