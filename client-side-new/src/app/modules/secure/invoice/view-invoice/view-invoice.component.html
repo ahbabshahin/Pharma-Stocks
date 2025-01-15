@@ -34,7 +34,7 @@
     <div class="info-group invoice-meta">
       <p>Invoice #: <span>{{ invoiceNumber || "N/A" }}</span></p>
       <p>Date: <span>{{ date | date: "dd-MM-yyyy" }}</span></p>
-      <p>Status: <span>{{ invoiceStatus | titlecase }}</span></p>
+      <p>Status: <span>{{ invoice?.status | titlecase }}</span></p>
     </div>
   </section>
 
@@ -50,11 +50,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of products">
+        <tr *ngFor="let product of invoice?.products">
           <td>{{ product.name | titlecase }}</td>
           <td>{{ product.quantity }}</td>
           <td>{{ product.price | number: "1.2-2" }}</td>
-          <td>{{ calculateProductTotal(product) }}</td>
+          <!-- <td>{{ calculateProductTotal(product) }}</td> -->
         </tr>
       </tbody>
     </table>
@@ -66,7 +66,7 @@
       <p>Discount: {{ discount || 0 }}%</p>
       <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p>
       <hr />
-      <p><strong>Total Amount: ৳ {{ totalAmount | number: "1.2-2" }}</strong></p>
+      <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
     </div>
   </footer>
 

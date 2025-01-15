@@ -28,7 +28,7 @@
                 ' - ' +
                 (list?.status | titlecase)
               "
-              [nzExtra]="edit"
+              [nzExtra]="view"
             >
               <p class="box" *ngFor="let product of list?.products">
                 <span>Product: {{ product?.name | titlecase }} </span>
@@ -48,7 +48,7 @@
           <span (click)="addInvoice(list)" nz-icon nzType="edit"></span>
         </ng-template>
         <ng-template #view>
-          <span nz-icon nzType="eye"></span>
+          <span nz-icon nzType="eye" (click)="viewInvoice(list)"></span>
         </ng-template>
         <ng-template #delete>
           <span (click)="deleteInvoice(list)" nz-icon nzType="delete"></span>

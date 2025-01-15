@@ -8,6 +8,7 @@ import { CustomerStoreService } from '../../../service/customer/customer-store.s
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { Observable, of } from 'rxjs';
 import { Customer } from '../../../store/models/customer.model';
+import { ViewInvoiceComponent } from './view-invoice/view-invoice.component';
 
 @Component({
   selector: 'app-invoice',
@@ -24,7 +25,7 @@ export class InvoiceComponent {
   loader$: Observable<boolean> = of(true);
   subLoader$: Observable<boolean> = of(false);
   invoices: Invoice[] = [];
-  total:number = 0;
+  total: number = 0;
   isMore: boolean = false;
   customers: Customer[] = [];
 
@@ -72,7 +73,7 @@ export class InvoiceComponent {
       });
   }
 
-  getLoader(){
+  getLoader() {
     this.loader$ = this.invoiceStoreService.getInvoiceLoader();
     this.subLoader$ = this.invoiceStoreService.getInvoiceSubLoader();
   }
@@ -107,7 +108,7 @@ export class InvoiceComponent {
       });
   }
 
-    getCustomers() {
+  getCustomers() {
     console.log('customer');
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
@@ -133,13 +134,22 @@ export class InvoiceComponent {
     });
   }
 
-  deleteInvoice(list?: Invoice){
-
+  viewInvoice(invoice: Invoice) {
+    this.drawerService.create({
+      nzTitle: 'View Invoice',
+      nzClosable: true,
+      nzMaskClosable: false,
+      nzWidth: '100%',
+      nzWrapClassName: 'full-drawer',
+      // nzSize: 'large',
+      nzContent: ViewInvoiceComponent,
+      nzData: { invoice },
+    });
   }
 
-  loadMore(){
+  deleteInvoice(list?: Invoice) {}
 
-  }
+  loadMore() {}
 
   generatePDF() {}
 
