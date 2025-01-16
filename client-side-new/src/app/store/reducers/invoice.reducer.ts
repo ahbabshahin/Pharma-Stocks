@@ -90,8 +90,8 @@ export const invoiceReducer = createReducer(
   })),
 
   // Delete Invoice
-  on(invoiceActions.deleteInvoiceSuccess, (state, { _id }) =>
-    invoiceAdapter.removeOne(_id, state)
+  on(invoiceActions.deleteInvoiceSuccess, (state, action) =>
+    invoiceAdapter.removeOne(action.id, state)
   ),
   on(invoiceActions.deleteInvoiceFail, (state, { error }) => ({
     ...state,

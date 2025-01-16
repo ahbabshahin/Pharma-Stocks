@@ -84,5 +84,27 @@ export class InvoiceEffects {
       })
     ),
     {dispatch: false}
+  );
+
+  deleteInvoice$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(invoiceActions.deleteInvoice),
+      exhaustMap((action: any) => {
+        return this.invoiceApi.deleteInvoice(action.id).pipe(
+          map((res: any) =>{
+            this.invoiceStore.deleteInvoiceSuccess(action.id);
+            this.commonService.showSuccessToast('Invice delete successful');
+            this.commonService.dismissLoading();
+          }),
+          catchError((err) =>{
+            this.commonService.showErrorToast('Invice delete failed');
+            this.commonService.dismissLoading();
+            return of()
+          })
+        )
+      })
+    ),
+
+    {dispatch: false}
   )
 }

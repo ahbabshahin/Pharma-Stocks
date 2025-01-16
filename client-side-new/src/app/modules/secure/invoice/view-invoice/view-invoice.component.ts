@@ -5,6 +5,7 @@ import { Invoice } from '../../../../store/models/invoice.model';
 import { CommonService } from '../../../../service/common/common.service';
 import { NewInvoiceComponent } from '../new-invoice/new-invoice.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 
 @Component({
   selector: 'app-view-invoice',
@@ -24,7 +25,9 @@ export class ViewInvoiceComponent {
 
   constructor(
     private commonService: CommonService,
-    private drawerService: NzDrawerService
+    private drawerService: NzDrawerService,
+    private invoiceStore: InvoiceStoreService,
+
   ) {}
 
   ngOnInit() {
@@ -65,6 +68,16 @@ export class ViewInvoiceComponent {
       nzData: { invoice: this.invoice },
     });
   }
+
+  async deleteInvoice() {
+    const ok = await this.commonService.showConfirmModal('Are you sure, you want to delete this invoice?');
+
+    if(!ok) return;
+
+    this.commonService.presentLoading();
+    this.invoiceStore.deleteInvoice(this.invoice?._id as string);
+}
+
   printInvoice() {}
 
   ngOnDestroy(){}

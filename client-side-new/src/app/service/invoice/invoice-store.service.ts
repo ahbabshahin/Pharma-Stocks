@@ -51,11 +51,11 @@ export class InvoiceStoreService {
     this.dispatch(invoiceActions.updateInvoiceFail({ error }));
   }
 
-  deleteInvoice(_id: string) {
-    this.dispatch(invoiceActions.deleteInvoice({ _id }));
+  deleteInvoice(id: string) {
+    this.dispatch(invoiceActions.deleteInvoice({ id }));
   }
-  deleteInvoiceSuccess(_id: string) {
-    this.dispatch(invoiceActions.deleteInvoiceSuccess({ _id }));
+  deleteInvoiceSuccess(id: string) {
+    this.dispatch(invoiceActions.deleteInvoiceSuccess({ id }));
   }
   deleteInvoiceFail(error: string) {
     this.dispatch(invoiceActions.deleteInvoiceFail({ error }));
