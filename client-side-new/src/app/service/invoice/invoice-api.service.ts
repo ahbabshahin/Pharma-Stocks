@@ -24,4 +24,8 @@ export class InvoiceApiService {
       payload
     ).pipe(map((res: any) => res?.body));
   }
+
+  deleteInvoice(id: string){
+    return this.http.delete(`${this.env.rootURL}/v1/invoice/${id}`);
+  }
 }
