@@ -6,6 +6,9 @@ import { CommonService } from '../../../../service/common/common.service';
 import { NewInvoiceComponent } from '../new-invoice/new-invoice.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
+import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
+import { Observable } from 'rxjs';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-view-invoice',
@@ -13,6 +16,7 @@ import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.s
   styleUrl: './view-invoice.component.scss',
 })
 export class ViewInvoiceComponent {
+  subs = new SubSink();
   invoice!: Invoice;
   business!: Business;
   customer!: Customer;
@@ -27,7 +31,7 @@ export class ViewInvoiceComponent {
     private commonService: CommonService,
     private drawerService: NzDrawerService,
     private invoiceStore: InvoiceStoreService,
-
+    private customerStore: CustomerStoreService
   ) {}
 
   ngOnInit() {
@@ -36,6 +40,7 @@ export class ViewInvoiceComponent {
 
   initialize() {
     this.getBusiness();
+    this.getCustomers();
   }
 
   getBusiness() {
@@ -69,16 +74,32 @@ export class ViewInvoiceComponent {
     });
   }
 
-  async deleteInvoice() {
-    const ok = await this.commonService.showConfirmModal('Are you sure, you want to delete this invoice?');
+  getCustomers() {
+    this.subs.sink = this.customerStore.getCustomers().subscribe({
+      next: (customers: Customer[]) => {
+        console.log('res: ', customers);
+        if(customers?.length)
+        this.customer = customers.find((item) => item?._id === this.invoice?.customer) as Customer
+      },
+      error: () => {
+        console.log('error');
+      },
+    });
 
-    if(!ok) return;
+  }
+
+  async deleteInvoice() {
+    const ok = await this.commonService.showConfirmModal(
+      'Are you sure, you want to delete this invoice?'
+    );
+
+    if (!ok) return;
 
     this.commonService.presentLoading();
     this.invoiceStore.deleteInvoice(this.invoice?._id as string);
-}
+  }
 
   printInvoice() {}
 
-  ngOnDestroy(){}
+  ngOnDestroy() {}
 }
