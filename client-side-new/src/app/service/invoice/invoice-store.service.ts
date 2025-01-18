@@ -21,11 +21,11 @@ export class InvoiceStoreService {
     this.dispatch(invoiceActions.setSubLoader({ status }));
   }
 
-  loadInvoice(params: { [key: string]: any }) {
-    this.dispatch(invoiceActions.loadInvoice({ params }));
+  loadInvoice(params: { [key: string]: any }, isMore: boolean) {
+    this.dispatch(invoiceActions.loadInvoice({ params, isMore }));
   }
-  loadInvoiceSuccess(res: Invoice[], total: number) {
-    this.dispatch(invoiceActions.loadInvoiceSuccess({ res, total }));
+  loadInvoiceSuccess(res: Invoice[], total: number, isMore: boolean) {
+    this.dispatch(invoiceActions.loadInvoiceSuccess({ res, total, isMore }));
   }
   loadInvoiceFail(error: string) {
     this.dispatch(invoiceActions.loadInvoiceFail({ error }));

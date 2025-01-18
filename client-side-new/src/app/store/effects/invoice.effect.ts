@@ -21,12 +21,22 @@ export class InvoiceEffects {
     () =>
       this.actions$.pipe(
         ofType(invoiceActions.loadInvoice),
-        mergeMap((action: { params: { [key: string]: any } }) => {
-          return this.invoiceApi.getInvoices(action.params).pipe(
+        mergeMap((action) => {
+          return this.invoiceApi.getInvoices(action.params,).pipe(
             map((res: any) => {
               console.log('res: ', res);
               this.invoiceStore.setLoader(false);
-              this.invoiceStore.loadInvoiceSuccess(res?.body, res?.total);
+              this.invoiceStore.loadInvoiceSuccess(
+                res?.body,
+                res?.total,
+                action.isMore
+              );
+              this.invoiceStore.setSubLoader(false)
+            }),
+            catchError(() =>{
+              this.commonService.showErrorToast('Invoice load failed');
+              this.invoiceStore.setSubLoader(false)
+              return of()
             })
           );
         })
