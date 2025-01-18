@@ -1,5 +1,4 @@
-<!-- <app-sidebar></app-sidebar> -->
-<nz-layout class="layout">
+<!-- <nz-layout class="layout">
   <nz-header>
     <div class="header-content">
       <h4 class="header-title">Pharma Stocks</h4>
@@ -12,7 +11,34 @@
   <nz-affix nzOffsetBottom="10">
     <nz-footer class="footer">All rights reserved to Pharma Stocks</nz-footer>
   </nz-affix>
+</nz-layout> -->
+
+
+<nz-layout class="layout">
+  <!-- Header Section -->
+   <nz-affix nzOffsetTop>
+  <nz-header class="header">
+    <div class="header-content">
+      <h4 class="header-title">Pharma Stocks</h4>
+      <button (click)="sidebar()" nz-button nzType="primary" type="button">
+        Menu
+      </button>
+    </div>
+  </nz-header>
+  </nz-affix>
+
+  <!-- Content Section -->
+  <nz-content class="content-container">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </nz-content>
+
+  <!-- Footer Section -->
+  <nz-affix nzOffsetBottom="10">
+    <nz-footer class="footer">
+      All rights reserved to Pharma Stocks
+    </nz-footer>
+  </nz-affix>
 </nz-layout>
 
-
-<!-- <router-outlet ></router-outlet> -->

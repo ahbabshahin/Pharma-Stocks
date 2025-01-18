@@ -1,35 +1,92 @@
-      :host {
-        text-align: center;
-      }
-
-      nz-header,
-      nz-footer {
-        background: #e3edf5;
-        color: #070707;
-      }
-
-      nz-footer {
-        line-height: 1.5;
-      }
-
-      // nz-sider {
-      //   background: #3ba0e9;
-      //   color: #fff;
-      //   line-height: 120px;
+      // :host {
+      //   text-align: center;
       // }
 
-      nz-content {
-        background: rgb(231, 236, 240);
-        // color: #fff;
-        min-height: 120px;
-        // line-height: 120px;
-      }
+      // nz-header,
+      // nz-footer {
+      //   background: #e3edf5;
+      //   color: #070707;
+      // }
 
-      nz-layout {
-        margin-bottom: 48px;
-      }
+      // nz-footer {
+      //   line-height: 1.5;
+      // }
 
-      nz-layout nz-layout,
-      nz-layout:last-child {
-        margin: 0;
-      }
+      // nz-content {
+      //   background: rgb(231, 236, 240);
+      //   min-height: 120px;
+      // }
+
+      // nz-layout {
+      //   margin-bottom: 48px;
+      // }
+
+      // nz-layout nz-layout,
+      // nz-layout:last-child {
+      //   margin: 0;
+      // }
+
+  /* Layout Styling */
+  .layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header Styling */
+  .header {
+    background: #001529;
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  .header-title {
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  /* Content Styling */
+  .content-container {
+    flex: 1;
+    padding: 20px;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content-wrapper {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Footer Styling */
+  .footer {
+    text-align: center;
+    background: #001529;
+    color: white;
+    padding: 10px 0;
+    font-size: 0.9rem;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .header-title {
+      font-size: 1.2rem;
+    }
+
+    .content-wrapper {
+      padding: 15px;
+    }
+
+    .footer {
+      font-size: 0.8rem;
+    }
+  }

@@ -51,3 +51,12 @@ body, html {
  .black{
   color: black;
  }
+
+ .s_error {
+   padding: 0.2rem;
+   border-radius: 5px;
+   transition: 0.3s;
+   color: #ff4b55;
+   font-size: 12px;
+   margin: 0.5rem 0;
+ }

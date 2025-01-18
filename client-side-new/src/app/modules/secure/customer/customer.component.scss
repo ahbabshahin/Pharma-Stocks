@@ -1,3 +1,29 @@
-.w-50{
-  width: 50%;
+// .w-50{
+//   width: 50%;
+// }
+
+.customer-card {
+  width: 100%;
+  /* Make the card width flexible */
+  max-width: 300px;
+  /* Limit the card width on larger screens */
+  margin: 0 auto;
+  /* Center the card horizontally */
+}
+
+.container {
+  padding: 0 15px;
+  /* Add padding to the container */
+}
+
+.row {
+  margin: 0 -15px;
+  /* Remove gaps between rows */
+}
+
+.col-lg-4,
+.col-md-6,
+.col-sm-12 {
+  padding: 15px;
+  /* Add spacing between columns */
 }

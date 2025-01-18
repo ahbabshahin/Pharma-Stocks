@@ -100,7 +100,11 @@ export class ViewInvoiceComponent {
     this.invoiceStore.deleteInvoice(this.invoice?._id as string);
   }
 
-  printInvoice() {}
+  print() {
+    window.print();
+  }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }

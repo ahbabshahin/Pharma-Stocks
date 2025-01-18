@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-end my-2 mx-2">
+<!-- <div class="d-flex justify-content-end my-2 mx-2">
   <button
     type="button"
     nz-button
@@ -54,11 +54,48 @@
     *ngIf="!customers?.length"
     bodyText="No customer found"
   ></app-global-no-data>
+</ng-container> -->
+
+<div class="d-flex justify-content-end my-2 mx-2">
+  <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addCustomer()">
+    Add Customer
+  </button>
+</div>
+
+<app-global-loader *ngIf="loader$ | async"></app-global-loader>
+
+<ng-container *ngIf="!(loader$ | async)">
+  <div class="container my-3" *ngIf="customers?.length">
+    <div class="row">
+      <ng-container *ngFor="let list of customers; let i = index">
+        <div class="col-lg-4 col-md-6 col-sm-12 my-3">
+          <nz-card class="customer-card" nzHoverable="true" [nzActions]="[edit, view, delete]">
+            <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
+            <p>Phone Number: {{ list?.contacts }}</p>
+          </nz-card>
+        </div>
+        <ng-template #edit>
+          <span (click)="addCustomer(list)" nz-icon nzType="edit"></span>
+        </ng-template>
+        <ng-template #view>
+          <span nz-icon nzType="eye"></span>
+        </ng-template>
+        <ng-template #delete>
+          <span (click)="deleteCustomer(list)" nz-icon nzType="delete"></span>
+        </ng-template>
+      </ng-container>
+    </div>
+    <p *ngIf="customers?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
+      Showing customer(s) {{ customers.length }} out of {{ total }}
+    </p>
+    <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
+    <div *ngIf="total > params.limit && customers.length < total"
+      class="d-flex justify-content-center align-items-center my-2 mx-2">
+      <button [disabled]="(subLoader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round"
+        class="w-50">
+        Load more
+      </button>
+    </div>
+  </div>
+  <app-global-no-data *ngIf="!customers?.length" bodyText="No customer found"></app-global-no-data>
 </ng-container>
-<ng-template #coverTemplate>
-  <img
-    alt="example"
-    src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-  />
-</ng-template>
-<!-- [nzCover]="coverTemplate" -->

@@ -1,4 +1,4 @@
-<nz-layout nz-row>
+<!-- <nz-layout nz-row>
   <div nz-col nz-span="24">
     <nz-header>Pharma Stocks</nz-header>
     <nz-content >
@@ -6,4 +6,29 @@
     </nz-content>
     <nz-footer></nz-footer>
   </div>
+</nz-layout> -->
+
+<nz-layout class="layout">
+  <!-- Header Section -->
+  <nz-affix nzOffsetTop>
+    <nz-header class="header">
+      <div class="header-content">
+        <h4 class="header-title">Pharma Stocks</h4>
+      </div>
+    </nz-header>
+  </nz-affix>
+  <!-- Content Section -->
+  <nz-content class="content-container">
+    <div class="content-wrapper">
+      <!-- <app-login></app-login> -->
+      <router-outlet></router-outlet>
+    </div>
+  </nz-content>
+
+  <!-- Footer Section -->
+  <nz-affix nzOffsetBottom>
+    <nz-footer class="footer">
+      All rights reserved to Pharma Stocks
+    </nz-footer>
+  </nz-affix>
 </nz-layout>

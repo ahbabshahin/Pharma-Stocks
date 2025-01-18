@@ -1,78 +1,9 @@
-<!-- <nz-layout class="app-layout">
-  <nz-sider
-    class="menu-sidebar"
-    nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
-    [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null"
-  >
-    <div class="sidebar-logo">
-      <h1>Pharma Stocks</h1>
-    </div>
-    <ul
-      nz-menu
-      nzTheme="dark"
-      nzMode="inline"
-      [nzInlineCollapsed]="isCollapsed"
-    >
-      <li nz-menu-item>
-        <a routerLink="dashboard" routerLinkActive="active-link">Dashboard</a>
-      </li>
-      <li nz-menu-item>
-        <a routerLink="stocks" routerLinkActive="active-link">Stocks</a>
-      </li>
-      <li nz-menu-item>
-        <a routerLink="invoice" routerLinkActive="active-link">Invoice</a>
-      </li>
-      <li nz-menu-item>
-        <a routerLink="customer" routerLinkActive="active-link">Customer</a>
-      </li>
-      <li nz-menu-item>
-        <a routerLink="profile" routerLinkActive="active-link">Profile</a>
-      </li>
-    </ul>
-  </nz-sider>
-  <nz-layout>
-    <nz-header>
-      <div class="app-header">
-        <span
-          (click)="isCollapsed = !isCollapsed"
-          class="trigger"
-          nz-icon
-          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        ></span>
-      </div>
-    </nz-header>
-    <nz-content>
-      <div class="inner-content">
-        <router-outlet></router-outlet>
-      </div>
-    </nz-content>
-  </nz-layout>
-</nz-layout> -->
-
-<div class="sidebar">
+<!-- <div class="sidebar">
   <div class="profile-section">
     <img src="assets/img/profile.jpg" alt="Profile Picture" class="profile-photo" />
     <h3 class="username">{{(user$ | async)?.name | titlecase}}</h3>
     <p class="user-role">{{(user$ | async)?.role | titlecase}}</p>
-    <!--
-    <a routerLink="/scan-earn" class="scan-earn">Scan & Earn</a>
-    <div class="barcode">
-      <img src="assets/barcode.png" alt="Barcode" class="barcode-img" />
-    </div> -->
   </div>
-
-  <!-- <div class="business-info">
-    <p class="business-name"><strong>OrderPoz (yofoodie) (1)</strong></p>
-    <p class="business-address">
-      Hebridean Preserves And Pastries Ltd, 3 An Goirtean, Brevig...
-    </p>
-    <a routerLink="/change-business" class="change-business">
-      <i class="icon-business"></i> Change Business
-    </a>
-  </div> -->
 
   <div class="nav-buttons">
     <a *ngFor="let route of routes" (click)="onRouteChange(route.path)" class="nav-button"><i
@@ -85,4 +16,23 @@
   </div>
 </div>
 
+ -->
 
+<div class="sidebar">
+  <div class="profile-section">
+    <img src="assets/img/profile.jpg" alt="Profile Picture" class="profile-photo" />
+    <h3 class="username">{{ (user$ | async)?.name | titlecase }}</h3>
+    <p class="user-role">{{ (user$ | async)?.role | titlecase }}</p>
+  </div>
+
+  <div class="nav-buttons">
+    <a *ngFor="let route of routes" (click)="onRouteChange(route.path)" class="nav-button">
+      <i class="icon-launcher"></i>
+      {{ route?.label | titlecase }}
+    </a>
+  </div>
+
+  <div class="version-info">
+    <p>Version: <span>1.0.0</span></p>
+  </div>
+</div>

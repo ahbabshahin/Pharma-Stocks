@@ -1,13 +1,12 @@
-<div nz-flex nzJustify="center">
+<app-global-loader *ngIf="loader"></app-global-loader>
+<div nz-flex nzJustify="center" *ngIf="user && !loader">
   <nz-card nzHoverable style="width:240px" [nzActions]="[actionSetting]" >
-    <nz-card-meta nzTitle="Europe Street beat" nzDescription="www.instagram.com"></nz-card-meta>
+    <nz-card-meta [nzTitle]="user.name" ></nz-card-meta>
+    <p>{{user?.role | titlecase}}</p>
+    <p>{{user?.email}}</p>
   </nz-card>
 </div>
-<!-- [nzCover]=" coverTemplate" -->
-<ng-template #coverTemplate>
-  <img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
-</ng-template>
-
+<!-- nzDescription="www.instagram.com" -->
 <ng-template #actionSetting>
   <button nz-button nzType="primary" (click)="logout()">Logout</button>
 </ng-template>
