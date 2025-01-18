@@ -9,6 +9,7 @@ import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.s
 import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
 import { Observable } from 'rxjs';
 import { SubSink } from 'subsink';
+import { BusinessService } from '../../../../service/business/business.service';
 
 @Component({
   selector: 'app-view-invoice',
@@ -31,7 +32,8 @@ export class ViewInvoiceComponent {
     private commonService: CommonService,
     private drawerService: NzDrawerService,
     private invoiceStore: InvoiceStoreService,
-    private customerStore: CustomerStoreService
+    private customerStore: CustomerStoreService,
+    private businessService: BusinessService,
   ) {}
 
   ngOnInit() {
@@ -44,9 +46,8 @@ export class ViewInvoiceComponent {
   }
 
   getBusiness() {
-    let business: string = localStorage.getItem('business') as string;
-    if (business) this.business = JSON.parse(business);
-    else this.commonService.showErrorToast('Business not found');
+    let business = this.businessService.getBusiness()
+    if(business) this.business = business;
   }
 
   calculateProductTotal(product: any): number {

@@ -72,7 +72,7 @@
         </div>
         <div class="info-group invoice-meta">
           <p>
-            Invoice #: <span>{{ invoiceNumber || "N/A" }}</span>
+            Invoice #: <span>{{ form?.get('sn')?.value || "N/A" }}</span>
           </p>
           <p>
             Date: <span>{{ date | date : "dd-MM-yyyy" }}</span>
@@ -115,14 +115,6 @@
                       [nzAutocomplete]="auto"
                       (input)="searchProduct($event)"
                     />
-                    <!--
-              <ng-container *ngFor="let validation of validationMessages?.itemName">
-                <p *ngIf="form?.get('itemName')?.hasError(validation?.type) && (form?.get('itemName')?.dirty || form?.get('itemName')?.touched)"
-                  class="s_error">
-                  {{ validation.message }}
-                </p>
-              </ng-container> -->
-
                     <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
                       <ng-container *ngIf="products.length > 0">
                         <nz-auto-option
@@ -136,6 +128,12 @@
                         </nz-auto-option>
                       </ng-container>
                     </nz-autocomplete>
+                    <ng-container>
+                      <p *ngIf="productsFormArray?.at(i)?.get('name')?.hasError('required') && (productsFormArray?.at(i)?.get('name')?.dirty || productsFormArray?.at(i)?.get('name')?.touched)"
+                        class="s_error">
+                        Product name is required
+                      </p>
+                    </ng-container>
                   </div>
                 </td>
                 <td>
@@ -156,6 +154,18 @@
                     min="1"
                     aria-label="Quantity"
                   />
+                <ng-container>
+                  <p *ngIf="productsFormArray?.at(i)?.get('quantity')?.hasError('required') && (productsFormArray?.at(i)?.get('quantity')?.dirty || productsFormArray?.at(i)?.get('quantity')?.touched)"
+                    class="s_error">
+                    Product quantity is required
+                  </p>
+                </ng-container>
+                <ng-container>
+                  <p *ngIf="productsFormArray?.at(i)?.get('quantity')?.hasError('min') && (productsFormArray?.at(i)?.get('quantity')?.dirty || productsFormArray?.at(i)?.get('quantity')?.touched)"
+                    class="s_error">
+                    Minimum quantity is 1
+                  </p>
+                </ng-container>
                 </td>
                 <td>
                   <input

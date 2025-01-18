@@ -1,5 +1,6 @@
 export interface Invoice {
   _id?: string;
+  sn:string;
   user?: string;
   products: Product[];
   discount: number;
