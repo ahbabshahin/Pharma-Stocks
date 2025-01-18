@@ -4,5 +4,6 @@ import { Injectable } from "@angular/core";
   providedIn: 'root',
 })
 export class Config {
-  rootURL = 'http://localhost:5000';
+  // rootURL = 'http://localhost:5000';
+  rootURL = 'https://pharma-stocks-server.vercel.app/api';
 }
