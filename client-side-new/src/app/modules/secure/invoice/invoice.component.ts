@@ -61,6 +61,15 @@ export class InvoiceComponent {
         console.log('error');
       },
     });
+
+    this.subs.sink = this.invoiceStoreService.getTotalInvoice().subscribe({
+      next: (total: number) => {
+        this.total = total;
+      },
+      error: () => {
+
+      }
+    });
   }
 
   isInvoiceLoaded() {
@@ -130,7 +139,7 @@ export class InvoiceComponent {
       nzWrapClassName: 'full-drawer',
       // nzSize: 'large',
       nzContent: NewInvoiceComponent,
-      nzData: { invoice },
+      nzData: { invoice, total: this.total },
     });
   }
 
@@ -143,7 +152,7 @@ export class InvoiceComponent {
       nzWrapClassName: 'full-drawer',
       // nzSize: 'large',
       nzContent: ViewInvoiceComponent,
-      nzData: { invoice },
+      nzData: { invoice, },
     });
   }
 

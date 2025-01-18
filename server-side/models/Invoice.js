@@ -23,7 +23,7 @@ const invoiceSchema = new mongoose.Schema({
 			},
 		},
 	],
-	taxRate: {
+	discount: {
 		type: Number,
 		default: 0.15, // 15% tax rate
 	},
@@ -42,6 +42,9 @@ const invoiceSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	sn:{
+		type:String,
+	}
 });
 
 invoiceSchema.pre('save', function (next) {

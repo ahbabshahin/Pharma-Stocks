@@ -63,6 +63,7 @@ export const invoiceReducer = createReducer(
       ...state,
       loaded: true,
       loader: false,
+      total: action.total,
     });
   }),
   on(invoiceActions.loadInvoiceFail, (state, { error }) => ({

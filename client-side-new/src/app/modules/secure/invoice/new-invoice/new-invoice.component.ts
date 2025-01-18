@@ -11,6 +11,7 @@ import { CustomerApiService } from '../../../../service/customer/customer-api.se
 import { Customer } from '../../../../store/models/customer.model';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
+import { BusinessService } from '../../../../service/business/business.service';
 
 @Component({
   selector: 'app-new-invoice',
@@ -21,6 +22,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   status!: boolean;
   invoiceNumber: number = 1;
+  total!: number;
   form!: FormGroup;
   business!: Business;
   date: Date = new Date();
@@ -38,7 +40,8 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     private customerApi: CustomerApiService,
     private customerStore: CustomerStoreService,
     private stockApi: StockApiService,
-    private drawerRef: NzDrawerRef
+    private drawerRef: NzDrawerRef,
+    private businessService: BusinessService
   ) {}
 
   ngOnInit(): void {
@@ -46,17 +49,21 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    this.getBusiness();
     this.getCustomers();
-    let business: string = localStorage.getItem('business') as string;
-    if (business) this.business = JSON.parse(business);
-    else this.commonService.showErrorToast('Business not found');
     this.initializeForm();
 
     if (this.invoice) this.populateForm();
   }
 
+  getBusiness() {
+    let business = this.businessService.getBusiness();
+    if (business) this.business = business;
+  }
+
   initializeForm() {
     this.form = this.formBuilder.group({
+      sn: [`SN-${this.total + 1}`, [Validators.required]],
       customer: ['', [Validators.required]],
       status: ['due', Validators.required],
       products: this.formBuilder.array([]),
@@ -65,19 +72,21 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
     });
-    if(!this.invoice)
-    this.addProduct();
+    if (!this.invoice) this.addProduct();
   }
 
   populateForm() {
     this.form.patchValue({
+      sn: this.invoice?.sn,
       customer: this.invoice?.customer,
       status: this.invoice?.status,
-      discount: this.invoice?.discount,
+      discount: (this.invoice?.discount * 100),
     });
-    const customer = this.customers.find((item) => item?._id == this.invoice?.customer);
+    const customer = this.customers.find(
+      (item) => item?._id == this.invoice?.customer
+    );
 
-    if(customer) this.customer = customer;
+    if (customer) this.customer = customer;
     this.populateProduct();
   }
 
@@ -106,7 +115,6 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       this.productsFormArray.push(productGroup);
       this.calculateProductTotal(productGroup);
     });
-
   }
 
   removeProduct(index: number): void {
@@ -205,6 +213,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       console.log('Invoice Data:', this.form.value);
       const formRes = this.form.value;
       let payload: Invoice = {
+        sn: formRes?.sn,
         products: formRes?.products,
         discount: formRes?.discount,
         totalAmount: this.subTotalAmount,
@@ -214,6 +223,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
       this.commonService.presentLoading();
       if (this.invoice) {
+        payload = {
+          ...payload,
+          _id: this.invoice._id,
+        }
         this.invoiceStore.updateInvoice(payload);
       } else {
         this.invoiceStore.addInvoice(payload);

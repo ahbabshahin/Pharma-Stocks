@@ -8,7 +8,7 @@ const Customer = require('../models/Customer');
 
 const calculateTotal = (products, discountRate) => {
 	const subtotal = products.reduce((acc, product) => {
-		return acc + product.price * product.quantity;
+		return acc + (product.price * product.quantity);
 	}, 0);
 
 	// Calculate discount and deduct it from subtotal
@@ -20,7 +20,7 @@ const calculateTotal = (products, discountRate) => {
 
 // Create Invoice
 const createInvoice = async (req, res) => {
-	const { products, customer, sendPDF, status } = req.body;
+	const { products, customer, sendPDF, status, sn } = req.body;
 	console.log('products: ', products);
 
 	if (!products || !customer) {
@@ -74,6 +74,7 @@ const createInvoice = async (req, res) => {
 			products,
 			customer,
 			totalAmount: total,
+			sn,
 		});
 
 		// Update the customer's invoices array

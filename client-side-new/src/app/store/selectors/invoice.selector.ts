@@ -24,6 +24,11 @@ export const getInvoiceError = createSelector(
   (state: InvoiceState) => state.error
 );
 
+export const getTotalInvoice = createSelector(
+  getInvoiceState,
+  (state: InvoiceState) => state.total
+);
+
 export const getInvoices = createSelector(
   getInvoiceState,
   invoiceAdapter.getSelectors().selectAll

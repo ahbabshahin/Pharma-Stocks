@@ -71,6 +71,8 @@ export class InvoiceStoreService {
     this.select(invoiceSelectors.getInvoiceLoaded);
   getInvoiceError = (): Observable<boolean> =>
     this.select(invoiceSelectors.getInvoiceError);
+  getTotalInvoice = (): Observable<number> =>
+    this.select(invoiceSelectors.getTotalInvoice);
   getInvoices = (): Observable<Invoice[]> =>
     this.select(invoiceSelectors.getInvoices);
 }
