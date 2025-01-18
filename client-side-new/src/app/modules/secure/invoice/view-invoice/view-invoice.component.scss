@@ -52,3 +52,53 @@
 .action-buttons {
   margin-top: 16px;
 }
+
+@media print {
+
+  /* Hide everything except the invoice-container */
+  body * {
+    visibility: hidden;
+  }
+
+  .invoice-container {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* Hide buttons */
+  button {
+    display: none;
+  }
+
+  /* Adjust the page layout for print */
+  .invoice-container {
+    margin: 0;
+    padding: 20px;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.w-50{
+  width: 50%;
+}
+
+.responsive-img {
+  max-width: 100%;
+  height: auto;
+  /* Maintain aspect ratio */
+  display: block;
+  /* Remove extra space below the image */
+  margin: 0 auto;
+  /* Center the image if needed */
+}
+
+// .invoice-container .logo {
+//   max-width: 150px;
+//   /* Set a maximum width for the logo container */
+//   margin: 0 auto;
+//   /* Optional: Center the container */
+// }

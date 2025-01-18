@@ -1,152 +1,22 @@
-    //  :host {
-    //    text-align: center;
-    //  }
-
-    //  //  nz-header,
-    //  //  nz-footer {
-    //  //    background: #7dbcea;
-    //  //    background: #20202048;
-    //  //    color: #fff;
-    //  //  }
-
-    //  .sidebar {
-    //    margin-top: 50%;
-    //  }
-
-    //  nz-footer {
-    //    line-height: 1.5;
-    //  }
-
-    //  //  nz-sider {
-    //  //    background: #3ba0e9;
-    //  //    color: #fff;
-    //  //    line-height: 120px;
-    //  //  }
-
-    //  nz-content {
-    //    //  background: rgba(16, 142, 233, 1);
-    //    background: #fff;
-    //    //  color: #fff;
-    //    min-height: 120px;
-    //    //  line-height: 120px;
-    //    height: 100% !important
-    //  }
-
-    //  nz-layout {
-    //    margin-bottom: 48px;
-    //  }
-
-    //  nz-layout nz-layout,
-    //  nz-layout:last-child {
-    //    margin: 0;
-    //  }
-
-    //  nz-header {
-    //    background: #20202048;
-    //    display: flex;
-    //    align-items: center;
-    //    height: 64px;
-    //  }
-
-    //  .header-content {
-    //    display: flex;
-    //    justify-content: space-between;
-    //    align-items: center;
-    //    width: 100%;
-    //    padding: 0 16px;
-    //  }
-
-    //  h4 {
-    //    margin: 0;
-    //    font-size: 1.5rem;
-    //    font-weight: bold;
-    //  }
-
-    //  .sidebar {
-    //    margin: 0;
-    //    position: relative;
-    //    top: 50%;
-    //    transform: translateY(-50%);
-    //  }
-
-    //  .md-drawer {
-    //    .ant-drawer {
-    //      width: 50% !important;
-    //      /* Makes the drawer take up half the screen width */
-    //      max-width: 600px;
-    //      /* Optional: Set a maximum width */
-    //      min-width: 400px;
-    //      /* Optional: Set a minimum width */
-    //    }
-
-    //    .ant-drawer-body {
-    //      padding: 16px;
-    //      /* Add padding for content inside the drawer */
-    //    }
-
-    //    .ant-drawer-header {
-    //      font-size: 18px;
-    //      /* Customize header font size */
-    //      font-weight: bold;
-    //    }
-    //  }
-
-    //  .footer{
-    //   height: 10px;
-    //  }
-
-// :root {
-//   --spacing: 16px;
-// }
-
-// body {
-//   font-family: 'Arial', sans-serif;
-//   font-size: 16px;
-//   line-height: 1.5;
-//   color: #333;
-//   margin: 0;
-//   padding: 0;
-// }
-
-// nz-header {
-//   background: #202020;
-//   color: #fff;
+// .layout {
 //   display: flex;
-//   align-items: center;
-//   height: 64px;
-//   padding: var(--spacing);
+//   flex-direction: column;
+//   height: 100vh;
 // }
 
 // .header-content {
 //   display: flex;
 //   justify-content: space-between;
 //   align-items: center;
-//   width: 100%;
-// }
-
-// h4 {
-//   margin: 0;
-//   font-size: 1.5rem;
-//   font-weight: bold;
-// }
-
-// nz-footer {
-//   background: #7dbcea;
-//   color: #fff;
-//   line-height: 1.5;
 //   padding: var(--spacing);
 // }
 
-// a {
-//   color: #007bff;
-//   text-decoration: none;
+// .header-title {
+//   font-size: 1.5rem;
+//   color: #fff;
 // }
 
-// a:hover {
-//   text-decoration: underline;
-// }
-
-// button {
+// .sidebar-button {
 //   background-color: #007bff;
 //   color: white;
 //   border: none;
@@ -154,84 +24,92 @@
 //   cursor: pointer;
 // }
 
-// button:hover {
+// .sidebar-button:hover {
 //   background-color: #0056b3;
 // }
 
-// .container {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
+// .content {
+//   flex: 1;
 //   padding: var(--spacing);
 // }
 
-// .grid {
-//   display: grid;
-//   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-//   gap: var(--spacing);
+// .footer {
+//   text-align: center;
+//   padding: var(--spacing);
 // }
 
+// @media (max-width: 768px) {
+
+//   nz-header,
+//   nz-footer {
+//     flex-direction: column;
+//     align-items: center;
+//   }
+// }
+
+/* General Layout */
 .layout {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  /* Full height layout */
+}
+
+/* Header Styling */
+.header {
+  background: #001529;
+  color: white;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
-  /* Space between title and button */
   align-items: center;
-  /* Center items vertically */
-  padding: var(--spacing);
-  /* Use spacing variable */
+  width: 100%;
 }
 
 .header-title {
-  font-size: 1.5rem;
-  /* Adjust font size for the header title */
-  color: #fff;
-  /* White color for contrast */
-}
-
-.sidebar-button {
-  background-color: #007bff;
-  /* Button color */
+  margin: 0;
   color: white;
-  /* Button text color */
-  border: none;
-  /* Remove border */
-  padding: var(--spacing);
-  /* Use spacing variable */
-  cursor: pointer;
-  /* Pointer cursor on hover */
+  font-size: 1.5rem;
 }
 
-.sidebar-button:hover {
-  background-color: #0056b3;
-  /* Darker shade on hover */
-}
-
-.content {
+/* Content Styling */
+.content-container {
   flex: 1;
-  /* Allow content to grow and fill available space */
-  padding: var(--spacing);
-  /* Use spacing variable */
+  padding: 20px;
+  background: #f0f2f5;
+  overflow-y: auto;
+  /* Makes the content scrollable if it overflows */
 }
 
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer Styling */
 .footer {
   text-align: center;
-  /* Center footer text */
-  padding: var(--spacing);
-  /* Use spacing variable */
+  background: #001529;
+  color: white;
+  padding: 10px 0;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
+  .header-title {
+    font-size: 1.2rem;
+  }
 
-  nz-header,
-  nz-footer {
-    flex-direction: column;
-    align-items: center;
+  .content-wrapper {
+    padding: 10px;
   }
 }

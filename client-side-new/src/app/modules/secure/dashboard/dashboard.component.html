@@ -1,1 +1,33 @@
-<h4 class="text-center">Welcome to Pharma Stock</h4>
+<!-- <h4 class="text-center">Welcome to Nutri-Heal Pharma Ltd</h4> -->
+<div class="dashboard">
+  <div class="welcome-section">
+    <h4 class="welcome-text">Welcome to {{ this.business.name }}</h4>
+  </div>
+
+  <div class="business-info">
+    <div class="info-card">
+      <h5>Business Name</h5>
+      <p>{{ this.business.name }}</p>
+    </div>
+    <div class="info-card">
+      <h5>Contact</h5>
+      <p>{{ this.business.contact }}</p>
+    </div>
+    <div class="info-card">
+      <h5>Address</h5>
+      <p>{{ this.business.address }}</p>
+    </div>
+    <div class="info-card">
+      <h5>Description</h5>
+      <p>{{ this.business.description }}</p>
+    </div>
+    <div class="info-card">
+      <h5>Post Code</h5>
+      <p>{{ this.business.post_code }}</p>
+    </div>
+  </div>
+
+  <div class="footer-section">
+    <p>&copy; 2025 Nutri-Heal Pharma Ltd. All Rights Reserved.</p>
+  </div>
+</div>

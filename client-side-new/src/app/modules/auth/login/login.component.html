@@ -15,13 +15,13 @@
             formControlName="userName"
             placeholder="Enter your username"
             (input)="onInput($event)"
-            [nzAutocomplete]="auto"
           />
-          <nz-autocomplete
+            <!-- [nzAutocomplete]="auto" -->
+            <!-- <nz-autocomplete
             [nzDataSource]="options"
             nzBackfill
             #auto
-          ></nz-autocomplete>
+          ></nz-autocomplete> -->
         </nz-input-group>
         <ng-template #prefixTemplateUser
           ><span nz-icon nzType="user"></span
@@ -39,7 +39,7 @@
             loginForm.get('email')?.touched && loginForm.get('email')?.invalid
           "
         >
-          <small *ngIf="loginForm.get('userName')?.errors?.['required']">
+          <small class="s_error" *ngIf="loginForm.get('userName')?.errors?.['required']">
             User name is required.
           </small>
           <!-- <small *ngIf="loginForm.get('userName')?.errors?.['userName']">
@@ -72,7 +72,7 @@
             loginForm.get('password')?.invalid
           "
         >
-          <small *ngIf="loginForm.get('password')?.errors?.['required']">
+          <small class="s_error" *ngIf="loginForm.get('password')?.errors?.['required']">
             Password is required.
           </small>
         </div>

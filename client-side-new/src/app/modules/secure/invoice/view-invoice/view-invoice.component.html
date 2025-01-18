@@ -1,10 +1,13 @@
 <div class="d-flex justify-content-end my-2 mx-2">
-  <button class="mt-20" type="button" nz-button class="primary-btn" (click)="updateInvoice()">
-    Update Invoice
+  <button nz-button class="primary-btn mt-20" type="button" (click)="print()">
+    Print
+  </button>
+  <button class="mx-2 mt-20 primary-btn" type="button" nz-button (click)="updateInvoice()">
+    Update
   </button>
 
-  <button class="mx-2 mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
-    Delete Invoice
+  <button class="mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
+    Delete
   </button>
 
 </div>
@@ -12,7 +15,7 @@
   <!-- Header Section -->
   <header class="invoice-header">
     <div class="logo">
-      <img src="assets/img/company_logo.jpeg" alt="Company Logo" />
+      <img src="assets/img/company_logo.jpeg" alt="Company Logo" class="responsive-img" />
     </div>
     <div class="company-details">
       <h1>{{ business.name | titlecase }}</h1>
@@ -81,10 +84,10 @@
   </footer>
 
   <!-- Action Buttons -->
-  <div class="action-buttons d-flex justify-content-end">
-    <button nz-button class="primary-btn" type="button" (click)="printInvoice()">
-      Print Invoice
+  <!-- <div class="action-buttons d-flex justify-content-center">
+    <button nz-button class="primary-btn" type="button" (click)="print()">
+      Print
     </button>
-  </div>
+  </div> -->
 </div>
 
