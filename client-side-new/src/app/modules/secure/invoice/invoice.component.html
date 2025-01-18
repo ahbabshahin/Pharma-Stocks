@@ -40,8 +40,8 @@
               <hr />
               <p>
                 Total: ৳ {{ list?.totalAmount | number : "1.2-2" }}
-              </p></nz-collapse-panel
-            >
+              </p>
+            </nz-collapse-panel>
           </nz-collapse>
         </div>
         <ng-template #edit>
@@ -63,7 +63,7 @@
     </p>
     <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
     <div
-      *ngIf="invoices.length > params.limit && invoices.length < total"
+    *ngIf="total > params.limit && invoices.length < total"
       class="d-flex justify-content-center align-items-center my-2 mx-2"
     >
       <button

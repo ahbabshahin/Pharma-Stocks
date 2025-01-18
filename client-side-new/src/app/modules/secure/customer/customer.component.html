@@ -44,7 +44,7 @@
       Showing customer(s) {{ customers.length }} out of {{total}}
     </p>
     <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
-    <div *ngIf="customers.length > params.limit && customers.length < total"
+    <div *ngIf="total > params.limit && customers.length < total"
       class="d-flex justify-content-center align-items-center my-2 mx-2">
       <button [disabled]="(subLoader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round"
         class="w-50">load more</button>

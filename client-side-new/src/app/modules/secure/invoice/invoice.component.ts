@@ -49,7 +49,7 @@ export class InvoiceComponent {
   }
 
   loadInvoice() {
-    this.invoiceStoreService.loadInvoice(this.params);
+    this.invoiceStoreService.loadInvoice(this.params, this.isMore);
   }
 
   getInvoices() {
@@ -66,9 +66,7 @@ export class InvoiceComponent {
       next: (total: number) => {
         this.total = total;
       },
-      error: () => {
-
-      }
+      error: () => {},
     });
   }
 
@@ -152,13 +150,23 @@ export class InvoiceComponent {
       nzWrapClassName: 'full-drawer',
       // nzSize: 'large',
       nzContent: ViewInvoiceComponent,
-      nzData: { invoice, },
+      nzData: { invoice },
     });
   }
 
   deleteInvoice(list?: Invoice) {}
 
-  loadMore() {}
+  loadMore() {
+    if (this.invoices?.length < this.total) {
+      this.params = {
+        ...this.params,
+        page: this.params.page + 1,
+      };
+      this.invoiceStoreService.setSubLoader(true);
+      this.isMore = true;
+      this.loadInvoice();
+    }
+  }
 
   generatePDF() {}
 

@@ -53,13 +53,15 @@ export const invoiceReducer = createReducer(
     return {
       ...state,
       loaded: false,
-      loader: true,
+      loader: action.isMore ? false: true,
       error: '',
     };
   }),
   on(invoiceActions.loadInvoiceSuccess, (state, action) => {
     console.log('action.res: ', action.res);
-    return invoiceAdapter.setAll(action.res, {
+    let response = [...selectAll(state), ...action.res];
+    if(!action.isMore) response = action.res
+    return invoiceAdapter.setAll(response, {
       ...state,
       loaded: true,
       loader: false,

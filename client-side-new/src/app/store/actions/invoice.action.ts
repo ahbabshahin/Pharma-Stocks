@@ -13,11 +13,11 @@ export const setSubLoader = createAction(
 
 export const loadInvoice = createAction(
   '[Invoice] load invoice',
-  props<{ params: { [key: string]: any } }>()
+  props<{ params: { [key: string]: any }; isMore: boolean }>()
 );
 export const loadInvoiceSuccess = createAction(
   '[Invoice] load invoice success',
-  props<{ res: Invoice[]; total: number }>()
+  props<{ res: Invoice[]; total: number, isMore: boolean }>()
 );
 export const loadInvoiceFail = createAction(
   '[Invoice] load invoice fail',
