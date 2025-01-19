@@ -76,7 +76,7 @@
   <!-- Footer Section -->
   <footer class="invoice-footer">
     <div class="summary">
-      <p>Discount: {{ (invoice.discount * 100) || 0 }}%</p>
+      <p>Discount: {{ invoice.discount || 0 }}%</p>
       <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p>
       <hr />
       <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>

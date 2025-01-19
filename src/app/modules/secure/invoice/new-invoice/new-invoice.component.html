@@ -168,7 +168,7 @@
                 </ng-container>
                 </td>
                 <td>
-                  <input
+                  <!-- <input
                     nz-input
                     [disabled]="true"
                     [nzBorderless]="true"
@@ -178,7 +178,8 @@
                     min="0"
                     step="0.01"
                     aria-label="Price"
-                  />
+                  /> -->
+                  {{ form?.get('price')?.value | number: "1.2-2" }}
                 </td>
                 <td>৳ {{ calculateProductTotal(product) }}</td>
                 <td>

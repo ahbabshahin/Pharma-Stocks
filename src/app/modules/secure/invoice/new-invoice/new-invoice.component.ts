@@ -80,7 +80,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       sn: this.invoice?.sn,
       customer: this.invoice?.customer,
       status: this.invoice?.status,
-      discount: (this.invoice?.discount * 100),
+      discount: this.invoice?.discount,
     });
     const customer = this.customers.find(
       (item) => item?._id == this.invoice?.customer
