@@ -43,6 +43,7 @@ export class ViewInvoiceComponent {
   initialize() {
     this.getBusiness();
     this.getCustomers();
+    this.date = this.invoice.createdAt as string
   }
 
   getBusiness() {
@@ -63,7 +64,7 @@ export class ViewInvoiceComponent {
   }
 
   updateInvoice() {
-    this.drawerService.create({
+   let drawerRef = this.drawerService.create({
       nzTitle: 'New Invoice',
       nzClosable: true,
       nzMaskClosable: false,
@@ -73,6 +74,12 @@ export class ViewInvoiceComponent {
       nzContent: NewInvoiceComponent,
       nzData: { invoice: this.invoice },
     });
+
+  this.subs.sink = drawerRef.afterClose.subscribe((invoice:Invoice) =>{
+    if(invoice) {
+      this.invoice = invoice;
+    }
+  })
   }
 
   getCustomers() {

@@ -71,6 +71,7 @@ export const invoiceReducer = createReducer(
   on(invoiceActions.loadInvoiceFail, (state, { error }) => ({
     ...state,
     loaded: false,
+    loader: false,
     error,
   })),
 

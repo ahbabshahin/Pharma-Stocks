@@ -35,6 +35,7 @@ export class InvoiceEffects {
             }),
             catchError(() =>{
               this.commonService.showErrorToast('Invoice load failed');
+            this.invoiceStore.loadInvoiceFail('failed');
               this.invoiceStore.setSubLoader(false)
               return of()
             })
@@ -58,6 +59,7 @@ export class InvoiceEffects {
           catchError((err) => {
             const errMsg = err?.error?.message ?? 'Add invoice failed'
             this.commonService.dismissLoading();
+            this.invoiceStore.addInvoiceFail('failed')
             this.commonService.showErrorToast(errMsg);
             return of();
           })
@@ -87,6 +89,7 @@ export class InvoiceEffects {
           catchError((err) => {
             const errMsg = err?.error?.message ?? 'update invoice failed';
             this.commonService.dismissLoading();
+            this.invoiceStore.updateInvoiceFail('failed');
             this.commonService.showErrorToast(errMsg);
             return of();
           })
@@ -108,6 +111,7 @@ export class InvoiceEffects {
           }),
           catchError((err) =>{
             this.commonService.showErrorToast('Invice delete failed');
+            this.invoiceStore.deleteInvoiceFail('failed');
             this.commonService.dismissLoading();
             return of()
           })

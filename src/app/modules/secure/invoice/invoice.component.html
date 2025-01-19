@@ -37,6 +37,7 @@
                 <br />
                 <span>Price: ৳ {{ product?.price | number : "1.2-2" }} </span>
               </p>
+              <p *ngIf="list?.discount">Discount: {{ list?.discount | number : "1.2-2" }} %</p>
               <hr />
               <p>
                 Total: ৳ {{ list?.totalAmount | number : "1.2-2" }}
@@ -59,7 +60,7 @@
       *ngIf="invoices?.length"
       class="d-flex justify-content-end align-items-center my-2 mx-2"
     >
-      Showing product(s) {{ invoices.length }} out of {{ total }}
+      Showing invoice(s) {{ invoices?.length }} out of {{ total }}
     </p>
     <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
     <div

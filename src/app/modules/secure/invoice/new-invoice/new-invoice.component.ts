@@ -216,7 +216,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         sn: formRes?.sn,
         products: formRes?.products,
         discount: formRes?.discount,
-        totalAmount: this.subTotalAmount,
+        totalAmount: this.totalAmount,
         status: formRes?.status,
         customer: formRes?.customer,
       };
@@ -231,7 +231,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       } else {
         this.invoiceStore.addInvoice(payload);
       }
-      this.drawerRef.close();
+      this.drawerRef.close(payload);
     } else {
       this.commonService.showWarningModal('Form is invalid');
     }
