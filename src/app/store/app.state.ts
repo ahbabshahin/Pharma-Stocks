@@ -23,16 +23,12 @@ export const LOGOUT = '[Auth] Logout';
 
 export function resetState(reducer: any): any {
   return (state: any, action: Action): any => {
-    if (action.type === authActions.logout.type) {
-      state = {
-        auth: undefined,
-        invoice: undefined,
-        stock: undefined,
-        customer: undefined
-      };
+    if (action.type === authActions?.logout.type) {
+      state = undefined;
     }
     return reducer(state, action);
   };
 }
+
 
 export const metaReducers = [resetState];

@@ -60,6 +60,7 @@ export class ProfileComponent {
     sessionStorage.removeItem('accessToken');
     const token = sessionStorage.getItem('accessToken');
     if (!token) {
+      this.authStore.logout()
       this.router.navigate(['/auth']);
     } else this.commonService.showErrorToast('Logout failed');
   }

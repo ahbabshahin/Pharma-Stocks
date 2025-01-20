@@ -70,17 +70,18 @@ export class AuthEffects {
 
   logout$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.logout),
-    tap(() =>{
-      sessionStorage.removeItem('accessToken');
-      this.authStore.logoutSuccess()
-      this.router.navigate(['/auth'])
+    map(() =>{
+      this.authStore.logoutSuccess();
+      this.router.navigate(['/auth']);
     }),
     catchError((err) =>{
       this.authStore.loginFail('logout failed');
       this.commonService.showErrorToast('Logout failed');
       return of(err)
     })
-));
+),
+{dispatch: false}
+);
 
   loadUser$ = createEffect(
     () =>

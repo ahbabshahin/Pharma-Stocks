@@ -9,20 +9,21 @@ import { Business } from '../../../store/models/business.model';
 })
 export class DashboardComponent {
   business!: Business;
-  constructor(private businessService: BusinessService){}
+  constructor(private businessService: BusinessService) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.initialize();
   }
 
-  initialize(){
+  initialize() {
     this.getBusiness();
   }
 
-  getBusiness(){
-   const business = this.businessService.getBusiness();
+  getBusiness() {
+    const business = this.businessService.getBusiness();
 
-   if(business) this.business = business;
+    if (business) this.business = business;
   }
 
+  ngOnDestroy() {}
 }

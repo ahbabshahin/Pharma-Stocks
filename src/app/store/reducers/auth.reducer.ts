@@ -57,4 +57,7 @@ export const authReducer = createReducer(
       error: action.error
     };
   }),
+  // on(authActions.logoutSuccess, (state, action) =>{
+  //   return
+  // })
 )
