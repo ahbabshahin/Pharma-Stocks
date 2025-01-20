@@ -3,11 +3,11 @@
   <button nz-button class="primary-btn mt-20" type="button" (click)="print()">
     Print
   </button>
-  <button class="mx-2 mt-20 primary-btn" type="button" nz-button (click)="updateInvoice()">
+  <button *ngIf="isAdmin" class="mx-2 mt-20 primary-btn" type="button" nz-button (click)="updateInvoice()">
     Update
   </button>
 
-  <button class="mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
+  <button *ngIf="isAdmin" class="mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
     Delete
   </button>
 </div>
@@ -19,10 +19,10 @@
       <img src="assets/img/company_logo.jpeg" alt="Company Logo" class="responsive-img" />
     </div>
     <div class="company-details">
-      <h1>{{ business.name | titlecase }}</h1>
+      <h1>{{ business?.name | titlecase }}</h1>
       <address>
-        {{ business.address | titlecase }}<br />
-        Phone: {{ business.contact }}
+        {{ business?.address | titlecase }}<br />
+        Phone: {{ business?.contact }}
       </address>
     </div>
   </header>
@@ -31,10 +31,10 @@
   <section class="invoice-info">
     <div class="info-group">
       <h3>From:</h3>
-      <p>{{ business.name | titlecase }}</p>
+      <p>{{ business?.name | titlecase }}</p>
       <address>
-        {{ business.address | titlecase }}<br />
-        Phone: {{ business.contact }}
+        {{ business?.address | titlecase }}<br />
+        Phone: {{ business?.contact }}
       </address>
     </div>
     <div class="info-group">

@@ -10,6 +10,7 @@ import { CustomerStoreService } from '../../../../service/customer/customer-stor
 import { Observable } from 'rxjs';
 import { SubSink } from 'subsink';
 import { BusinessService } from '../../../../service/business/business.service';
+import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 
 @Component({
   selector: 'app-view-invoice',
@@ -27,6 +28,7 @@ export class ViewInvoiceComponent {
   products: any;
   discount!: number;
   totalAmount!: number;
+  isAdmin: boolean = false;
 
   constructor(
     private commonService: CommonService,
@@ -34,21 +36,29 @@ export class ViewInvoiceComponent {
     private invoiceStore: InvoiceStoreService,
     private customerStore: CustomerStoreService,
     private businessService: BusinessService,
+    private authStore: AuthStoreService
   ) {}
 
   ngOnInit() {
     this.initialize();
   }
 
-  initialize() {
+  async initialize() {
+    await this.isAdminUser();
     this.getBusiness();
     this.getCustomers();
-    this.date = this.invoice.createdAt as string
+    this.date = this.invoice.createdAt as string;
   }
 
   getBusiness() {
-    let business = this.businessService.getBusiness()
-    if(business) this.business = business;
+    let business = this.businessService.getBusiness();
+    if (business) this.business = business;
+  }
+
+  async isAdminUser() {
+    console.log('admin');
+    this.isAdmin = await this.authStore.isAdminUser();
+    console.log('this.isAdmin: ', this.isAdmin);
   }
 
   calculateProductTotal(product: any): number {
@@ -64,7 +74,7 @@ export class ViewInvoiceComponent {
   }
 
   updateInvoice() {
-   let drawerRef = this.drawerService.create({
+    let drawerRef = this.drawerService.create({
       nzTitle: 'New Invoice',
       nzClosable: true,
       nzMaskClosable: false,
@@ -75,25 +85,26 @@ export class ViewInvoiceComponent {
       nzData: { invoice: this.invoice },
     });
 
-  this.subs.sink = drawerRef.afterClose.subscribe((invoice:Invoice) =>{
-    if(invoice) {
-      this.invoice = invoice;
-    }
-  })
+    this.subs.sink = drawerRef.afterClose.subscribe((invoice: Invoice) => {
+      if (invoice) {
+        this.invoice = invoice;
+      }
+    });
   }
 
   getCustomers() {
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (customers: Customer[]) => {
         console.log('res: ', customers);
-        if(customers?.length)
-        this.customer = customers.find((item) => item?._id === this.invoice?.customer) as Customer
+        if (customers?.length)
+          this.customer = customers.find(
+            (item) => item?._id === this.invoice?.customer
+          ) as Customer;
       },
       error: () => {
         console.log('error');
       },
     });
-
   }
 
   async deleteInvoice() {
