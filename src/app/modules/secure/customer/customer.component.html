@@ -69,7 +69,8 @@
     <div class="row">
       <ng-container *ngFor="let list of customers; let i = index">
         <div class="col-lg-4 col-md-6 col-sm-12 my-3">
-          <nz-card class="customer-card" nzHoverable="true" [nzActions]="[edit, view, delete]">
+          <nz-card class="customer-card" nzHoverable="true" [nzActions]="[edit,  delete]">
+            <!-- view, -->
             <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
             <p>Phone Number: {{ list?.contacts }}</p>
           </nz-card>

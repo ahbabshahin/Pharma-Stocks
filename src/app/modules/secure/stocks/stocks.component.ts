@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { Stock } from '../../../store/models/stocks.model';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NewStockComponent } from './new-stock/new-stock.component';
+import { AuthStoreService } from '../../../service/auth/auth-store.service';
 
 @Component({
   selector: 'app-stocks',
@@ -24,18 +25,22 @@ export class StocksComponent {
   total: number = 0;
   subLoader$: Observable<boolean> = of(false);
   isMore: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private stockStore: StockStoreService,
     private commonService: CommonService,
     private drawerService: NzDrawerService,
+    private authStore: AuthStoreService,
+
   ) {}
 
   ngOnInit() {
     this.initialize();
   }
 
-  initialize() {
+  async initialize() {
+    await this.isAdminUser();
     this.getLoader();
     this.isStockLoaded();
     this.getStocks();
@@ -49,6 +54,13 @@ export class StocksComponent {
           this.loadStock();
         }
       });
+  }
+
+
+  async isAdminUser() {
+    console.log('admin');
+    this.isAdmin = await this.authStore.isAdminUser();
+    console.log('this.isAdmin: ', this.isAdmin);
   }
 
   getLoader() {

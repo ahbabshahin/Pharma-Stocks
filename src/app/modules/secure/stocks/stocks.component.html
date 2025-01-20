@@ -120,10 +120,10 @@
           </nz-card>
         </div>
         <ng-template #edit>
-          <span (click)="addStock(list)" nz-icon nzType="edit"></span>
+          <span *ngIf="isAdmin" (click)="addStock(list)" nz-icon nzType="edit"></span>
         </ng-template>
         <ng-template #delete>
-          <span (click)="deleteStock(list._id)" nz-icon nzType="delete"></span>
+          <span *ngIf="isAdmin" (click)="deleteStock(list._id)" nz-icon nzType="delete"></span>
         </ng-template>
       </ng-container>
     </div>

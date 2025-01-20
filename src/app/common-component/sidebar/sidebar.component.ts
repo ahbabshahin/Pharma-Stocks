@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { Router, RouterModule } from '@angular/router';
 import { AuthStoreService } from '../../service/auth/auth-store.service';
@@ -7,51 +7,58 @@ import { SubSink } from 'subsink';
 import { User } from '../../store/models/user.model';
 import { Observable, of } from 'rxjs';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [CommonModule, SharedModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
+  styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   user$: Observable<User> = of();
+  filteredRoutes: { label: string; path: string }[] = [];
+
+  // Define all routes
+  routes: { label: string; path: string; roles: string[] }[] = [
+    { label: 'dashboard', path: '/dashboard', roles: ['admin', 'user'] },
+    { label: 'stocks', path: '/stocks', roles: ['admin', 'user'] },
+    { label: 'invoice', path: '/invoice', roles: ['admin', 'user'] },
+    { label: 'customer', path: '/customer', roles: ['admin',] },
+    { label: 'profile', path: '/profile', roles: ['admin', 'user'] },
+  ];
 
   constructor(
     private router: Router,
     private authStore: AuthStoreService,
-    private drawerRef: NzDrawerRef,
+    private drawerRef: NzDrawerRef
   ) {}
 
-  routes: { label: string; path: string }[] = [
-    { label: 'dashboard', path: '/dashboard' },
-    { label: 'stocks', path: '/stocks' },
-    { label: 'invoice', path: '/invoice' },
-    { label: 'customer', path: '/customer' },
-    { label: 'profile', path: '/profile' },
-  ];
-
-  ngOnInit(){
+  ngOnInit(): void {
     this.initialize();
   }
 
-  initialize(){
-    this.getUser()
+  initialize(): void {
+    this.getUser();
   }
 
-  getUser(){
+  getUser(): void {
     this.user$ = this.authStore.getUser();
+    this.subs.sink = this.user$.pipe(filter(Boolean)).subscribe((user) => {
+      this.filteredRoutes = this.routes.filter((route) =>
+        route.roles.includes(user.role as string)
+      );
+    });
   }
 
-  onRouteChange(path: string){
+  onRouteChange(path: string): void {
     this.router.navigate([path]);
     this.drawerRef.close();
   }
 
-
-  ngOnDestroy(){
-
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }

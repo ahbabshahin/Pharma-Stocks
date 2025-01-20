@@ -18,7 +18,7 @@
 
  -->
 
-<div class="sidebar">
+<!-- <div class="sidebar">
   <div class="profile-section">
     <img src="assets/img/profile.jpg" alt="Profile Picture" class="profile-photo" />
     <h3 class="username">{{ (user$ | async)?.name | titlecase }}</h3>
@@ -35,4 +35,23 @@
   <div class="version-info">
     <p>Version: <span>1.0.0</span></p>
   </div>
+</div> -->
+<div class="sidebar">
+  <div class="profile-section">
+    <img src="assets/img/profile.jpg" alt="Profile Picture" class="profile-photo" />
+    <h3 class="username">{{ (user$ | async)?.name | titlecase }}</h3>
+    <p class="user-role">{{ (user$ | async)?.role | titlecase }}</p>
+  </div>
+
+  <div class="nav-buttons">
+    <a *ngFor="let route of filteredRoutes" (click)="onRouteChange(route.path)" class="nav-button">
+      <i class="icon-launcher"></i>
+      {{ route?.label | titlecase }}
+    </a>
+  </div>
+
+  <div class="version-info">
+    <p>Version: 1.0.0</p>
+  </div>
 </div>
+

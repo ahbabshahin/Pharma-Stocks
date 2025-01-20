@@ -18,7 +18,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { HttpTokenInterceptor } from './interceptor/http.interceptor';
 import { Config } from './config';
-import { appReducer, AppState, authStateName } from './store/app.state';
+import { appReducer, AppState, authStateName, metaReducers } from './store/app.state';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { authReducer } from './store/reducers/auth.reducer';
@@ -37,7 +37,7 @@ registerLocaleData(en);
     RouterModule,
     RouterOutlet,
     HttpClientModule,
-    StoreModule.forRoot(appReducer),
+    StoreModule.forRoot(appReducer, {metaReducers}),
     EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     IconsProviderModule,

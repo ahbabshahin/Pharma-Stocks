@@ -4,6 +4,8 @@ import { SecureComponent } from './secure.component';
 import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
 import { AuthGuard } from '../../guard/auth.guard';
 import { ProfileComponent } from './profile/profile.component';
+import { AdminGuard } from '../../guard/admin.guard';
+import { NotAuthorizedComponent } from '../../common-component/not-authorized/not-authorized.component';
 
 const routes: Routes = [
   {
@@ -32,12 +34,17 @@ const routes: Routes = [
         path: 'customer',
         loadChildren: () =>
           import('./customer/customer.module').then((m) => m.CustomerModule),
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, AdminGuard],
       },
       {
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard],
+      },
+
+      {
+        path: 'not-authorized',
+        component: NotAuthorizedComponent,
       },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route
