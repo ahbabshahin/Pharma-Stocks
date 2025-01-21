@@ -29,7 +29,7 @@ export class RegisterComponent {
   initializeForm(){
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      userName: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -40,7 +40,7 @@ export class RegisterComponent {
     console.log('form ', this.registerForm?.value);
     const formRes: {
       name: string,
-      userName:  string,
+      username:  string,
       email: string,
       password:  string,
       confirmPassword?:  string,
@@ -53,7 +53,11 @@ export class RegisterComponent {
       return
     }else{
       delete formRes.confirmPassword;
-      const payload: RegisterCred = formRes;
+      let payload: RegisterCred = formRes;
+      payload = {
+        ...payload,
+        username: payload?.username?.trim(),
+      }
       console.log('payload: ', payload);
       this.commonService.presentLoading();
       this.authStore.register(payload);

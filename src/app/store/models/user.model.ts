@@ -2,14 +2,14 @@ export interface User {
   _id?: string;
   name: string;
   email: string;
-  userName: string;
+  username: string;
   role?: string;
   image?: string;
   accessToken?: string;
 }
 
 export interface LoginCred {
-  userName: string;
+  username: string;
   password: string;
 }
 

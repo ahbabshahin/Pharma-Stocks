@@ -29,7 +29,7 @@ export class LoginComponent {
 
   initializeForm() {
     this.loginForm = this.fb.group({
-      userName: ['', [Validators.required]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
   }
@@ -40,7 +40,11 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    const payload: LoginCred = this.loginForm?.value;
+    let payload: LoginCred = this.loginForm?.value;
+    payload = {
+      ...payload,
+      username: payload?.username?.trim(),
+    }
     this.commonService.presentLoading();
     this.authStore.login(payload);
   }

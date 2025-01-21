@@ -34,20 +34,20 @@
           nz-input
           id="username"
           type="text"
-          formControlName="userName"
+          formControlName="username"
           placeholder="Enter your username"
         />
         <ng-container
           *ngIf="
-            registerForm?.get('userName')?.invalid &&
-            (registerForm.get('userName')?.touched ||
-              registerForm.get('userName')?.dirty)
+            registerForm?.get('username')?.invalid &&
+            (registerForm.get('username')?.touched ||
+              registerForm.get('username')?.dirty)
           "
         >
-          <small class="s_error" *ngIf="registerForm.get('userName')?.errors?.['required']">
+          <small class="s_error" *ngIf="registerForm.get('username')?.errors?.['required']">
             Username is required.
           </small>
-          <small class="s_error" *ngIf="registerForm.get('userName')?.errors?.['minlength']">
+          <small class="s_error" *ngIf="registerForm.get('username')?.errors?.['minlength']">
             Username must be at least 3 characters.
           </small>
         </ng-container>

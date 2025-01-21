@@ -12,7 +12,7 @@
           <input
             type="text"
             nz-input
-            formControlName="userName"
+            formControlName="username"
             placeholder="Enter your username"
             (input)="onInput($event)"
           />
@@ -39,10 +39,10 @@
             loginForm.get('email')?.touched && loginForm.get('email')?.invalid
           "
         >
-          <small class="s_error" *ngIf="loginForm.get('userName')?.errors?.['required']">
+          <small class="s_error" *ngIf="loginForm.get('username')?.errors?.['required']">
             User name is required.
           </small>
-          <!-- <small *ngIf="loginForm.get('userName')?.errors?.['userName']">
+          <!-- <small *ngIf="loginForm.get('username')?.errors?.['username']">
             Please enter a valid email address.
           </small> -->
         </div>
