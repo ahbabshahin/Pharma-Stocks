@@ -1,12 +1,23 @@
 <app-global-loader *ngIf="loader"></app-global-loader>
-<div nz-flex nzJustify="center" *ngIf="user && !loader">
-  <nz-card nzHoverable style="width:240px" [nzActions]="[actionSetting]" >
-    <nz-card-meta [nzTitle]="user.name" ></nz-card-meta>
-    <p>{{user?.role | titlecase}}</p>
-    <p>{{user?.email}}</p>
+
+<div nz-flex nzJustify="center" *ngIf="user && !loader" class="user-card-container">
+  <nz-card nzHoverable class="user-card">
+    <nz-card-meta
+      [nzTitle]="user.name"
+      [nzAvatar]="avatarTemplate"
+      [nzDescription]="user.role | titlecase">
+    </nz-card-meta>
+    <ng-template #avatarTemplate>
+      <img [src]="'assets/img/profile.jpg'" alt="Avatar" class="user-avatar" />
+    </ng-template>
+    <div class="card-details">
+      <p class="user-email">{{ user?.email }}</p>
+      <button nz-button nzType="primary" class="logout-button" (click)="logout()">Logout</button>
+    </div>
   </nz-card>
 </div>
-<!-- nzDescription="www.instagram.com" -->
+
+
 <ng-template #actionSetting>
-  <button nz-button nzType="primary" (click)="logout()">Logout</button>
+  <button nz-button nzType="primary" class="logout-button" (click)="logout()">Logout</button>
 </ng-template>
