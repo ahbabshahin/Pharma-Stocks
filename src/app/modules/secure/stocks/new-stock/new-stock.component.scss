@@ -1,14 +1,101 @@
-// label {
-//   font-weight: 500;
-//   font-size: 1.4rem;
-//   color: #222;
-// }
-
-input {
+/* General Input Styling */
+input[nz-input] {
   border: 1px solid #c7d0d9 !important;
   width: 100%;
-  border-radius: .8rem !important;
-  background: #fff !important;
-  height: 2.5rem;
+  border-radius: 8px;
+  background: #f9fafb !important;
+  height: 2.8rem;
+  font-size: 16px;
+  padding: 0 10px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow for depth */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[nz-input]:focus {
+  border-color: #007bff !important;
+  /* Brand color for focus */
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+  /* Glow effect on focus */
+}
+
+label {
+  font-weight: 600;
   font-size: 14px;
+  color: #495057;
+  /* Slightly darker text for contrast */
+}
+
+sup.text-danger {
+  color: #dc3545;
+  /* Red for required fields */
+}
+
+/* Form Container */
+form {
+  padding: 20px;
+  border-radius: 8px;
+  background: #ffffff;
+  /* White background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Soft shadow */
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003f7f);
+  box-shadow: 0 6px 15px rgba(0, 86, 179, 0.4);
+  transform: translateY(-2px);
+}
+
+.primary-btn:disabled {
+  background: #6c757d;
+  /* Greyed out for disabled state */
+  cursor: not-allowed;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  form {
+    padding: 15px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  form {
+    padding: 10px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+
+  input[nz-input] {
+    font-size: 14px;
+  }
 }

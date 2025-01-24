@@ -1,129 +1,35 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-group my-2">
-    <label>Title <sup class="text-danger">*</sup></label>
-    <input
-      nz-input
-      type="text"
-      class="form-control"
-      formControlName="name"
-      placeholder="Minirin"
-    />
+  <div class="form-group">
+    <label for="title">Title <sup class="text-danger">*</sup></label>
+    <input id="title" nz-input type="text" class="form-control" formControlName="name" placeholder="e.g., Minirin" />
   </div>
-  <div class="form-group my-2">
-    <label>Quantity <sup class="text-danger">*</sup></label>
-    <input
-      nz-input
-      type="number"
-      class="form-control"
-      formControlName="quantity"
-      placeholder="10"
-      min="1"
-    />
+  <div class="form-group">
+    <label for="quantity">Quantity <sup class="text-danger">*</sup></label>
+    <input id="quantity" nz-input type="number" class="form-control" formControlName="quantity" placeholder="e.g., 10"
+      min="1" />
   </div>
-  <div class="form-group my-2">
-    <label>Price <sup class="text-danger">*</sup></label>
-    <input
-      nz-input
-      type="number"
-      class="form-control"
-      formControlName="price"
-      placeholder="৳1200"
-      min="1"
-    />
+  <div class="form-group">
+    <label for="price">Price <sup class="text-danger">*</sup></label>
+    <input id="price" nz-input type="number" class="form-control" formControlName="price" placeholder="e.g., ৳1200"
+      min="1" />
   </div>
-  <div class="form-group my-2">
-    <label>Brand <sup class="text-danger">*</sup></label>
-    <input
-      nz-input
-      type="text"
-      class="form-control"
-      formControlName="brand"
-      placeholder="Ferring Pharmaceuticals"
-    />
+  <div class="form-group">
+    <label for="brand">Brand <sup class="text-danger">*</sup></label>
+    <input id="brand" nz-input type="text" class="form-control" formControlName="brand"
+      placeholder="e.g., Ferring Pharmaceuticals" />
   </div>
-  <div class="form-group my-2">
-    <label>Dosage <sup class="text-danger">*</sup></label>
-    <input
-      nz-input
-      type="text"
-      class="form-control"
-      formControlName="dosage"
-      placeholder="0.1 mg"
-    />
+  <div class="form-group">
+    <label for="dosage">Dosage <sup class="text-danger">*</sup></label>
+    <input id="dosage" nz-input type="text" class="form-control" formControlName="dosage" placeholder="e.g., 0.1 mg" />
   </div>
-  <div class="form-group my-2">
-    <label>Low Stock Limit <sup class="text-danger">*</sup></label>
-    <input
-      nz-input
-      type="number"
-      class="form-control"
-      formControlName="lowStockThreshold"
-      placeholder="0.1 mg"
-      min="1"
-    />
+  <div class="form-group">
+    <label for="lowStockLimit">Low Stock Limit <sup class="text-danger">*</sup></label>
+    <input id="lowStockLimit" nz-input type="number" class="form-control" formControlName="lowStockThreshold"
+      placeholder="e.g., 10" min="1" />
   </div>
-  <div nz-flex nzJustify="flex-end" class="my-2">
+  <div nz-flex nzJustify="flex-end" class="form-group">
     <button type="submit" class="primary-btn" nz-button nzShape="round">
       Submit
     </button>
   </div>
 </form>
-
-<!-- <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <nz-form-item>
-    <div>
-      <label>Product title</label>
-    </div>
-    <nz-form-control nzErrorTip="Please input product title">
-      <nz-input-group>
-        <input type="text" nz-input formControlName="name" placeholder="Minirin" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input product quantity">
-      <nz-input-group>
-        <input type="number" nz-input formControlName="quantity" placeholder="10" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input product price">
-      <nz-input-group>
-        <input type="number" nz-input formControlName="price" placeholder="৳1200" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input product brand!">
-      <nz-input-group>
-        <input type="text" nz-input formControlName="brand" placeholder="Ferring Pharmaceuticals" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input product dosage!">
-      <nz-input-group>
-        <input type="text" nz-input formControlName="dosage" placeholder="0.1 mg" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input product lowStockThreshold!">
-      <nz-input-group>
-        <input type="number" nz-input formControlName="lowStockThreshold" placeholder="0.1 mg" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item nz-flex class="mb-8">
-    <nz-form-control nzJustify="flex-end">
-      <button type="submit" nz-button class="primary-btn" nzShape="round">Submit</button>
-    </nz-form-control>
-  </nz-form-item>
-</form> -->

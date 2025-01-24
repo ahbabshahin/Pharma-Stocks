@@ -1,48 +1,168 @@
-//  p {
-//    margin: 0;
-//  }
-// .md-drawer {
-//   .ant-drawer {
-//     width: 50% !important;
-//     max-width: 600px;
-//     min-width: 400px;
-
-//   }
-
-//   .ant-drawer-body {
-//     padding: 16px;
-//   }
-
-//   .ant-drawer-header {
-//     font-size: 18px;
-//     font-weight: bold;
-//   }
-// }
-
-// .w-50 {
-//   width: 50%;
-// }
-
-.stock-card {
-  width: 100%;
-  max-width: 300px;
-  /* Prevent cards from becoming too wide */
-  margin: 0 auto;
-  /* Center the card horizontally */
-}
-
+/* General container styling */
 .container {
-  padding: 0 15px;
+  padding: 20px;
 }
 
 .row {
-  margin: 0 -15px;
-  /* Align cards properly */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 0 auto;
+  justify-content: center;
+  /* Center content horizontally */
 }
 
 .col-lg-4,
 .col-md-6,
 .col-sm-12 {
-  padding: 15px;
-  /* Add space between columns */
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  /* Center cards horizontally in each column */
+}
+
+/* Stock card design */
+.stock-card {
+  width: 100%;
+  max-width: 320px;
+  /* Slightly wider cards */
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Soft shadow */
+  transition: all 0.3s ease;
+}
+
+.stock-card:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  /* Elevated hover effect */
+  transform: translateY(-5px);
+  /* Slight lift on hover */
+}
+
+.stock-card p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #555;
+  /* Subtle text color */
+}
+
+.stock-card .ant-card-meta-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+  /* Use a brand color for titles */
+}
+
+/* Add Stock Button */
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  /* Center vertically */
+  justify-content: center;
+  /* Center horizontally */
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  /* Prevent text wrapping */
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003f7f);
+  box-shadow: 0 6px 12px rgba(0, 86, 179, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Search Bar Styling */
+.nz-input-group {
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nz-input-group input {
+  border: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 25px 0 0 25px;
+  /* Rounded corners for input */
+  outline: none;
+}
+
+.nz-input-group input::placeholder {
+  color: #bbb;
+  /* Subtle placeholder color */
+}
+
+.nz-input-group button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0 25px 25px 0;
+  /* Rounded corners for button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nz-input-group button:hover {
+  background: #0056b3;
+}
+
+/* Search Icon */
+.nz-input-group button span[nz-icon] {
+  font-size: 18px;
+}
+
+/* Load More Button */
+button[nz-button] {
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+button[nz-button]:hover {
+  background: linear-gradient(135deg, #0056b3, #003f7f);
+  box-shadow: 0 6px 12px rgba(0, 86, 179, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stock-card {
+    max-width: 100%;
+  }
+
+  .row {
+    gap: 10px;
+  }
+
+  button[nz-button] {
+    width: 80%;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 10px;
+  }
+
+  button[nz-button] {
+    width: 100%;
+    font-size: 14px;
+  }
 }
