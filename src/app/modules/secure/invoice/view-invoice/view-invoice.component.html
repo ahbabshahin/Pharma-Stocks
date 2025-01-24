@@ -13,7 +13,7 @@
 </div>
 </nz-affix>
 <div class="invoice-container">
-  <!-- Header Section -->
+
   <header class="invoice-header">
     <div class="logo">
       <img src="assets/img/company_logo.jpeg" alt="Company Logo" class="responsive-img" />
@@ -27,7 +27,6 @@
     </div>
   </header>
 
-  <!-- Invoice Information -->
   <section class="invoice-info">
     <div class="info-group">
       <h3>From:</h3>
@@ -52,7 +51,6 @@
     </div>
   </section>
 
-  <!-- Product Table -->
   <section class="product-list">
     <table>
       <thead>
@@ -74,7 +72,6 @@
     </table>
   </section>
 
-  <!-- Footer Section -->
   <footer class="invoice-footer">
     <div class="summary">
       <p>Discount: {{ invoice.discount || 0 }}%</p>
@@ -83,12 +80,5 @@
       <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
     </div>
   </footer>
-
-  <!-- Action Buttons -->
-  <!-- <div class="action-buttons d-flex justify-content-center">
-    <button nz-button class="primary-btn" type="button" (click)="print()">
-      Print
-    </button>
-  </div> -->
 </div>
 

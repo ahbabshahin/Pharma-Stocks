@@ -45,6 +45,8 @@ export class SecureComponent {
     // this.getUser();
     this.decodedToken = this.commonService.decodeJWT();
     console.log('token ', this.decodedToken);
+    if (!sessionStorage.getItem('role'))
+      sessionStorage.setItem('role', this.decodedToken?.role);
     if(this.decodedToken?.userId){
       this.loadUser();
       this.getUser();
