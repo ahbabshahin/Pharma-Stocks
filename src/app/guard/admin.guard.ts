@@ -10,15 +10,18 @@ import { AuthStoreService } from '../service/auth/auth-store.service';
 export class AdminGuard implements CanActivate {
   constructor(private authService: AuthStoreService, private router: Router) {}
 
-  canActivate(): Observable<boolean> {
-    return this.authService.getUser().pipe(
-      map((user) => {
-        if (user?.role === 'admin') {
-          return true; // Grant access
-        }
-        this.router.navigate(['/not-authorized']); // Redirect if not admin
-        return false;
-      })
-    );
+  canActivate(): boolean {
+    const token = sessionStorage.getItem('accessToken');
+    const role = sessionStorage.getItem('role');
+
+    if (token && role === 'admin') {
+      // Allow access if token exists and role is admin
+      return true;
+    } else {
+      // Redirect to login or unauthorized page
+      // this.router.navigate(['/unauthorized']);
+      this.router.navigate(['/not-authorized']); // Redirect if not admin
+      return false;
+    }
   }
 }
