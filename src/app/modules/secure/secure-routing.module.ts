@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SecureComponent } from './secure.component';
-import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
 import { AuthGuard } from '../../guard/auth.guard';
 import { ProfileComponent } from './profile/profile.component';
 import { AdminGuard } from '../../guard/admin.guard';
 import { NotAuthorizedComponent } from '../../common-component/not-authorized/not-authorized.component';
+import { UserModule } from './user/user.module';
 
 const routes: Routes = [
   {
@@ -41,7 +41,11 @@ const routes: Routes = [
         component: ProfileComponent,
         canActivate: [AuthGuard],
       },
-
+      {
+        path: 'user',
+        component: UserModule,
+        canActivate: [AuthGuard],
+      },
       {
         path: 'not-authorized',
         component: NotAuthorizedComponent,
