@@ -43,8 +43,9 @@ const routes: Routes = [
       },
       {
         path: 'user',
-        component: UserModule,
-        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./user/user.module').then((m) => m.UserModule),
+        canActivate: [AuthGuard, AdminGuard],
       },
       {
         path: 'not-authorized',
