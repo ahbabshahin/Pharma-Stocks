@@ -1,0 +1,143 @@
+/* General Container for Card */
+.user-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #edf2f7, #ffffff);
+  /* Soft gradient background */
+}
+
+/* Card styles */
+.user-card {
+  width: 100%;
+  max-width: 380px;
+  /* Slightly larger for better readability */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  /* Deeper shadow for emphasis */
+  border-radius: 15px;
+  /* Smoother rounded corners */
+  background: #ffffff;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-10px);
+  /* Slight lift effect */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  /* More pronounced shadow */
+}
+
+/* Avatar styles */
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+  /* Highlighted border matching the theme */
+  margin: 15px auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+  /* Slight zoom effect */
+}
+
+/* Typography styles */
+.nz-card-meta-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.nz-card-meta-description {
+  font-size: 16px;
+  color: #6c757d;
+  /* Muted gray for role */
+}
+
+.card-details {
+  margin-top: 20px;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #495057;
+  /* Neutral gray */
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+/* Logout Button Styles */
+.logout-button {
+  display: flex;
+  /* Flexbox for centering content */
+  align-items: center;
+  /* Vertical alignment */
+  justify-content: center;
+  /* Horizontal alignment */
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 20px;
+  /* Balanced padding */
+  border-radius: 20px;
+  /* Rounded button */
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease;
+  line-height: normal;
+  /* Prevent any line-height-related issues */
+  font-weight: 500;
+  /* Slightly bold text for better readability */
+}
+
+.logout-button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  box-shadow: 0 6px 15px rgba(0, 86, 179, 0.4);
+  /* Brighter shadow */
+  transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .user-card {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .logout-button {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-card {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .user-avatar {
+    width: 70px;
+    height: 70px;
+  }
+
+  .logout-button {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+}

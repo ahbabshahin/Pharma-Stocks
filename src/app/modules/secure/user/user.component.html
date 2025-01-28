@@ -1,1 +1,24 @@
-<p>user works!</p>
+<app-global-loader *ngIf="loader"></app-global-loader>
+
+<ng-container *ngIf="!loader">
+<ng-container *ngIf="users?.length">
+    <div nz-flex nzJustify="center" class="user-card-container" *ngFor="let user of users; let i = index;">
+      <nz-card nzHoverable class="user-card">
+        <nz-card-meta [nzTitle]="user.name" [nzAvatar]="avatarTemplate" [nzDescription]="user.role | titlecase">
+        </nz-card-meta>
+        <ng-template #avatarTemplate>
+          <img [src]="'assets/img/profile.jpg'" alt="Avatar" class="user-avatar" />
+        </ng-template>
+        <div class="card-details">
+          <p class="user-email">{{ user?.email }}</p>
+          <button nz-button nzType="primary" class="logout-button" (click)="editRole(user)">Make Admin</button>
+        </div>
+      </nz-card>
+    </div>
+</ng-container>
+</ng-container>
+
+
+<!-- <ng-template #actionSetting>
+  <button nz-button nzType="primary" class="logout-button" (click)="logout()">Logout</button>
+</ng-template> -->
