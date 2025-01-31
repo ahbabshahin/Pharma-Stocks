@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { User } from '../../../store/models/user.model';
 import { UserApiService } from '../../../service/user/user-api.service';
 import { SubSink } from 'subsink';
+import { CommonService } from '../../../service/common/common.service';
 
 @Component({
   selector: 'app-user',
@@ -18,7 +19,7 @@ export class UserComponent {
     limit: 10
   }
   total: number = 0;
-  constructor(private userApi: UserApiService){}
+  constructor(private userApi: UserApiService, private commonService: CommonService,){}
 
   ngOnInit(){
     this.initialize();
@@ -40,7 +41,14 @@ export class UserComponent {
       } });
   }
 
-  editRole(user: User){
+  async editRole(user: User){
+    const ok = await this.commonService.showConfirmModal(
+      `Are you sure, you want to make ${user?.name} as Admin?`
+    );
+
+    if(!ok) return;
+
+    this.commonService.presentLoading();
 
   }
 
