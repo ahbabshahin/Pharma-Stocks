@@ -52,8 +52,8 @@ export const invoiceReducer = createReducer(
   on(invoiceActions.loadInvoice, (state, action) => {
     return {
       ...state,
-      loaded: false,
-      loader: action.isMore ? false: true,
+      loaded: action.isMore ? true : false,
+      loader: action.isMore ? false : true,
       error: '',
     };
   }),

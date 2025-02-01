@@ -6,4 +6,5 @@ export interface Customer {
   img?: string;
   address: string;
   invoices?: string[];
+  sn: string;
 }

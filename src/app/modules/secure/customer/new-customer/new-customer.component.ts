@@ -36,12 +36,14 @@ export class NewCustomerComponent {
       contacts: ['', [Validators.required]],
       email: [''],
       address: ['', [Validators.required, Validators.minLength(3)]],
+      sn: [this.customerStore.generateSerialNumber()],
     });
   }
 
   populateForm(){
     this.form.patchValue({
-      ...this.customer
+      ...this.customer,
+      sn: this.customer?.sn ? this.customer.sn : this.customerStore.generateSerialNumber(),
     });
   }
 
