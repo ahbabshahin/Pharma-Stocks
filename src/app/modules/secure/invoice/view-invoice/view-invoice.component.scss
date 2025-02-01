@@ -33,15 +33,29 @@
   margin: 16px 0;
 }
 
+// .product-list th,
+// .product-list td {
+//   padding: 8px;
+//   border: 1px solid #e0e0e0;
+//   text-align: left;
+// }
+
+// .product-list th {
+//   background: #f5f5f5;
+// }
+
 .product-list th,
 .product-list td {
-  padding: 8px;
+  padding: 4px 8px;
+  /* Reduced padding for smaller row height */
   border: 1px solid #e0e0e0;
   text-align: left;
 }
 
 .product-list th {
   background: #f5f5f5;
+  font-weight: bold;
+  /* Keep the header distinct */
 }
 
 .invoice-footer {
@@ -53,19 +67,82 @@
   margin-top: 16px;
 }
 
+.invoice-signatures {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.signature {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.signature p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.signature .signature-line {
+  margin: 10px 0;
+  border-bottom: 1px solid #333;
+  height: 2px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// @media print {
+
+//   /* Hide everything except the invoice-container */
+//   body * {
+//     visibility: hidden;
+//   }
+
+//   .invoice-container {
+//     visibility: visible;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//   }
+
+//   /* Hide buttons */
+//   button {
+//     display: none;
+//   }
+
+//   /* Adjust the page layout for print */
+//   .invoice-container {
+//     margin: 0;
+//     padding: 20px;
+//     border: none;
+//     box-shadow: none;
+//   }
+// }
+
 @media print {
 
-  /* Hide everything except the invoice-container */
+  /* General print settings */
   body * {
     visibility: hidden;
   }
 
   .invoice-container {
     visibility: visible;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    position: relative;
+    margin: 0;
+    padding: 20px;
+    border: none;
+    box-shadow: none;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    /* Header, Info, Content, Footer */
+    height: 100vh;
+    /* Full page height */
   }
 
   /* Hide buttons */
@@ -73,12 +150,17 @@
     display: none;
   }
 
-  /* Adjust the page layout for print */
-  .invoice-container {
-    margin: 0;
-    padding: 20px;
-    border: none;
-    box-shadow: none;
+  /* Ensure table doesn't break */
+  .product-list table {
+    page-break-inside: avoid;
+  }
+
+  /* Force signature section at the bottom */
+  .invoice-signatures {
+    margin-top: auto;
+    text-align: center;
+    page-break-before: avoid;
+    /* Ensure it stays on the same page */
   }
 }
 

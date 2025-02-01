@@ -29,7 +29,7 @@
 
   <section class="invoice-info">
     <div class="info-group">
-      <h3>From:</h3>
+      <!-- <h3>From:</h3> -->
       <p>{{ business?.name | titlecase }}</p>
       <address>
         {{ business?.address | titlecase }}<br />
@@ -37,7 +37,7 @@
       </address>
     </div>
     <div class="info-group">
-      <h3>To:</h3>
+      <h6>Customer Details:</h6>
       <p>{{ customer?.name | titlecase }}</p>
       <address>
         <span *ngIf="customer?.address">{{ customer.address }}</span><br />
@@ -74,11 +74,28 @@
 
   <footer class="invoice-footer">
     <div class="summary">
-      <p>Discount: {{ invoice.discount || 0 }}%</p>
       <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p>
+      <p>Discount: {{ invoice.discount || 0 }}%</p>
       <hr />
       <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
     </div>
   </footer>
+
+<div class="invoice-signatures">
+  <div class="signature">
+    <div class="signature-line"></div>
+    <p>Customer Signature</p>
+  </div>
+  <div class="signature">
+    <div class="signature-line"></div>
+    <p>Depo In-Charge</p>
+  </div>
+  <div class="signature">
+    <div class="signature-line"></div>
+    <p>Authorized Signature</p>
+  </div>
+
+</div>
+
 </div>
 
