@@ -34,8 +34,8 @@ export const stockReducer = createReducer(
   on(stockActions.loadStock, (state, action) => {
     return {
       ...state,
-      loader: action.isMore ? false: true,
-      loaded: false,
+      loader: action.isMore ? false : true,
+      loaded: action.isMore ? true : false,
     };
   }),
   on(stockActions.loadStockSuccess, (state, action) => {
