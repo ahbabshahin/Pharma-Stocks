@@ -126,23 +126,21 @@
 
 @media print {
 
-  /* General print settings */
+  /* Hide everything except the invoice-container */
   body * {
     visibility: hidden;
   }
 
   .invoice-container {
     visibility: visible;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     margin: 0;
     padding: 20px;
     border: none;
     box-shadow: none;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    /* Header, Info, Content, Footer */
-    height: 100vh;
-    /* Full page height */
   }
 
   /* Hide buttons */
@@ -150,20 +148,39 @@
     display: none;
   }
 
-  /* Ensure table doesn't break */
+  /* Ensure the signature section is fixed at the bottom of the last page */
+  .invoice-signatures {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
+    page-break-before: always;
+    /* Moves to the last page */
+    visibility: visible;
+  }
+
+  /* Prevent table rows from splitting across pages */
   .product-list table {
+    page-break-inside: auto;
+  }
+
+  .product-list tbody tr {
     page-break-inside: avoid;
   }
 
-  /* Force signature section at the bottom */
-  .invoice-signatures {
-    margin-top: auto;
-    text-align: center;
-    page-break-before: avoid;
-    /* Ensure it stays on the same page */
+  /* Footer adjustments */
+  .invoice-footer {
+    margin-top: 16px;
+    page-break-after: avoid;
+  }
+
+  /* Avoid overlapping content */
+  .invoice-container {
+    page-break-inside: auto;
   }
 }
-
 .w-50{
   width: 50%;
 }
