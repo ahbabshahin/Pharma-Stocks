@@ -36,7 +36,7 @@ export const customerReducer = createReducer(
       return {
         ...state,
         loader: action.isMore ? false: true,
-        loaded: false,
+        loaded: action.isMore ? true: false,
       };
     }),
     on(customerActions.loadCustomerSuccess, (state, action) => {

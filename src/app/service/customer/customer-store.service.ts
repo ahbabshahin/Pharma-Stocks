@@ -93,4 +93,18 @@ export class CustomerStoreService {
 
   getCustomers = (): Observable<Customer[]> =>
     this.select(customerSelectors.getCustomers);
+
+  generateSerialNumber() {
+    // Generate two random uppercase letters
+    const letters = String.fromCharCode(
+      Math.floor(Math.random() * 26) + 65,
+      Math.floor(Math.random() * 26) + 65
+    );
+
+    // Generate four random digits
+    const digits = Math.floor(1000 + Math.random() * 9000);
+
+    // Combine letters and digits
+    return letters + digits;
+  }
 }

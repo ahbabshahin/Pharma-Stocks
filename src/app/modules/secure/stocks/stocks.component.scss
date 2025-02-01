@@ -133,6 +133,16 @@ button[nz-button] {
   border: none;
   box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
   transition: all 0.3s ease;
+  display: flex;
+  /* Ensure it's a flex container */
+  align-items: center;
+  /* Vertically center text */
+  justify-content: center;
+  /* Horizontally center text */
+  text-align: center;
+  /* Ensure text alignment */
+  white-space: nowrap;
+  /* Prevent text wrapping */
 }
 
 button[nz-button]:hover {
