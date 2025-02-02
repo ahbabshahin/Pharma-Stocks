@@ -1,4 +1,4 @@
-import { isDevMode, NgModule } from '@angular/core';
+import { isDevMode, NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +27,9 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './modules/auth/auth.module';
 registerLocaleData(en);
 
+export function loadConfig(config: Config): () => Promise<void> {
+  return () => config.loadConfig();
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,7 +40,7 @@ registerLocaleData(en);
     RouterModule,
     RouterOutlet,
     HttpClientModule,
-    StoreModule.forRoot(appReducer, {metaReducers}),
+    StoreModule.forRoot(appReducer, { metaReducers }),
     EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     IconsProviderModule,
@@ -50,6 +53,13 @@ registerLocaleData(en);
   bootstrap: [AppComponent],
   providers: [
     AppState,
+    Config,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [Config],
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpTokenInterceptor,
