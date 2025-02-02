@@ -13,7 +13,7 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
           <nz-card class="customer-card" nzHoverable="true" [nzActions]="[edit, delete]">
             <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
-            <p class="mt-2">
+            <p class="mt-2" *ngIf="list?.contacts">
               <strong>Phone Number:</strong> {{ list?.contacts }}
             </p>
           </nz-card>
