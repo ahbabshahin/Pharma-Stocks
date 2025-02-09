@@ -51,6 +51,18 @@ export class UserComponent {
     this.commonService.presentLoading();
 
   }
+  async deleteUser(user: User){
+    const ok = await this.commonService.showConfirmModal(
+      `Are you sure, you want to delete ${user?.name}?`
+    );
+
+    if(!ok) return;
+
+    this.commonService.presentLoading();
+
+  }
+
+
 
   ngOnDestroy(){
 
