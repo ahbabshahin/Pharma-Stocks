@@ -8,7 +8,7 @@ export class UserApiService {
   constructor(private http: HttpClient, private env: Config) { }
 
   getUsers(params: {[key: string]: any}){
-    return this.http.get(`${this.env.rootURL}/v1/auth/all`, { params });
+    return this.http.get(`${this.env.rootURL}/v1/user/all`, { params });
   }
 
 
