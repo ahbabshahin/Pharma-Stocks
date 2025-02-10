@@ -41,6 +41,15 @@ export const editRoleFail = createAction(
   props<{ error: string }>()
 );
 
-export const deleteUser = createAction('[User] delete user', props<{id: string}>());
-export const deleteUserSuccess = createAction('[User] delete user success', props<{id: string}>());
-export const deleteUserFail = createAction('[User] delete user fail', props<{error: string}>());
+export const deleteUser = createAction(
+  '[User] delete user',
+  props<{ id: string }>()
+);
+export const deleteUserSuccess = createAction(
+  '[User] delete user success',
+  props<{ id: string }>()
+);
+export const deleteUserFail = createAction(
+  '[User] delete user fail',
+  props<{ error: string }>()
+);
