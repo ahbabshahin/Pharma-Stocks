@@ -16,3 +16,13 @@ export interface LoginCred {
 export interface RegisterCred extends User {
   password: string;
 }
+
+export interface ForgetPassword{
+  id: string;
+  password: string;
+}
+
+export interface EditRolePayload{
+  id: string;
+  role: string
+}
