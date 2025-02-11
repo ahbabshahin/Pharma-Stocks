@@ -1,6 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { User } from "../models/user.model";
-import { createReducer } from "@ngrx/store";
+import { createReducer, on } from "@ngrx/store";
+import * as userActions from "../actions/user.action";
 
 export interface UserState extends EntityState<User>{
   loader: boolean;
@@ -28,4 +29,20 @@ const { selectAll } = userAdapter.getSelectors();
 
 export const userReducer = createReducer(
   initialState,
+  on(userActions.loadUsers, (state, action) =>{
+    return{
+      ...state,
+      loader: !action.isMore,
+      loaded: action.isMore
+    }
+  }),
+  on(userActions.loadUsersSuccess, (state, action) => {
+    let response = action.res;
+    if(action.isMore) response = [...selectAll(state), ...action.res];
+    return userAdapter.addMany(response, state);
+  }),
+  on(userActions.editRoleSuccess, (state, action) =>{
+    return userAdapter.updateOne(action.res, state)
+  }),
+
 );
