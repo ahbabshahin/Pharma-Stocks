@@ -11,7 +11,7 @@ import { Update } from "@ngrx/entity";
 
 @Injectable()
 
-export class UserEffects{
+export class UserEffects {
 
     constructor(
     private actions$: Actions,

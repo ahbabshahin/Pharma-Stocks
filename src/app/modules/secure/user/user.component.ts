@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { User } from '../../../store/models/user.model';
+import { EditRolePayload, User } from '../../../store/models/user.model';
 import { UserApiService } from '../../../service/user/user-api.service';
 import { SubSink } from 'subsink';
 import { CommonService } from '../../../service/common/common.service';
+import { UserStoreService } from '../../../service/user/user-store.service';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NewUserComponent } from './new-user/new-user.component';
 
 @Component({
   selector: 'app-user',
@@ -19,7 +22,12 @@ export class UserComponent {
     limit: 10
   }
   total: number = 0;
-  constructor(private userApi: UserApiService, private commonService: CommonService,){}
+  constructor(
+    private userApi: UserApiService,
+    private commonService: CommonService,
+    private userStore: UserStoreService,
+    private drawerService: NzDrawerService,
+  ){}
 
   ngOnInit(){
     this.initialize();
@@ -41,6 +49,19 @@ export class UserComponent {
       } });
   }
 
+  addUser(user: User) {
+    this.drawerService.create({
+      nzTitle: 'New Invoice',
+      nzClosable: true,
+      nzMaskClosable: false,
+      nzWidth: '100%',
+      nzWrapClassName: 'full-drawer',
+      // nzSize: 'large',
+      nzContent: NewUserComponent,
+      nzData: { user, total: this.total },
+    });
+  }
+
   async editRole(user: User){
     const ok = await this.commonService.showConfirmModal(
       `Are you sure, you want to make ${user?.name} as Admin?`
@@ -50,7 +71,13 @@ export class UserComponent {
 
     this.commonService.presentLoading();
 
+    let payload : EditRolePayload = {
+      _id: user?._id as string,
+      role: user?.role === 'user' ? 'admin' : 'user'
+    }
+    this.userStore.editRole(payload);
   }
+
   async deleteUser(user: User){
     const ok = await this.commonService.showConfirmModal(
       `Are you sure, you want to delete ${user?.name}?`
