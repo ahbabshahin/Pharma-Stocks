@@ -11,7 +11,8 @@
         </ng-template>
         <div class="card-details">
           <p class="user-email">{{ user?.email }}</p>
-          <button nz-button nzType="primary" class="logout-button" (click)="editRole(user)">Make Admin</button>
+          <button nz-button class="logout-button"
+            (click)="editRole(user)">{{user?.role === 'user' ? 'Make' : 'Remove'}} Admin</button>
         </div>
       </nz-card>
     </div>
