@@ -90,3 +90,31 @@ nz-select {
   font-size: 12px;
   margin: 0.5rem 0;
 }
+
+.autocomplete-wrapper {
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  background: white;
+  width: 100%;
+  z-index: 1000;
+  // border: 1px solid #ddd;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.product-list td input[nz-input] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.product-list td {
+  position: relative;
+}
+
+nz-autocomplete {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  display: block !important;
+  border: none !important; /* Ensure no unwanted border */
+}
