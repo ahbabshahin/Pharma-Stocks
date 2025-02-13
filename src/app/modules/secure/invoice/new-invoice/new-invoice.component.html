@@ -116,19 +116,21 @@
                       [nzAutocomplete]="auto"
                       (input)="searchProduct($event)"
                     />
-                    <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
-                      <ng-container *ngIf="products.length > 0">
-                        <nz-auto-option
-                          *ngFor="let item of products"
-                          [nzValue]="item?.name"
-                          (click)="onProductSelect(item, i)"
-                        >
-                          <div class="d-flex jc-between gap-2">
-                            <span>{{ item?.name | titlecase }}</span>
-                          </div>
-                        </nz-auto-option>
-                      </ng-container>
-                    </nz-autocomplete>
+                    <div class="autocomplete-wrapper">
+                      <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                        <ng-container *ngIf="products.length > 0">
+                          <nz-auto-option
+                            *ngFor="let item of products"
+                            [nzValue]="item?.name"
+                            (click)="onProductSelect(item, i)"
+                          >
+                            <div class="d-flex jc-between gap-2">
+                              <span>{{ item?.name | titlecase }}</span>
+                            </div>
+                          </nz-auto-option>
+                        </ng-container>
+                      </nz-autocomplete>
+                    </div>
                     <ng-container>
                       <p
                         *ngIf="
