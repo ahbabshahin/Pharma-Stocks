@@ -11,6 +11,7 @@ export const authStateName = 'auth';
 export const invoiceStateName = 'invoice';
 export const stockStateName = 'stock';
 export const customerStateName = 'customer';
+export const userStateName = 'user';
 
 export const appReducer = {
   [authStateName]: authReducer,
