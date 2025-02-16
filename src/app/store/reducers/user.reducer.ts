@@ -7,6 +7,7 @@ export interface UserState extends EntityState<User>{
   loader: boolean;
   loaded: boolean;
   subLoader: boolean;
+  total: number;
   error: string;
 }
 
@@ -16,6 +17,7 @@ const defaultUser: UserState = {
   loader: false,
   loaded: false,
   subLoader: false,
+  total: 0,
   error: "",
 }
 
@@ -39,10 +41,28 @@ export const userReducer = createReducer(
   on(userActions.loadUsersSuccess, (state, action) => {
     let response = action.res;
     if(action.isMore) response = [...selectAll(state), ...action.res];
-    return userAdapter.addMany(response, state);
+    return userAdapter.addMany(response, {
+      ...state,
+      loader: false,
+      loaded: true,
+    });
+  }),
+  on(userActions.loadUsersFail, (state, action) => {
+    return  {
+      ...state,
+      error: action.error,
+      loader: false,
+      loaded: false,
+    };
   }),
   on(userActions.editRoleSuccess, (state, action) =>{
     return userAdapter.updateOne(action.res, state)
   }),
+  on(userActions.editRoleFail, (state, action) =>{
+    return  {
+     ...state,
+      error: action.error,
+    };
+  })
 
 );

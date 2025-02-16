@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { EditRolePayload, User } from '../../../store/models/user.model';
-import { UserApiService } from '../../../service/user/user-api.service';
 import { SubSink } from 'subsink';
 import { CommonService } from '../../../service/common/common.service';
 import { UserStoreService } from '../../../service/user/user-store.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NewUserComponent } from './new-user/new-user.component';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -14,7 +14,6 @@ import { NewUserComponent } from './new-user/new-user.component';
 })
 export class UserComponent {
   user!: any;
-  loader: boolean = true;
   users: User[] = [];
   subs = new SubSink();
   params = {
@@ -22,8 +21,10 @@ export class UserComponent {
     limit: 10
   }
   total: number = 0;
+  isMore: boolean = false;
+  loader$: Observable<boolean> = of(true);
+  subloader$: Observable<boolean> = of(false);
   constructor(
-    private userApi: UserApiService,
     private commonService: CommonService,
     private userStore: UserStoreService,
     private drawerService: NzDrawerService,
@@ -34,18 +35,50 @@ export class UserComponent {
   }
 
   initialize(){
+    this.getLoader();
+    this.isUserLoaded();
     this.getUsers();
   }
 
+  getLoader(){
+    this.loader$ = this.userStore.getUserLoader();
+    this.subloader$ = this.userStore.getUserSubLoader();
+  }
+
+  isUserLoaded(){
+    this.subs.sink = this.userStore.getUserLoaded().subscribe({
+      next: (loaded: boolean) =>{
+        if(!loaded)
+          this.loadUsers();
+      },
+    })
+  }
+
+  loadUsers(){
+    this.userStore.loadUsers(this.params, this.isMore);
+  }
+
   getUsers(){
-    this.subs.sink = this.userApi
-      .getUsers(this.params)
-      .subscribe({ next: (res: any) => {
-        this.users = res.body;
-        this.total = res?.total
-        this.loader = false;
+    this.subs.sink = this.userStore
+      .getUsers()
+      .subscribe({ next: (res: User[]) => {
+        console.log('users list: ', res);
+        this.users = res;
+        this.getTotalUser()
+        // this.total = res?.total
+        // this.loader = false;
       }, error: () => {
-        this.loader = false;
+        // this.loader = false;
+      } });
+  }
+
+  getTotalUser(){
+    this.subs.sink = this.userStore
+     .getTotalUser()
+     .subscribe({ next: (res: number) => {
+        this.total = res;
+      }, error: () => {
+        this.commonService.showErrorToast('')
       } });
   }
 
@@ -92,6 +125,6 @@ export class UserComponent {
 
 
   ngOnDestroy(){
-
+    this.subs.unsubscribe();
   }
 }
