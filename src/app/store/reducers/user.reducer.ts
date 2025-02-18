@@ -63,6 +63,15 @@ export const userReducer = createReducer(
      ...state,
       error: action.error,
     };
+  }),
+  on(userActions.deleteUserSuccess, (state, action) =>{
+    return userAdapter.removeOne(action.id, state)
+  }),
+  on(userActions.deleteUserFail, (state, action) =>{
+    return  {
+     ...state,
+      error: action.error,
+    };
   })
 
 );

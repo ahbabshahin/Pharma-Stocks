@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Config } from '../../config';
-import { EditRolePayload } from '../../store/models/user.model';
+import { EditRolePayload, User } from '../../store/models/user.model';
 import { map } from 'rxjs';
 
 @Injectable()
@@ -11,6 +11,14 @@ export class UserApiService {
 
   getUsers(params: {[key: string]: any}){
     return this.http.get(`${this.env.rootURL}/v1/user/all`, { params });
+  }
+
+  addUser(payload: User){
+    return this.http.post(`${this.env.rootURL}/v1/user/`, payload);
+  }
+
+  deleteUser(id: string){
+    return this.http.delete(`${this.env.rootURL}/v1/user/${id}`);
   }
 
   editRole(payload: EditRolePayload){
