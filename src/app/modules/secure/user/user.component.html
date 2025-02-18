@@ -1,11 +1,11 @@
-<app-global-loader *ngIf="loader"></app-global-loader>
+<app-global-loader *ngIf="loader$ | async"></app-global-loader>
 
-<ng-container *ngIf="!loader">
+<ng-container *ngIf="!(loader$ | async)">
   <ng-container *ngIf="users?.length">
     <div class="user-card-wrapper">
       <div class="user-card-container" *ngFor="let user of users">
         <nz-card nzHoverable class="user-card">
-          <nz-card-meta [nzTitle]="user.name" [nzAvatar]="avatarTemplate" [nzDescription]="user.role | titlecase">
+          <nz-card-meta [nzTitle]="user.name" [nzAvatar]="avatarTemplate" [nzDescription]="user?.role | titlecase">
           </nz-card-meta>
           <ng-template #avatarTemplate>
             <img [src]="'assets/img/profile.jpg'" alt="Avatar" class="user-avatar" />
@@ -21,4 +21,5 @@
       </div>
     </div>
   </ng-container>
+    <app-global-no-data *ngIf="!users?.length" bodyText="No user found"></app-global-no-data>
 </ng-container>
