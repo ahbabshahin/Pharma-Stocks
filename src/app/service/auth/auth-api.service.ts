@@ -24,7 +24,7 @@ export class AuthApiService {
 
   getUser(id: string){
     return this.http
-      .get(`${this.env.rootURL}/v1/user/user/${id}`)
+      .get(`${this.env.rootURL}/v1/user/${id}`)
       .pipe(map((res: any) => res?.body));
   }
 }

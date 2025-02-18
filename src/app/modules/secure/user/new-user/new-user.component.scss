@@ -1,0 +1,23 @@
+.user-form {
+  max-width: 600px;
+
+  .card {
+    border-radius: 16px;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 12px;
+  }
+
+  button {
+    border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .card {
+      padding: 20px;
+    }
+  }
+}

@@ -31,6 +31,7 @@ export class UserEffects {
         }),
         catchError((err) =>{
           let errorMessage = err?.error?.message || 'User load failed';
+          this.userStore.loadUsersFail(errorMessage);
             this.commonService.showErrorToast(errorMessage);
           return of();
         })

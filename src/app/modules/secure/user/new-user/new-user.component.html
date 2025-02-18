@@ -1,1 +1,72 @@
-<p>new-user works!</p>
+<div class="container user-form mt-4">
+  <div class="card shadow-lg p-4">
+    <h2 class="mb-4">{{ isEdit ? 'Edit User' : 'Add User' }}</h2>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Name -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          formControlName="name"
+          placeholder="Enter name"
+          [class.is-invalid]="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">
+          Name is required.
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="Enter email"
+          [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+          Valid email is required.
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control"
+          formControlName="username"
+          placeholder="Enter username"
+          [class.is-invalid]="userForm.get('username')?.invalid && userForm.get('username')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
+          Username is required.
+        </div>
+      </div>
+
+      <!-- Role -->
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select id="role" class="form-select" formControlName="role">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
+          {{ isEdit ? 'Update' : 'Add' }} User
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
