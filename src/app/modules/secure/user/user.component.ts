@@ -132,7 +132,7 @@ export class UserComponent {
     if(!ok) return;
 
     this.commonService.presentLoading();
-
+    this.userStore.deleteUser(user._id as string);
   }
 
 

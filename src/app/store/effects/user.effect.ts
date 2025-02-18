@@ -59,7 +59,31 @@ export class UserEffects {
           }),
           catchError((err) => {
             let errorMessage = err?.error?.message || 'Edit user role failed';
+            this.userStore.editRoleFail(errorMessage);
             this.commonService.showErrorToast(errorMessage)
+            this.commonService.dismissLoading()
+            return of();
+          })
+        )
+      })
+    ),
+    {dispatch: false}
+  );
+
+  deleteUser$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(userActions.deleteUser),
+      mergeMap((action) => {
+        return this.userApi.deleteUser(action.id).pipe(
+          map(() =>{
+            this.commonService.dismissLoading();
+            this.commonService.showSuccessToast('Delete user successfully');
+            this.userStore.deleteUserSuccess(action.id)
+          }),
+          catchError((err) => {
+            let errorMessage = err?.error?.message || 'Delete user failed';
+            this.commonService.showErrorToast(errorMessage)
+            this.userStore.deleteUserFail(errorMessage);
             this.commonService.dismissLoading()
             return of();
           })
