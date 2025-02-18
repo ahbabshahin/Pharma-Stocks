@@ -111,6 +111,19 @@ export class UserComponent {
     this.userStore.editRole(payload);
   }
 
+   editUser(user?: User){
+     console.log('user: ', user);
+      this.drawerService.create({
+       nzTitle: `${user ? 'Update': 'Add'} user`,
+       nzClosable: true,
+       nzMaskClosable: false,
+       nzWidth: '100%',
+       // nzWrapClassName: 'md-drawer',
+       nzContent: NewUserComponent,
+       nzData: {user}
+     });
+  }
+
   async deleteUser(user: User){
     const ok = await this.commonService.showConfirmModal(
       `Are you sure, you want to delete ${user?.name}?`
@@ -119,7 +132,7 @@ export class UserComponent {
     if(!ok) return;
 
     this.commonService.presentLoading();
-
+    this.userStore.deleteUser(user._id as string);
   }
 
 
