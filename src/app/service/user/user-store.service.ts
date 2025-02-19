@@ -24,6 +24,16 @@ export class UserStoreService {
     this.dispatch(userActions.loadUsersFail({ error }));
   }
 
+  addUser(payload: User) {
+    this.dispatch(userActions.addUser({ payload }));
+  }
+  addUserSuccess(res: User) {
+    this.dispatch(userActions.addUserSuccess({ res }));
+  }
+  addUserFail(error: string) {
+    this.dispatch(userActions.addUserFail({ error }));
+  }
+
   updateUser(payload: User) {
     this.dispatch(userActions.updateUser({ payload }));
   }
@@ -66,7 +76,5 @@ export class UserStoreService {
     this.select(userSelectors.getTotalUser);
   getUserError = (): Observable<string> =>
     this.select(userSelectors.getUserError);
-  getUsers = (): Observable<User[]> =>
-    this.select(userSelectors.getUsers);
-
+  getUsers = (): Observable<User[]> => this.select(userSelectors.getUsers);
 }
