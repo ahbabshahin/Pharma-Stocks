@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { User } from '../../../../store/models/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserStoreService } from '../../../../service/user/user-store.service';
+import { CommonService } from '../../../../service/common/common.service';
 
 @Component({
   selector: 'app-new-user',
@@ -11,10 +12,28 @@ import { UserStoreService } from '../../../../service/user/user-store.service';
 export class NewUserComponent {
   user!: User;
   total!: number;
-  userForm: FormGroup;
+  userForm!: FormGroup;
   isEdit = false;
 
-  constructor(private formBuilder: FormBuilder, private userStore: UserStoreService,) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private userStore: UserStoreService,
+    private commonService: CommonService,
+  ) {}
+
+  ngOnInit(): void {
+    this.initialize();
+    if (this.user) {
+      this.isEdit = true;
+      this.populateForm();
+    }
+  }
+
+  initialize(){
+    this.initializeForm();
+  }
+
+  initializeForm(){
     this.userForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -23,11 +42,10 @@ export class NewUserComponent {
     });
   }
 
-  ngOnInit(): void {
-    if (this.user) {
-      this.isEdit = true;
-      this.userForm.patchValue(this.user);
-    }
+  populateForm(){
+    this.userForm.patchValue({
+      ...this.user
+    });
   }
 
   onSubmit(): void {
@@ -36,11 +54,15 @@ export class NewUserComponent {
       let payload: User = {
         ...this.userForm?.value
       }
-      this.userStore.addUser(payload)
+      this.commonService.presentLoading();
+      if (this.user) this.userStore.updateUser(payload);
+      else this.userStore.addUser(payload);
     }
   }
 
   onCancel(): void {
     this.userForm.reset();
   }
+
+  noOnDestroy(){}
 }
