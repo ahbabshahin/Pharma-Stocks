@@ -10,10 +10,8 @@ import { User } from "../models/user.model";
 import { Update } from "@ngrx/entity";
 
 @Injectable()
-
 export class UserEffects {
-
-    constructor(
+  constructor(
     private actions$: Actions,
     private userApi: UserApiService,
     private userStore: UserStoreService,
@@ -21,76 +19,142 @@ export class UserEffects {
     private router: Router
   ) {}
 
-  loadUsers$ = createEffect(() => this.actions$.pipe(
-    ofType(userActions.loadUsers),
-    mergeMap((action) =>{
-      return this.userApi.getUsers(action.params).pipe(
-        map((res: any) =>{
-          console.log('res: ', res);
-          this.userStore.loadUsersSuccess(res?.body ?? [], res?.total ?? 0, action.isMore);
-        }),
-        catchError((err) =>{
-          let errorMessage = err?.error?.message || 'User load failed';
-          this.userStore.loadUsersFail(errorMessage);
-            this.commonService.showErrorToast(errorMessage);
-          return of();
+  loadUsers$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(userActions.loadUsers),
+        mergeMap((action) => {
+          return this.userApi.getUsers(action.params).pipe(
+            map((res: any) => {
+              console.log('res: ', res);
+              this.userStore.loadUsersSuccess(
+                res?.body ?? [],
+                res?.total ?? 0,
+                action.isMore
+              );
+            }),
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'User load failed';
+              this.userStore.loadUsersFail(errorMessage);
+              this.commonService.showErrorToast(errorMessage);
+              return of();
+            })
+          );
         })
-      )
-    })
-  ),
-  {dispatch: false}
-);
+      ),
+    { dispatch: false }
+  );
+
+  addUser$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(userActions.addUser),
+        mergeMap((action) => {
+          return this.userApi.addUser(action.payload).pipe(
+            map((res: User) => {
+              this.userStore.addUserSuccess(res);
+              this.commonService.dismissLoading();
+              this.commonService.showSuccessToast(
+                'Add user successfully'
+              );
+            }),
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'Add user failed';
+              this.userStore.addUserFail(errorMessage);
+              this.commonService.showErrorToast(errorMessage);
+              this.commonService.dismissLoading();
+              return of();
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+  updateUser$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(userActions.updateUser),
+        mergeMap((action) => {
+          return this.userApi.updateUser(action.payload).pipe(
+            map((res: User) => {
+              let response: Update<User> = {
+                id: action?.payload?._id as string,
+                changes: {
+                  ...res,
+                }
+              }
+              this.userStore.updateUserSuccess(response);
+              this.commonService.dismissLoading();
+              this.commonService.showSuccessToast(
+                'User update successfully'
+              );
+            }),
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'update user failed';
+              this.userStore.updateUserFail(errorMessage);
+              this.commonService.showErrorToast(errorMessage);
+              this.commonService.dismissLoading();
+              return of();
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
 
   editRole$ = createEffect(
-    () => this.actions$.pipe(
-      ofType(userActions.editRole),
-      mergeMap((action) => {
-        return this.userApi.editRole(action.payload).pipe(
-          map((res: User) =>{
-            let response: Update<User> = {
-              id: res._id as string,
-              changes: {
-                ...res
-              }
-            }
-            this.userStore.editRoleSuccess(response)
+    () =>
+      this.actions$.pipe(
+        ofType(userActions.editRole),
+        mergeMap((action) => {
+          return this.userApi.editRole(action.payload).pipe(
+            map((res: User) => {
+              let response: Update<User> = {
+                id: res._id as string,
+                changes: {
+                  ...res,
+                },
+              };
+              this.userStore.editRoleSuccess(response);
               this.commonService.dismissLoading();
-              this.commonService.showSuccessToast('Edit user role successfully');
-          }),
-          catchError((err) => {
-            let errorMessage = err?.error?.message || 'Edit user role failed';
-            this.userStore.editRoleFail(errorMessage);
-            this.commonService.showErrorToast(errorMessage)
-            this.commonService.dismissLoading()
-            return of();
-          })
-        )
-      })
-    ),
-    {dispatch: false}
+              this.commonService.showSuccessToast(
+                'Edit user role successfully'
+              );
+            }),
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'Edit user role failed';
+              this.userStore.editRoleFail(errorMessage);
+              this.commonService.showErrorToast(errorMessage);
+              this.commonService.dismissLoading();
+              return of();
+            })
+          );
+        })
+      ),
+    { dispatch: false }
   );
 
   deleteUser$ = createEffect(
-    () => this.actions$.pipe(
-      ofType(userActions.deleteUser),
-      mergeMap((action) => {
-        return this.userApi.deleteUser(action.id).pipe(
-          map(() =>{
-            this.commonService.dismissLoading();
-            this.commonService.showSuccessToast('Delete user successfully');
-            this.userStore.deleteUserSuccess(action.id)
-          }),
-          catchError((err) => {
-            let errorMessage = err?.error?.message || 'Delete user failed';
-            this.commonService.showErrorToast(errorMessage)
-            this.userStore.deleteUserFail(errorMessage);
-            this.commonService.dismissLoading()
-            return of();
-          })
-        )
-      })
-    ),
-    {dispatch: false}
-  )
-
+    () =>
+      this.actions$.pipe(
+        ofType(userActions.deleteUser),
+        mergeMap((action) => {
+          return this.userApi.deleteUser(action.id).pipe(
+            map(() => {
+              this.commonService.dismissLoading();
+              this.commonService.showSuccessToast('Delete user successfully');
+              this.userStore.deleteUserSuccess(action.id);
+            }),
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'Delete user failed';
+              this.commonService.showErrorToast(errorMessage);
+              this.userStore.deleteUserFail(errorMessage);
+              this.commonService.dismissLoading();
+              return of();
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
 }

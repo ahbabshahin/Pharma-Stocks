@@ -15,6 +15,19 @@ export const loadUsersFail = createAction(
   props<{ error: string }>()
 );
 
+export const addUser = createAction(
+  '[User] add user',
+  props<{ payload: User }>()
+);
+export const addUserSuccess = createAction(
+  '[User] add user success',
+  props<{ res: User }>()
+);
+export const addUserFail = createAction(
+  '[User] add user fail',
+  props<{ error: string }>()
+);
+
 export const updateUser = createAction(
   '[User] update user',
   props<{ payload: User }>()

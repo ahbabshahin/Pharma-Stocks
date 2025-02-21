@@ -14,7 +14,15 @@ export class UserApiService {
   }
 
   addUser(payload: User){
-    return this.http.post(`${this.env.rootURL}/v1/user/`, payload);
+    return this.http
+      .post(`${this.env.rootURL}/v1/user/`, payload)
+      .pipe(map((res: any) => res?.body));
+  }
+
+  updateUser(payload: User){
+    return this.http
+      .patch(`${this.env.rootURL}/v1/user/${payload?._id}`, payload)
+      .pipe(map((res: any) => res?.body));
   }
 
   deleteUser(id: string){
