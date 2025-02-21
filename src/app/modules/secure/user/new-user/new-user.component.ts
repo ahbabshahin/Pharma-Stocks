@@ -3,6 +3,7 @@ import { User } from '../../../../store/models/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserStoreService } from '../../../../service/user/user-store.service';
 import { CommonService } from '../../../../service/common/common.service';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-new-user',
@@ -19,6 +20,7 @@ export class NewUserComponent {
     private formBuilder: FormBuilder,
     private userStore: UserStoreService,
     private commonService: CommonService,
+    private drawerRef: NzDrawerRef,
   ) {}
 
   ngOnInit(): void {
@@ -55,8 +57,15 @@ export class NewUserComponent {
         ...this.userForm?.value
       }
       this.commonService.presentLoading();
-      if (this.user) this.userStore.updateUser(payload);
+      if (this.user) {
+        payload = {
+         ...payload,
+          _id: this.user._id,
+        };
+        this.userStore.updateUser(payload);
+      }
       else this.userStore.addUser(payload);
+      this.drawerRef.close();
     }
   }
 

@@ -22,9 +22,9 @@
                 <!-- {{ user?.role === 'user' ? 'Make Admin' : 'Remove Admin' }} -->
                 <span nz-icon nzType="user-switch" [nz-tooltip]="user?.role === 'user' ? 'Make Admin' : 'Remove Admin'" nzTheme="outline"></span>
               </button>
-              <!-- <button nz-button nzSize="small" nzShape="circle" nz-tooltip="edit user" nzType="default" (click)="editUser(user)">
+              <button nz-button nzSize="small" nzShape="circle" nz-tooltip="edit user" nzType="default" (click)="editUser(user)">
                 <span nz-icon nzType="edit" nzTheme="outline"></span>
-              </button> -->
+              </button>
               <button nz-button nzSize="small" nzShape="circle" nzDanger nz-tooltip="delete user" (click)="deleteUser(user)">
                 <span nz-icon nzType="delete" nzTheme="outline"></span>
               </button>
