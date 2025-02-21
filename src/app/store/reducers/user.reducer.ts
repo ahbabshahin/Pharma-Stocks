@@ -55,6 +55,15 @@ export const userReducer = createReducer(
       loaded: false,
     };
   }),
+  on(userActions.updateUserSuccess, (state, action) =>{
+    return userAdapter.updateOne(action.res, state)
+  }),
+  on(userActions.updateUserFail, (state, action) =>{
+    return  {
+     ...state,
+      error: action.error,
+    };
+  }),
   on(userActions.editRoleSuccess, (state, action) =>{
     return userAdapter.updateOne(action.res, state)
   }),

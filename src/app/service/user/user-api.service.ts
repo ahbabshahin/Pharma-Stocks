@@ -19,6 +19,12 @@ export class UserApiService {
       .pipe(map((res: any) => res?.body));
   }
 
+  updateUser(payload: User){
+    return this.http
+      .patch(`${this.env.rootURL}/v1/user/${payload?._id}`, payload)
+      .pipe(map((res: any) => res?.body));
+  }
+
   deleteUser(id: string){
     return this.http.delete(`${this.env.rootURL}/v1/user/${id}`);
   }

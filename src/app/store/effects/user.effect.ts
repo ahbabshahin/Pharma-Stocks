@@ -55,12 +55,43 @@ export class UserEffects {
               this.userStore.addUserSuccess(res);
               this.commonService.dismissLoading();
               this.commonService.showSuccessToast(
-                'Edit user role successfully'
+                'Add user successfully'
               );
             }),
             catchError((err) => {
               let errorMessage = err?.error?.message || 'Add user failed';
               this.userStore.addUserFail(errorMessage);
+              this.commonService.showErrorToast(errorMessage);
+              this.commonService.dismissLoading();
+              return of();
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+  updateUser$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(userActions.updateUser),
+        mergeMap((action) => {
+          return this.userApi.updateUser(action.payload).pipe(
+            map((res: User) => {
+              let response: Update<User> = {
+                id: action?.payload?._id as string,
+                changes: {
+                  ...res,
+                }
+              }
+              this.userStore.updateUserSuccess(response);
+              this.commonService.dismissLoading();
+              this.commonService.showSuccessToast(
+                'User update successfully'
+              );
+            }),
+            catchError((err) => {
+              let errorMessage = err?.error?.message || 'update user failed';
+              this.userStore.updateUserFail(errorMessage);
               this.commonService.showErrorToast(errorMessage);
               this.commonService.dismissLoading();
               return of();
