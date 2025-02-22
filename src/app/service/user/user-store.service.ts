@@ -11,6 +11,13 @@ import * as userSelectors from '../../store/selectors/user.selector';
 export class UserStoreService {
   constructor(private store: Store<UserState>) {}
 
+  userRole: { label: string; value: string }[] = [
+    { label: 'Office', value: 'office' },
+    { label: 'Field', value: 'field' },
+    { label: 'Delivery', value: 'delivery' },
+    { label: 'Admin', value: 'admin' },
+  ];
+
   dispatch = (action: Action) => this.store.dispatch(action);
   select = (action: any) => this.store.select(action);
 
