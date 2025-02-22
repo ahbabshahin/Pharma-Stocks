@@ -106,7 +106,7 @@ export class UserComponent {
 
     let payload : EditRolePayload = {
       _id: user?._id as string,
-      role: user?.role === 'user' ? 'admin' : 'user'
+      role: user?.role === 'office' ? 'admin' : 'office'
     }
     this.userStore.editRole(payload);
   }

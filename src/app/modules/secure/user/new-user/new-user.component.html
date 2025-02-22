@@ -1,6 +1,6 @@
 <div class="container user-form mt-4">
   <div class="card shadow-lg p-4">
-    <h2 class="mb-4">{{ isEdit ? 'Edit User' : 'Add User' }}</h2>
+    <h2 class="mb-4">{{ isEdit ? "Edit User" : "Add User" }}</h2>
 
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
       <!-- Name -->
@@ -12,9 +12,14 @@
           class="form-control"
           formControlName="name"
           placeholder="Enter name"
-          [class.is-invalid]="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+          [class.is-invalid]="
+            userForm.get('name')?.invalid && userForm.get('name')?.touched
+          "
         />
-        <div class="invalid-feedback" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">
+        <div
+          class="invalid-feedback"
+          *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+        >
           Name is required.
         </div>
       </div>
@@ -28,9 +33,16 @@
           class="form-control"
           formControlName="email"
           placeholder="Enter email"
-          [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+          [class.is-invalid]="
+            userForm.get('email')?.invalid && userForm.get('email')?.touched
+          "
         />
-        <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            userForm.get('email')?.invalid && userForm.get('email')?.touched
+          "
+        >
           Valid email is required.
         </div>
       </div>
@@ -44,9 +56,18 @@
           class="form-control"
           formControlName="username"
           placeholder="Enter username"
-          [class.is-invalid]="userForm.get('username')?.invalid && userForm.get('username')?.touched"
+          [class.is-invalid]="
+            userForm.get('username')?.invalid &&
+            userForm.get('username')?.touched
+          "
         />
-        <div class="invalid-feedback" *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            userForm.get('username')?.invalid &&
+            userForm.get('username')?.touched
+          "
+        >
           Username is required.
         </div>
       </div>
@@ -55,17 +76,27 @@
       <div class="mb-3">
         <label for="role" class="form-label">Role</label>
         <select id="role" class="form-select" formControlName="role">
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
+          <option
+            *ngFor="let role of userRole; let i = index"
+            [value]="role?.value"
+            [label]="role.label"
+          ></option>
+          <!-- <option value="admin">Admin</option> -->
         </select>
       </div>
 
       <!-- Action Buttons -->
       <div class="d-flex gap-3 mt-4">
-        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
-          {{ isEdit ? 'Update' : 'Add' }} User
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="userForm.invalid"
+        >
+          {{ isEdit ? "Update" : "Add" }} User
         </button>
-        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          Cancel
+        </button>
       </div>
     </form>
   </div>

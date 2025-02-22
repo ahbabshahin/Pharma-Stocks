@@ -41,7 +41,7 @@ export const userReducer = createReducer(
   on(userActions.loadUsersSuccess, (state, action) => {
     let response = action.res;
     if(action.isMore) response = [...selectAll(state), ...action.res];
-    return userAdapter.addMany(response, {
+    return userAdapter.setAll(response, {
       ...state,
       loader: false,
       loaded: true,
@@ -53,6 +53,15 @@ export const userReducer = createReducer(
       error: action.error,
       loader: false,
       loaded: false,
+    };
+  }),
+  on(userActions.addUserSuccess, (state, action) =>{
+    return userAdapter.addOne(action.res, state)
+  }),
+  on(userActions.addUserFail, (state, action) =>{
+    return  {
+     ...state,
+      error: action.error,
     };
   }),
   on(userActions.updateUserSuccess, (state, action) =>{
