@@ -26,7 +26,7 @@ export class StockEffects {
             map((res: any) => {
                 this.stockStore.loadStockSuccess(
                   res.body ?? [],
-                  res?.total,
+                  res?.total ?? 0,
                   action.isMore
                 );
               if(action.isMore) this.stockStore.setStockSubLoader(false);
@@ -137,7 +137,7 @@ export class StockEffects {
           return this.stockApi.searchStock(action.params).pipe(
             map((res: any) => {
               if (res?.body?.length) {
-                this.stockStore.searchStockSuccess(res.body);
+                this.stockStore.searchStockSuccess(res.body ?? [], res?.total ?? 0);
               } else {
                 this.commonService.showErrorToast('Stock search failed');
               }

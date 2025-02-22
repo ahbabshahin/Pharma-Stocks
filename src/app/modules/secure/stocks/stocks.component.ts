@@ -7,6 +7,7 @@ import { Stock } from '../../../store/models/stocks.model';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NewStockComponent } from './new-stock/new-stock.component';
 import { AuthStoreService } from '../../../service/auth/auth-store.service';
+import { setLoader } from '../../../store/actions/auth.action';
 
 @Component({
   selector: 'app-stocks',
@@ -44,6 +45,7 @@ export class StocksComponent {
     this.getLoader();
     this.isStockLoaded();
     this.getStocks();
+    this.getTotalStocks();
   }
 
   isStockLoaded() {
@@ -83,9 +85,12 @@ export class StocksComponent {
         if (this.isMore) this.isMore = false;
       },
     });
+  }
 
+  getTotalStocks(){
     this.subs.sink = this.stockStore.getTotalStock().subscribe({
       next: (total: number) => {
+        console.log('total: ', total);
         this.total = total;
       },
       error: () => {},
@@ -123,6 +128,16 @@ export class StocksComponent {
 
       this.stockStore.searchStock(params);
     }
+  }
+
+  resetSearch(){
+    this.searchText = '';
+    this.params = {
+      ...this.params,
+      page: 1
+    }
+    this.isMore = false;
+    this.loadStock();
   }
 
   loadMore(){

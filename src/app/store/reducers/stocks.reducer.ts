@@ -99,6 +99,7 @@ export const stockReducer = createReducer(
     return stockAdapter.setAll(action.res, {
       ...state,
       loader: false,
+      total: action.total,
     });
   }),
   on(stockActions.searchStockFail, (state, action) => {
