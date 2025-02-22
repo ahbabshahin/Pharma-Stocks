@@ -65,7 +65,7 @@ export const searchStock = createAction(
 );
 export const searchStockSuccess = createAction(
   '[Stock] search stock success',
-  props<{ res: Stock[] }>()
+  props<{ res: Stock[], total: number }>()
 );
 export const searchStockFail = createAction(
   '[Stock] search stock fail',

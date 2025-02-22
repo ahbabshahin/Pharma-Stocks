@@ -61,8 +61,8 @@ export class StockStoreService {
   searchStock(params: { [key: string]: any }) {
     this.dispatch(stockActions.searchStock({ params }));
   }
-  searchStockSuccess(res: Stock[]) {
-    this.dispatch(stockActions.searchStockSuccess({ res }));
+  searchStockSuccess(res: Stock[], total: number) {
+    this.dispatch(stockActions.searchStockSuccess({ res, total }));
   }
   searchStockFail(error: string) {
     this.dispatch(stockActions.searchStockFail({ error }));
