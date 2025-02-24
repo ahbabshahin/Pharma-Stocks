@@ -1,9 +1,8 @@
 <div class="container user-form mt-4">
   <div class="card shadow-lg p-4">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
-
-      <!-- Username -->
+    <!-- Step 1: Username Section -->
+    <form *ngIf="step === 1" [formGroup]="usernameForm" (ngSubmit)="checkUser()" novalidate>
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input
@@ -12,26 +11,31 @@
           class="form-control"
           formControlName="username"
           placeholder="Enter username"
-          [class.is-invalid]="loginForm.get('username')?.invalid && (loginForm.get('username')?.touched || loginForm?.get('username')?.dirty)"
+          [class.is-invalid]="usernameForm.get('username')?.invalid && (usernameForm.get('username')?.touched || usernameForm.get('username')?.dirty)"
         />
-        <div class="invalid-feedback" *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.touched || loginForm?.get('username')?.dirty)">
+        <div class="invalid-feedback" *ngIf="usernameForm.get('username')?.invalid && (usernameForm.get('username')?.touched || usernameForm.get('username')?.dirty)">
           Username is required.
         </div>
       </div>
+      <button type="submit" [disabled]="usernameForm.invalid" class="primary-btn" nz-button nzShape="round">
+        Next
+      </button>
+    </form>
+
+    <!-- Step 2: Password Section -->
+    <form *ngIf="step === 2" [formGroup]="passwordForm" (ngSubmit)="onLogin()" novalidate>
       <div class="mb-3">
-        <label for="username" class="form-label">Password</label>
+        <label for="password" class="form-label">Password</label>
         <nz-input-group [nzSuffix]="suffixTemplate">
-        <input
-          nz-input
-          type="text"
-          id="password"
-          [type]="passwordVisible ? 'text' : 'password'"
-          placeholder="input password"
-          formControlName="password"
-          class="form-control"
-          placeholder="Enter password"
-          [class.is-invalid]="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)"
-        />
+          <input
+            nz-input
+            id="password"
+            [type]="passwordVisible ? 'text' : 'password'"
+            placeholder="Enter password"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="passwordForm.get('password')?.invalid && (passwordForm.get('password')?.touched || passwordForm.get('password')?.dirty)"
+          />
         </nz-input-group>
         <ng-template #suffixTemplate>
           <span
@@ -40,30 +44,85 @@
             (click)="passwordVisible = !passwordVisible"
           ></span>
         </ng-template>
-        <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
+        <div class="invalid-feedback" *ngIf="passwordForm.get('password')?.invalid && (passwordForm.get('password')?.touched || passwordForm.get('password')?.dirty)">
           Password is required.
         </div>
       </div>
-
-      <!-- Role -->
-      <!-- <div class="mb-3">
-        <label for="role" class="form-label">Role</label>
-        <select id="role" class="form-select" formControlName="role">
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div> -->
-
-      <!-- Action Buttons -->
       <div class="d-flex gap-3 mt-4">
-        <button type="submit" [disabled]="loginForm?.invalid" class="primary-btn" nz-button nzShape="round">
-          Submit
+        <button type="button" class="btn btn-secondary" (click)="step = 1">Back</button>
+        <button type="submit" [disabled]="passwordForm.invalid" class="primary-btn" nz-button nzShape="round">
+          Login
         </button>
-        <!-- <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button> -->
       </div>
     </form>
+
+    <!-- Step 3: Set Password Section -->
+    <form *ngIf="step === 3" [formGroup]="setPasswordForm" (ngSubmit)="setNewPassword()" novalidate>
+      <div class="mb-3">
+        <label for="newPassword" class="form-label">Set New Password</label>
+        <nz-input-group [nzSuffix]="newPasswordSuffixTemplate">
+          <input
+            nz-input
+            id="newPassword"
+            [type]="newPasswordVisible ? 'text' : 'password'"
+            class="form-control"
+            formControlName="newPassword"
+            placeholder="Enter new password"
+            [class.is-invalid]="setPasswordForm.get('newPassword')?.invalid && (setPasswordForm.get('newPassword')?.touched || setPasswordForm.get('newPassword')?.dirty)"
+          />
+          <div class="invalid-feedback" *ngIf="setPasswordForm.get('newPassword')?.invalid && (setPasswordForm.get('newPassword')?.touched || setPasswordForm.get('newPassword')?.dirty)">
+            Password must be at least 6 characters.
+          </div>
+        </nz-input-group>
+        <ng-template #newPasswordSuffixTemplate>
+          <span
+            nz-icon
+            [nzType]="newPasswordVisible ? 'eye-invisible' : 'eye'"
+            (click)="newPasswordVisible = !newPasswordVisible"
+          ></span>
+        </ng-template>
+
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <nz-input-group [nzSuffix]="confirmPasswordSuffixTemplate">
+          <input
+            nz-input
+            id="confirmPassword"
+            [type]="confirmPasswordVisible ? 'text' : 'password'"
+            class="form-control"
+            formControlName="confirmPassword"
+            placeholder="Confirm new password"
+            [class.is-invalid]="setPasswordForm.get('confirmPassword')?.invalid || passwordsDoNotMatch"
+          />
+          <div class="invalid-feedback" *ngIf="setPasswordForm.get('confirmPassword')?.invalid">
+            Confirm Password is required.
+          </div>
+          <div class="invalid-feedback" *ngIf="passwordsDoNotMatch">
+            Passwords do not match.
+          </div>
+        </nz-input-group>
+        <ng-template #confirmPasswordSuffixTemplate>
+          <span
+            nz-icon
+            [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'"
+            (click)="confirmPasswordVisible = !confirmPasswordVisible"
+          ></span>
+        </ng-template>
+
+      </div>
+
+      <div class="d-flex gap-3 mt-4">
+        <button type="button" class="btn btn-secondary" (click)="step = 1">Back</button>
+        <button type="submit" [disabled]="setPasswordForm.invalid || passwordsDoNotMatch" class="primary-btn" nz-button nzShape="round">
+          Set Password
+        </button>
+      </div>
+    </form>
+
     <p class="black">
-      Don't have an account. Please register
+      Don't have an account? Please register
       <a routerLink="/auth/register">here</a>
     </p>
   </div>
