@@ -11,6 +11,7 @@ import { authReducer } from '../../store/reducers/auth.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from '../../store/effects/auth.effect';
 import * as authComponents from './index';
+import { UserApiService } from '../../service/user/user-api.service';
 
 @NgModule({
   declarations: [...authComponents.components],
@@ -18,5 +19,7 @@ import * as authComponents from './index';
     // StoreModule.forFeature(authStateName, authReducer),
     // EffectsModule.forFeature([AuthEffects])
   ],
+  providers: [UserApiService],
+
 })
 export class AuthModule {}

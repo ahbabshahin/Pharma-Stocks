@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Config } from '../../config';
-import { EditRolePayload, User } from '../../store/models/user.model';
+import { EditRolePayload, LoginCred, User } from '../../store/models/user.model';
 import { map } from 'rxjs';
 
 @Injectable()
@@ -35,4 +35,8 @@ export class UserApiService {
       .pipe(map((res: any) => res?.body));
   }
 
+  setPassword(id: string, payload: LoginCred){
+    return this.http
+     .patch(`${this.env.rootURL}/v1/user/set-password/${id}`, payload);
+  }
 }
