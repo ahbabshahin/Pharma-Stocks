@@ -6,6 +6,7 @@ export interface User {
   role?: string;
   image?: string;
   accessToken?: string;
+  isPasswordSet?: boolean;
 }
 
 export interface LoginCred {

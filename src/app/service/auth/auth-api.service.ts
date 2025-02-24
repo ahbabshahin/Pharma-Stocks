@@ -14,6 +14,10 @@ export class AuthApiService {
     return this.http.post(`${this.env.rootURL}/v1/auth/login`, payload);
   }
 
+  checkUserExist(username: string){
+    return this.http.get(`${this.env.rootURL}/v1/auth/check-user/${username}`).pipe(map((res: any) => res?.body));
+  }
+
   register(payload: RegisterCred) {
     return this.http.post(`${this.env.rootURL}/v1/auth/register`, payload);
   }
