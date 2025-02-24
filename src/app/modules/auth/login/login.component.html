@@ -1,9 +1,7 @@
-<div class="container user-form mt-4">
+<!-- <div class="container user-form mt-4">
   <div class="card shadow-lg p-4">
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
-
-      <!-- Username -->
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input
@@ -45,25 +43,103 @@
         </div>
       </div>
 
-      <!-- Role -->
-      <!-- <div class="mb-3">
-        <label for="role" class="form-label">Role</label>
-        <select id="role" class="form-select" formControlName="role">
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div> -->
-
-      <!-- Action Buttons -->
       <div class="d-flex gap-3 mt-4">
         <button type="submit" [disabled]="loginForm?.invalid" class="primary-btn" nz-button nzShape="round">
           Submit
         </button>
-        <!-- <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button> -->
       </div>
     </form>
     <p class="black">
       Don't have an account. Please register
+      <a routerLink="/auth/register">here</a>
+    </p>
+  </div>
+</div> -->
+
+<div class="container user-form mt-4">
+  <div class="card shadow-lg p-4">
+
+    <!-- Step 1: Username Section -->
+    <form *ngIf="step === 1" [formGroup]="usernameForm" (ngSubmit)="checkUser()" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control"
+          formControlName="username"
+          placeholder="Enter username"
+          [class.is-invalid]="usernameForm.get('username')?.invalid && (usernameForm.get('username')?.touched || usernameForm.get('username')?.dirty)"
+        />
+        <div class="invalid-feedback" *ngIf="usernameForm.get('username')?.invalid && (usernameForm.get('username')?.touched || usernameForm.get('username')?.dirty)">
+          Username is required.
+        </div>
+      </div>
+      <button type="submit" [disabled]="usernameForm.invalid" class="primary-btn" nz-button nzShape="round">
+        Next
+      </button>
+    </form>
+
+    <!-- Step 2: Password Section -->
+    <form *ngIf="step === 2" [formGroup]="passwordForm" (ngSubmit)="onLogin()" novalidate>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <nz-input-group [nzSuffix]="suffixTemplate">
+          <input
+            nz-input
+            id="password"
+            [type]="passwordVisible ? 'text' : 'password'"
+            placeholder="Enter password"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="passwordForm.get('password')?.invalid && (passwordForm.get('password')?.touched || passwordForm.get('password')?.dirty)"
+          />
+        </nz-input-group>
+        <ng-template #suffixTemplate>
+          <span
+            nz-icon
+            [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordVisible = !passwordVisible"
+          ></span>
+        </ng-template>
+        <div class="invalid-feedback" *ngIf="passwordForm.get('password')?.invalid && (passwordForm.get('password')?.touched || passwordForm.get('password')?.dirty)">
+          Password is required.
+        </div>
+      </div>
+      <div class="d-flex gap-3 mt-4">
+        <button type="button" class="btn btn-secondary" (click)="step = 1">Back</button>
+        <button type="submit" [disabled]="passwordForm.invalid" class="primary-btn" nz-button nzShape="round">
+          Login
+        </button>
+      </div>
+    </form>
+
+    <!-- Step 3: Set Password Section -->
+    <form *ngIf="step === 3" [formGroup]="setPasswordForm" (ngSubmit)="setNewPassword()" novalidate>
+      <div class="mb-3">
+        <label for="newPassword" class="form-label">Set New Password</label>
+        <input
+          type="password"
+          id="newPassword"
+          class="form-control"
+          formControlName="newPassword"
+          placeholder="Enter new password"
+          [class.is-invalid]="setPasswordForm.get('newPassword')?.invalid && (setPasswordForm.get('newPassword')?.touched || setPasswordForm.get('newPassword')?.dirty)"
+        />
+        <div class="invalid-feedback" *ngIf="setPasswordForm.get('newPassword')?.invalid && (setPasswordForm.get('newPassword')?.touched || setPasswordForm.get('newPassword')?.dirty)">
+          Password must be at least 6 characters.
+        </div>
+      </div>
+      <div class="d-flex gap-3 mt-4">
+        <button type="button" class="btn btn-secondary" (click)="step = 1">Back</button>
+        <button type="submit" [disabled]="setPasswordForm.invalid" class="primary-btn" nz-button nzShape="round">
+          Set Password
+        </button>
+      </div>
+    </form>
+
+    <p class="black">
+      Don't have an account? Please register
       <a routerLink="/auth/register">here</a>
     </p>
   </div>
