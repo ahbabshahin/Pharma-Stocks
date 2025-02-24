@@ -1,8 +1,8 @@
-<!-- <div class="d-flex justify-content-end my-2 mx-2">
+<div class="d-flex justify-content-end my-2 mx-2">
   <button type="button" nz-button class="primary-btn" nzShape="round" (click)="editUser()">
     Add User
   </button>
-</div> -->
+</div>
 <app-global-loader *ngIf="loader$ | async"></app-global-loader>
 
 <ng-container *ngIf="!(loader$ | async)">
@@ -18,9 +18,8 @@
           <div class="card-details">
             <p class="user-email">{{ user?.email }}</p>
             <div class="action-buttons">
-              <button nz-button nzSize="small" nzShape="circle" [nzType]="user?.role === 'user' ? 'primary' : 'default'"  (click)="editRole(user)">
-                <!-- {{ user?.role === 'user' ? 'Make Admin' : 'Remove Admin' }} -->
-                <span nz-icon nzType="user-switch" [nz-tooltip]="user?.role === 'user' ? 'Make Admin' : 'Remove Admin'" nzTheme="outline"></span>
+              <button nz-button nzSize="small" nzShape="circle" [nzType]="user?.role === 'office' ? 'primary' : 'default'"  (click)="editRole(user)">
+                <span nz-icon nzType="user-switch" [nz-tooltip]="user?.role === 'office' ? 'Make Admin' : 'Remove Admin'" nzTheme="outline"></span>
               </button>
               <button nz-button nzSize="small" nzShape="circle" nz-tooltip="edit user" nzType="default" (click)="editUser(user)">
                 <span nz-icon nzType="edit" nzTheme="outline"></span>

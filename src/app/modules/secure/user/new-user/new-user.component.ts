@@ -15,7 +15,7 @@ export class NewUserComponent {
   total!: number;
   userForm!: FormGroup;
   isEdit = false;
-
+  userRole: {label: string, value: string}[] = this.userStore?.userRole;
   constructor(
     private formBuilder: FormBuilder,
     private userStore: UserStoreService,
@@ -40,7 +40,7 @@ export class NewUserComponent {
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       username: ['', [Validators.required]],
-      role: ['user'],
+      role: ['office'],
     });
   }
 
