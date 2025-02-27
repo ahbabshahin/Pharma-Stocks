@@ -178,7 +178,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     let searchTerm = e?.target?.value.trim();
     if (searchTerm !== '') {
       let params = {
-        query: e,
+        query: searchTerm,
       };
       this.subs.sink = this.stockApi
         .searchStock(params)
