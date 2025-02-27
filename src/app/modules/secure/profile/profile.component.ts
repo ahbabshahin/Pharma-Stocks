@@ -58,6 +58,7 @@ export class ProfileComponent {
 
   executeLogout(){
     sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('role');
     const token = sessionStorage.getItem('accessToken');
     if (!token) {
       this.authStore.logout()
