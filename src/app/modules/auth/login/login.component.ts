@@ -64,6 +64,7 @@ export class LoginComponent {
     this.commonService.presentLoading();
 
     this.username = this.usernameForm.value.username;
+    this.username = this.username.trim();
 
     this.subs.sink = this.authApi.checkUserExist(this.username).subscribe({
       next: (res: User) => {

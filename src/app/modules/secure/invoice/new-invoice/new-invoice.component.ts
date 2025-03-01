@@ -142,7 +142,6 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     console.log('customer');
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
-        console.log('res: ', res);
         this.customers = res;
       },
       error: () => {
@@ -152,9 +151,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   searchCustomer(e: any) {
-    console.log('e: ', e);
     let searchTerm = e?.target?.value?.trim();
-    console.log('searchTerm: ', searchTerm);
     if (searchTerm !== '') {
       let params = {
         name: searchTerm,
@@ -162,7 +159,6 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       this.subs.sink = this.customerApi
         .searchCustomer(params)
         .subscribe((res: any) => {
-          console.log('res: ', res);
           this.customers = res;
         });
     }
@@ -174,19 +170,17 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   searchProduct(e: any) {
-    console.log('e: ', e);
     let searchTerm = e?.target?.value.trim();
-    if (searchTerm !== '') {
+    // if (searchTerm !== '') {
       let params = {
         query: searchTerm,
       };
       this.subs.sink = this.stockApi
         .searchStock(params)
         .subscribe((res: any) => {
-          console.log('res: ', res);
           this.products = res?.body;
         });
-    }
+    // }
   }
 
   onProductSelect(selectedProduct: Stock, index: number): void {
