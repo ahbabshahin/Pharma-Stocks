@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NewInvoiceComponent } from './new-invoice/new-invoice.component';
-import{ SubSink } from 'subsink';
+import { SubSink } from 'subsink';
 import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
@@ -9,31 +9,48 @@ import { CustomerApiService } from '../../../service/customer/customer-api.servi
 import { Observable, of } from 'rxjs';
 import { Customer } from '../../../store/models/customer.model';
 import { ViewInvoiceComponent } from './view-invoice/view-invoice.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
-  styleUrl: './invoice.component.scss',
+  styleUrls: ['./invoice.component.scss'], // Fixed styleUrl to styleUrls
 })
-export class InvoiceComponent {
+export class InvoiceComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   params = {
     page: 1,
     limit: 10,
     status: 'due',
   };
+  searchParams: {
+    page: number;
+    limit: number;
+    status: string;
+    customer?: string;
+    startDate?: string;
+    endDate?: string;
+  } = {
+    ...this.params,
+    customer: '',
+    startDate: '',
+    endDate: ''
+  };
+  dateRange: Date[] = [];
   loader$: Observable<boolean> = of(true);
   subLoader$: Observable<boolean> = of(false);
   invoices: Invoice[] = [];
   total: number = 0;
   isMore: boolean = false;
   customers: Customer[] = [];
+  searchText: string = '';
 
   constructor(
     private drawerService: NzDrawerService,
     private invoiceStoreService: InvoiceStoreService,
     private customerStore: CustomerStoreService,
-    private customerApi: CustomerApiService
+    private customerApi: CustomerApiService,
+    private datePipe: DatePipe,
   ) {}
 
   ngOnInit() {
@@ -49,24 +66,31 @@ export class InvoiceComponent {
   }
 
   loadInvoice() {
+    this.invoiceStoreService.setLoader(true);
     this.invoiceStoreService.loadInvoice(this.params, this.isMore);
   }
 
   getInvoices() {
     this.subs.sink = this.invoiceStoreService.getInvoices().subscribe({
       next: (res: Invoice[]) => {
-        this.invoices = res;
+        if (res) {
+          this.invoices = res;
+        }
       },
-      error: () => {
-        console.log('error');
+      error: (error) => {
+
       },
     });
 
     this.subs.sink = this.invoiceStoreService.getTotalInvoice().subscribe({
       next: (total: number) => {
-        this.total = total;
+        if (total !== undefined) {
+          this.total = total;
+        }
       },
-      error: () => {},
+      error: (error) => {
+
+      },
     });
   }
 
@@ -74,7 +98,7 @@ export class InvoiceComponent {
     this.subs.sink = this.invoiceStoreService
       .getInvoiceLoaded()
       .subscribe((loaded: boolean) => {
-        if (!loaded) {
+        if (loaded === false) {
           this.loadInvoice();
         }
       });
@@ -86,19 +110,22 @@ export class InvoiceComponent {
   }
 
   loadCustomer() {
-    let params = {
+    const params = {
       page: 1,
       limit: 100,
     };
     this.subs.sink = this.customerApi.getCustomers(params).subscribe({
       next: (res: any) => {
-        this.customerStore.loadCustomerSuccess(
-          res?.body ?? [],
-          res?.total ?? 0,
-          false
-        );
+        if (res) {
+          this.customerStore.loadCustomerSuccess(
+            res?.body ?? [],
+            res?.total ?? 0,
+            false
+          );
+        }
       },
-      error: () => {
+      error: (error) => {
+
         this.customerStore.loadCustomerFail('Customer load failed');
       },
     });
@@ -108,22 +135,20 @@ export class InvoiceComponent {
     this.subs.sink = this.customerStore
       .getCustomerLoaded()
       .subscribe((loaded: boolean) => {
-        console.log('loaded: ', loaded);
-        if (!loaded) {
+        if (loaded === false) {
           this.loadCustomer();
         }
       });
   }
 
   getCustomers() {
-    console.log('customer');
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
-        console.log('res: ', res);
-        this.customers = res;
+        if (res) {
+          this.customers = res;
+        }
       },
-      error: () => {
-        console.log('error');
+      error: (error) => {
       },
     });
   }
@@ -135,26 +160,104 @@ export class InvoiceComponent {
       nzMaskClosable: false,
       nzWidth: '100%',
       nzWrapClassName: 'full-drawer',
-      // nzSize: 'large',
       nzContent: NewInvoiceComponent,
       nzData: { invoice, total: this.total },
     });
   }
 
   viewInvoice(invoice: Invoice) {
-    this.drawerService.create({
-      nzTitle: 'View Invoice',
-      nzClosable: true,
-      nzMaskClosable: false,
-      nzWidth: '100%',
-      nzWrapClassName: 'full-drawer',
-      // nzSize: 'large',
-      nzContent: ViewInvoiceComponent,
-      nzData: { invoice },
-    });
+    if (invoice) {
+      this.drawerService.create({
+        nzTitle: 'View Invoice',
+        nzClosable: true,
+        nzMaskClosable: false,
+        nzWidth: '100%',
+        nzWrapClassName: 'full-drawer',
+        nzContent: ViewInvoiceComponent,
+        nzData: { invoice },
+      });
+    }
   }
 
-  deleteInvoice(list?: Invoice) {}
+  deleteInvoice(list?: Invoice) {
+    if (list) {
+      // Implement delete functionality
+      this.invoiceStoreService.deleteInvoice(list._id as string);
+    }
+  }
+
+  onSearch(e: any) {
+    if (e?.target) {
+      this.searchText = e.target.value?.trim();
+        this.searchParams = {
+          ...this.params,
+          page: 1,
+          customer: this.searchText,
+        };
+        if(this.dateRange.length == 0){
+          delete this.searchParams.startDate;
+          delete this.searchParams.endDate;
+        }
+        this.isMore = false;
+        this.searchInvoice();
+
+    }
+  }
+
+  searchInvoice() {
+    this.invoiceStoreService.setInvoiceLoaded(true);
+    this.invoiceStoreService.searchInvoice(this.searchParams);
+  }
+
+  formatDate(date: Date) {
+    return this.datePipe.transform(date, 'yyyy-MM-dd');
+  }
+
+  onDateChange(dates: Date[]) {
+    if (dates && dates.length === 2) {
+      this.dateRange = dates;
+      this.searchParams = {
+        ...this.searchParams,
+        startDate: this.formatDate(dates[0]) as string,
+        endDate: this.formatDate(dates[1]) as string,
+      }
+      if(this.searchText == ''){
+        delete this.searchParams.customer;
+      }
+    } else {
+      this.searchParams = {
+        ...this.searchParams,
+      }
+      if(this.dateRange.length == 0){
+        delete this.searchParams.startDate;
+        delete this.searchParams.endDate;
+      }
+    }
+    this.searchParams = {
+      ...this.searchParams,
+      page: 1,
+    };
+    this.isMore = false;
+    this.searchInvoice();
+  }
+
+  resetSearch() {
+    this.params = {
+      ...this.params,
+      page: 1,
+    };
+    this.searchText = '';
+    this.searchParams = {
+      ...this.searchParams,
+      page: 1,
+      customer: '',
+      startDate: '',
+      endDate: '',
+    };
+    this.dateRange = [];
+    this.isMore = false;
+    this.loadInvoice();
+  }
 
   loadMore() {
     if (this.invoices?.length < this.total) {
@@ -168,7 +271,9 @@ export class InvoiceComponent {
     }
   }
 
-  generatePDF() {}
+  generatePDF() {
+    // Implement PDF generation
+  }
 
   ngOnDestroy() {
     this.subs.unsubscribe();

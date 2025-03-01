@@ -11,6 +11,11 @@ export const setSubLoader = createAction(
   props<{ status: boolean }>()
 );
 
+export const setInvoiceLoaded = createAction(
+  '[Invoice] set invoice loaded',
+  props<{ status: boolean }>()
+);
+
 export const loadInvoice = createAction(
   '[Invoice] load invoice',
   props<{ params: { [key: string]: any }; isMore: boolean }>()
@@ -62,3 +67,9 @@ export const deleteInvoiceFail = createAction(
   '[Invoice] delete invoice fail',
   props<{ error: any }>()
 );
+
+export const searchInvoice = createAction(
+  '[Invoice] search invoice',
+  props<{ params: { [key: string]: any } }>()
+);
+

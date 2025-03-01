@@ -14,8 +14,10 @@ export class InvoiceStoreService {
   select = <T>(action: any): Observable<T> => this.store.select(action);
 
   setLoader(status: boolean) {
-    console.log('status: ', status);
     this.dispatch(invoiceActions.setLoader({ status }));
+  }
+  setInvoiceLoaded(status: boolean) {
+    this.dispatch(invoiceActions.setInvoiceLoaded({ status }));
   }
   setSubLoader(status: boolean) {
     this.dispatch(invoiceActions.setSubLoader({ status }));
@@ -59,6 +61,10 @@ export class InvoiceStoreService {
   }
   deleteInvoiceFail(error: string) {
     this.dispatch(invoiceActions.deleteInvoiceFail({ error }));
+  }
+
+  searchInvoice(params: { [key: string]: any } ) {
+    this.dispatch(invoiceActions.searchInvoice({ params }));
   }
 
   // selectors

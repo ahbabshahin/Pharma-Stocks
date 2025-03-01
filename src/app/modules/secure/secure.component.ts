@@ -6,6 +6,7 @@ import { User } from '../../store/models/user.model';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
 import { Business } from '../../store/models/business.model';
+import { AuthService } from '../../service/auth/auth.service';
 
 @Component({
   selector: 'app-secure',
@@ -22,12 +23,12 @@ export class SecureComponent {
   business!: Business;
   constructor(
     private authStore: AuthStoreService,
+    private authService: AuthService,
     private commonService: CommonService,
     private drawerService: NzDrawerService,
   ){}
 
   ngOnInit() {
-    console.log('secure');
     this.initialize();
   }
 
@@ -44,7 +45,7 @@ export class SecureComponent {
       localStorage.setItem('business', JSON.stringify(this.business));
     // this.getUser();
     this.decodedToken = this.commonService.decodeJWT();
-    console.log('token ', this.decodedToken);
+
     if (!sessionStorage.getItem('role'))
       sessionStorage.setItem('role', this.decodedToken?.role);
     if(this.decodedToken?.userId){
@@ -58,9 +59,12 @@ export class SecureComponent {
   }
 
   getUser(){
-    this.subs.sink = this.authStore.getUser().subscribe((res: User) =>{
-      console.log('user ', res);
-    })
+    this.subs.sink = this.authStore.getUser().subscribe({next:(res: User) =>{
+    },
+    error: (error) => {
+      this.authService.executeLogout();
+    }
+  })
   }
 
   sidebar(){
