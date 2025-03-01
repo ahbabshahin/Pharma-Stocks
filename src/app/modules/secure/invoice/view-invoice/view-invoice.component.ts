@@ -4,7 +4,7 @@ import { Customer } from '../../../../store/models/customer.model';
 import { Invoice } from '../../../../store/models/invoice.model';
 import { CommonService } from '../../../../service/common/common.service';
 import { NewInvoiceComponent } from '../new-invoice/new-invoice.component';
-import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
 import { Observable } from 'rxjs';
@@ -36,7 +36,8 @@ export class ViewInvoiceComponent {
     private invoiceStore: InvoiceStoreService,
     private customerStore: CustomerStoreService,
     private businessService: BusinessService,
-    private authStore: AuthStoreService
+    private authStore: AuthStoreService,
+    private drawerRef: NzDrawerRef
   ) {}
 
   ngOnInit() {
@@ -116,6 +117,7 @@ export class ViewInvoiceComponent {
 
     this.commonService.presentLoading();
     this.invoiceStore.deleteInvoice(this.invoice?._id as string);
+    this.drawerRef.close();
   }
 
   print() {

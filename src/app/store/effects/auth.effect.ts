@@ -7,6 +7,7 @@ import { AuthApiService } from '../../service/auth/auth-api.service';
 import { CommonService } from '../../service/common/common.service';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
+import { AuthService } from '../../service/auth/auth.service';
 @Injectable()
 export class AuthEffects {
   constructor(
@@ -14,7 +15,8 @@ export class AuthEffects {
     private authStore: AuthStoreService,
     private authApi: AuthApiService,
     private commonService: CommonService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
   ) {}
 
   login$ = createEffect(
@@ -24,7 +26,6 @@ export class AuthEffects {
         exhaustMap((action) =>
           this.authApi.login(action.payload).pipe(
             map((res: any) => {
-              console.log('res: ', res);
               this.commonService.dismissLoading();
               this.authStore.loginSuccess(res.accessToken);
               this.commonService.showSuccessToast('Login successful');
@@ -50,7 +51,6 @@ export class AuthEffects {
         exhaustMap((action) =>
           this.authApi.register(action.payload).pipe(
             map((res: any) => {
-              console.log('res: ', res);
               this.commonService.dismissLoading();
               this.authStore.registerSuccess(res?.message);
               this.commonService.showSuccessToast(res?.message);
@@ -90,10 +90,10 @@ export class AuthEffects {
         mergeMap((action: any) =>
           this.authApi.getUser(action.id).pipe(
             map((res: User) => {
-              console.log('res: ', res);
               this.authStore.loadUserSuccess(res);
             }),
             catchError((err: any) => {
+              this.authService.executeLogout();
               return of(err);
             })
           )

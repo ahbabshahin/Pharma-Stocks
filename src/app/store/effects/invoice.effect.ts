@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { InvoiceApiService } from '../../service/invoice/invoice-api.service';
 import * as invoiceActions from '../../store/actions/invoice.action';
-import { catchError, exhaustMap, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, exhaustMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { InvoiceStoreService } from '../../service/invoice/invoice-store.service';
 import { CommonService } from '../../service/common/common.service';
 import { Invoice } from '../models/invoice.model';
@@ -24,7 +24,6 @@ export class InvoiceEffects {
         mergeMap((action) => {
           return this.invoiceApi.getInvoices(action.params,).pipe(
             map((res: any) => {
-              console.log('res: ', res);
               this.invoiceStore.setLoader(false);
               this.invoiceStore.loadInvoiceSuccess(
                 res?.body,
@@ -51,7 +50,6 @@ export class InvoiceEffects {
       exhaustMap((action: any) =>{
         return this.invoiceApi.addInvoice(action.payload).pipe(
           map((res: Invoice) => {
-            console.log('res: ', res);
             this.invoiceStore.addInvoiceSuccess(res);
             this.commonService.dismissLoading();
             this.commonService.showSuccessToast('Add invoice successful');
@@ -75,7 +73,6 @@ export class InvoiceEffects {
       exhaustMap((action: any) =>{
         return this.invoiceApi.updateInvoice(action.payload).pipe(
           map((res: Invoice) => {
-            console.log('res: ', res);
             let response : Update<Invoice> = {
               id: res._id as string,
               changes: {
@@ -120,5 +117,32 @@ export class InvoiceEffects {
     ),
 
     {dispatch: false}
-  )
+  );
+
+  searchInvoice$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(invoiceActions.searchInvoice),
+        switchMap((action) => {
+          return this.invoiceApi.searchInvoice(action.params,).pipe(
+            map((res: any) => {
+              this.invoiceStore.setLoader(false);
+              this.invoiceStore.loadInvoiceSuccess(
+                res?.body,
+                res?.total,
+                false
+              );
+              this.invoiceStore.setSubLoader(false)
+            }),
+            catchError(() =>{
+              this.commonService.showErrorToast('Invoice search failed');
+              this.invoiceStore.loadInvoiceFail('failed');
+              this.invoiceStore.setSubLoader(false)
+              return of()
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
 }
