@@ -28,4 +28,10 @@ export class InvoiceApiService {
   deleteInvoice(id: string){
     return this.http.delete(`${this.env.rootURL}/v1/invoice/${id}`);
   }
+
+  searchInvoice(params: { [key: string]: any }){
+    return this.http.get(`${this.env.rootURL}/v1/invoice/search`, {
+      params,
+    });
+  }
 }

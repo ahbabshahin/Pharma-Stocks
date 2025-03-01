@@ -35,13 +35,19 @@ export const invoiceReducer = createReducer(
 
   // Set Loader
   on(invoiceActions.setLoader, (state, action) => {
-    console.log('reducer status ', action.status);
     return {
       ...state,
       loader: action.status,
     };
   }),
 
+  // Set Invoice Loaded
+  on(invoiceActions.setInvoiceLoaded, (state, action) => {
+    return {
+      ...state,
+      loaded: action.status,
+    };
+  }),
   // Set SubLoader
   on(invoiceActions.setSubLoader, (state, { status }) => ({
     ...state,
@@ -52,13 +58,12 @@ export const invoiceReducer = createReducer(
   on(invoiceActions.loadInvoice, (state, action) => {
     return {
       ...state,
-      loaded: action.isMore ? true : false,
-      loader: action.isMore ? false : true,
+      // loaded: action.isMore ? true : false,
+      // loader: action.isMore ? false : true,
       error: '',
     };
   }),
   on(invoiceActions.loadInvoiceSuccess, (state, action) => {
-    console.log('action.res: ', action.res);
     let response = [...selectAll(state), ...action.res];
     if(!action.isMore) response = action.res
     return invoiceAdapter.setAll(response, {

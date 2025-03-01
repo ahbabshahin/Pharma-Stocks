@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { StockApiService } from '../../service/stocks/stock-api.service';
 import { StockStoreService } from '../../service/stocks/stock-store.service';
 import * as stockActions from '../../store/actions/stocks.action';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { CommonService } from '../../service/common/common.service';
 import { Update } from '@ngrx/entity';
 import { Stock } from '../models/stocks.model';
@@ -133,7 +133,7 @@ export class StockEffects {
     () =>
       this.actions$.pipe(
         ofType(stockActions.searchStock),
-        mergeMap((action) => {
+        switchMap((action) => {
           return this.stockApi.searchStock(action.params).pipe(
             map((res: any) => {
               if (res?.body?.length) {
