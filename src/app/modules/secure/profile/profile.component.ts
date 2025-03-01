@@ -9,6 +9,7 @@ import { User } from '../../../store/models/user.model';
 import { SubSink } from 'subsink';
 import { CommonComponentModule } from "../../../common-component/common-component.module";
 import { LoaderComponent } from "../../../common-component/loader/loader.component";
+import { AuthService } from '../../../service/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,6 +26,7 @@ export class ProfileComponent {
     private authStore: AuthStoreService,
     private commonService: CommonService,
     private router: Router,
+    private authService: AuthService,
   ){}
 
   ngOnInit(){
@@ -44,7 +46,7 @@ export class ProfileComponent {
       error: () => {
         this.commonService.showErrorModal('No user found');
         this.loader = false;
-        this.executeLogout();
+        this.authService.executeLogout();
       },
     });
   }
@@ -53,7 +55,7 @@ export class ProfileComponent {
     const ok = await this.commonService.showConfirmModal('Are you sure you want to logout?');
     console.log('ok: ', ok);
     if(!ok) return;
-    this.executeLogout();
+    this.authService.executeLogout();
   }
 
   executeLogout(){

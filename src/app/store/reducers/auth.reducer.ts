@@ -43,9 +43,8 @@ export const authReducer = createReducer(
   }),
   on(authActions.loadUserSuccess, (state, action) =>{
     let user = action?.res;
-    console.log('user: ', user);
     let userRole: string = user?.role as string;
-    console.log('userRole:', userRole);
+
     return authAdapter.setOne(action.res, {
       ...state,
       userRole: userRole?.trim(),
