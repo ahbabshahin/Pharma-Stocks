@@ -92,7 +92,7 @@ nz-select {
 }
 
 .autocomplete-wrapper {
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
   position: absolute;
   background: white;
@@ -113,8 +113,50 @@ nz-select {
 }
 
 nz-autocomplete {
-  max-height: 200px !important;
+  max-height: 300px !important;
   overflow-y: auto !important;
   display: block !important;
   border: none !important; /* Ensure no unwanted border */
 }
+
+nz-autocomplete .cdk-overlay-pane {
+  -webkit-overflow-scrolling: touch; /* Enables smooth scrolling */
+}
+
+
+@media screen and (max-width: 768px) {
+  .autocomplete-wrapper,
+  nz-autocomplete {
+    width: 100% !important;
+    min-width: 300px !important;
+    max-width: 90vw !important;
+  }
+
+  ::ng-deep .cdk-overlay-pane {
+    width: 100% !important; /* Ensures full width */
+    min-width: 300px !important; /* Expands the dropdown */
+    max-width: 90vw !important;
+  }
+
+  .cdk-overlay-connected-position-bounding-box {
+    width: 100% !important; /* Forces the bounding box to be wider */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  nz-select[formControlName="status"] {
+    width: 100% !important;
+  }
+}
+
+.status-select-wrapper {
+  width: 100%;
+}
+nz-select {
+  width: 100%;
+}
+.cdk-overlay-pane {
+  max-width: 45vw !important;
+  min-width: 200px !important;
+}
+
