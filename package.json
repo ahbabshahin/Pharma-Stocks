@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --aot",
+    "start": "ng serve",
     "build": "ng build --configuration production",
-    "build:prod": "ng build --configuration production --aot",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -26,6 +26,8 @@
     "@ngrx/store": "^17.2.0",
     "@ngrx/store-devtools": "^17.2.0",
     "bootstrap": "^5.3.3",
+    "jspdf": "^3.0.0",
+    "jspdf-autotable": "^5.0.2",
     "ng-zorro-antd": "^17.3.0",
     "ngx-print": "^2.0.0",
     "ngx-toastr": "^19.0.0",
