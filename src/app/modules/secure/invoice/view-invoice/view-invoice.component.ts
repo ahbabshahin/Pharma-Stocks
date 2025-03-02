@@ -11,6 +11,8 @@ import { Observable } from 'rxjs';
 import { SubSink } from 'subsink';
 import { BusinessService } from '../../../../service/business/business.service';
 import { AuthStoreService } from '../../../../service/auth/auth-store.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-view-invoice',
@@ -123,6 +125,89 @@ export class ViewInvoiceComponent {
   print() {
     window.print();
   }
+
+  printInvoice() {
+    const doc = new jsPDF();
+
+    // Add Company Logo Before Business Info
+    const logo = new Image();
+    logo.src = 'assets/img/company_logo.jpeg';
+
+    logo.onload = () => {
+      doc.addImage(logo, 'JPEG', 15, 8, 40, 40);
+
+      // Business Info
+      doc.setFontSize(14);
+      doc.text(this.business?.name || 'Business Name', 60, 20);
+      doc.setFontSize(10);
+      doc.text(this.business?.address || 'Business Address', 60, 30);
+      doc.text(`Phone: ${this.business?.contact || 'N/A'}`, 60, 40);
+
+      // Invoice Details
+      doc.setFontSize(12);
+      doc.text(`Invoice #: ${this.invoice?.sn || 'N/A'}`, 140, 20);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 140, 30);
+      doc.text(`Status: ${this.invoice?.status || 'N/A'}`, 140, 40);
+
+      // Line Separator
+      doc.line(15, 50, 195, 50);
+
+      // Customer Details
+      doc.text(`Customer: ${this.customer?.name || 'N/A'}`, 15, 60);
+      if (this.customer?.contacts) {
+        doc.text(`Phone: ${this.customer.contacts}`, 15, 70);
+      }
+      if (this.customer?.address) {
+        doc.text(`Address: ${this.customer.address}`, 15, 80);
+      }
+
+      // Generate Table of Products
+      autoTable(doc, {
+        startY: 90,
+        head: [['Product Name', 'Quantity', 'Price (/=)', 'Total (/=)']],
+        body: this.invoice?.products.map(product => [
+          product.name,
+          product.quantity,
+          product.price.toFixed(2),
+          (product.quantity * product.price).toFixed(2),
+        ]),
+        theme: 'striped',
+        margin: { top: 10 },
+      });
+
+      // Calculate & Display Total
+      const finalY = (doc as any).lastAutoTable.finalY + 10;
+      doc.text(`Subtotal: ${this.subTotalAmount.toFixed(2)}/=`, 140, finalY + 10);
+      doc.text(`Discount: ${this.invoice.discount || 0}%`, 140, finalY + 20);
+      doc.text(`Total Amount: ${this.invoice?.totalAmount.toFixed(2)}/=`, 140, finalY + 30);
+
+      // Signature Section with equal spacing and line lengths
+      const signatureY = finalY + 50;
+      const pageWidth = 210; // A4 width in mm
+      const margin = 20;
+      const signatureWidth = 50;
+      const spacing = (pageWidth - 2 * margin - 3 * signatureWidth) / 2;
+
+      const x1 = margin;
+      const x2 = margin + signatureWidth + spacing;
+      const x3 = margin + 2 * (signatureWidth + spacing);
+
+      // Draw signature lines with equal length
+      doc.line(x1, signatureY, x1 + signatureWidth, signatureY);
+      doc.line(x2, signatureY, x2 + signatureWidth, signatureY);
+      doc.line(x3, signatureY, x3 + signatureWidth, signatureY);
+
+      // Add signature labels centered under each line
+      doc.text('Customer Signature', x1 + (signatureWidth/2) - 20, signatureY + 10);
+      doc.text('Depo In-Charge', x2 + (signatureWidth/2) - 15, signatureY + 10);
+      doc.text('Authorized By', x3 + (signatureWidth/2) - 15, signatureY + 10);
+
+      // Save or Print PDF
+      doc.autoPrint();
+      window.open(doc.output('bloburl'), '_blank');
+    };
+  }
+
 
   ngOnDestroy() {
     this.subs.unsubscribe();
