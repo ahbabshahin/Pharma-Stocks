@@ -356,3 +356,66 @@ nz-card-meta {
   }
 }
 
+// Move shared styles to styles.scss and keep component-specific styles here
+:host {
+  --card-padding: 20px;
+  --mobile-padding: 15px;
+}
+
+.row {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1400px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.search {
+  &-container {
+    padding: var(--card-padding);
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  &-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1;
+  }
+
+  &-input { flex: 1; }
+}
+
+.date-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .search {
+    &-container { padding: var(--mobile-padding); }
+    &-filters { flex-direction: column; }
+  }
+
+  .date-input-group {
+    flex-direction: column;
+    .date-separator { display: none; }
+  }
+
+  .w-50 { width: 100%; }
+}
+
+// Use existing styles from ng-zorro instead of custom styles where possible
+::ng-deep .ant-picker-dropdown {
+  @media (max-width: 768px) {
+    width: 95vw !important;
+    max-width: 320px !important;
+  }
+}
+
