@@ -166,6 +166,107 @@ button[nz-button]:hover {
   }
 }
 
+/* Search section */
+.search {
+  &-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  &-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  &-input {
+    flex: 1;
+    min-width: 180px;
+  }
+}
+
+/* Utilities */
+.clear-icon {
+  cursor: pointer;
+  color: #888;
+
+  &:hover {
+    color: #ff4d4f;
+  }
+}
+
+/* Stock panel styles */
+.stock-panel {
+  margin-bottom: 16px;
+
+  .collapse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .product-name {
+    font-weight: 500;
+    font-size: 16px;
+    color: #262626;
+    text-align: left;
+  }
+
+  .header-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+
+    button {
+      padding: 4px 8px;
+
+      &:hover {
+        color: #1890ff;
+      }
+    }
+  }
+}
+
+.panel-content {
+  padding: 16px 0;
+
+  .stock-details {
+    background: #fafafa;
+    padding: 16px;
+    border-radius: 4px;
+
+    .detail-row {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #595959;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
+        color: #262626;
+        margin-right: 8px;
+      }
+    }
+  }
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -179,6 +280,37 @@ button[nz-button]:hover {
 
   button[nz-button] {
     width: 80%;
+  }
+
+  .search-container,
+  .search-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input,
+  .primary-btn {
+    width: 100%;
+  }
+
+  .collapse-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+
+    .product-name {
+      align-self: flex-start;
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  .header-details {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
   }
 }
 
