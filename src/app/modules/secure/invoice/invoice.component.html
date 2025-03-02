@@ -51,50 +51,50 @@
 
 <ng-container *ngIf="!(loader$ | async)">
   <div class="container my-3" *ngIf="invoices?.length">
-    <div class="row">
-      <ng-container *ngFor="let list of invoices; let i = index">
-        <div class="col-lg-6 col-md-12 my-3">
-          <nz-card nzBordered="true" nzHoverable>
-            <nz-card-meta [nzTitle]="
-                (customers | find : '_id' : list.customer)?.name || 'Unknown Customer'
-              " [nzDescription]="
-                (list?.createdAt
-                  ? (list.createdAt | date : 'dd-MM-yyyy')
-                  : '') +
-                ' - ' +
-                (list?.status | titlecase)
-              "></nz-card-meta>
-
-            <div class="mt-3">
-              <p class="product-details" *ngFor="let product of list?.products">
-                <span><strong>Product:</strong> {{ product?.name | titlecase }}</span><br />
-                <span><strong>Quantity:</strong> {{ product?.quantity }}</span><br />
-                <span><strong>Price:</strong> ৳ {{ product?.price | number : '1.2-2' }}</span>
-              </p>
-
-              <p *ngIf="list?.discount">
-                <strong>Discount:</strong> {{ list?.discount | number : '1.2-2' }}%
-              </p>
-
-              <hr />
-              <p><strong>Total:</strong> ৳ {{ list?.totalAmount | number : '1.2-2' }}</p>
-            </div>
-
-            <div class="d-flex justify-content-end">
-              <button nz-button nzType="link" nzShape="round" (click)="viewInvoice(list)">
+    <nz-collapse>
+      <nz-collapse-panel *ngFor="let list of invoices; let i = index"
+        [nzHeader]="collapseHeader"
+        [nzActive]="false"
+        class="invoice-panel">
+        <ng-template #collapseHeader>
+          <div class="collapse-header" (click)="$event.stopPropagation()">
+            <span class="customer-name">
+              {{ (customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
+            </span>
+            <div class="header-details">
+              <span class="date">{{ list?.createdAt | date : 'dd-MM-yyyy' }}</span>
+              <nz-tag [nzColor]="list?.status === 'paid' ? 'success' : 'warning'">
+                {{ list?.status | titlecase }}
+              </nz-tag>
+              <button nz-button nzType="primary" nzGhost (click)="viewInvoice(list)">
                 <i nz-icon nzType="eye" nzTheme="outline"></i> View
               </button>
-              <!-- <button nz-button nzType="link" nzShape="round" (click)="addInvoice(list)">
-                <i nz-icon nzType="edit" nzTheme="outline"></i> Edit
-              </button> -->
-              <!-- <button nz-button nzType="link" nzShape="round" (click)="deleteInvoice(list)">
-                <i nz-icon nzType="delete" nzTheme="outline"></i> Delete
-              </button> -->
             </div>
-          </nz-card>
+          </div>
+        </ng-template>
+        <ng-template #expandIcon let-active>
+          <i nz-icon nzType="caret-right" class="collapse-arrow" [class.active]="active"></i>
+        </ng-template>
+
+        <!-- Panel Content -->
+        <div class="panel-content">
+          <div class="products-section">
+            <p class="product-details" *ngFor="let product of list?.products">
+              <span><strong>Product:</strong> {{ product?.name | titlecase }}</span><br />
+              <span><strong>Quantity:</strong> {{ product?.quantity }}</span><br />
+              <span><strong>Price:</strong> ৳ {{ product?.price | number : '1.2-2' }}</span>
+            </p>
+
+            <p *ngIf="list?.discount">
+              <strong>Discount:</strong> {{ list?.discount | number : '1.2-2' }}%
+            </p>
+
+            <hr />
+            <p class="total-amount"><strong>Total:</strong> ৳ {{ list?.totalAmount | number : '1.2-2' }}</p>
+          </div>
         </div>
-      </ng-container>
-    </div>
+      </nz-collapse-panel>
+    </nz-collapse>
 
     <p *ngIf="invoices?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
       Showing invoice(s) {{ invoices?.length }} out of {{ total }}
