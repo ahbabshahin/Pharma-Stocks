@@ -31,3 +31,391 @@
     /* Make the "Load More" button full width on smaller screens */
   }
 }
+
+.search-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+/* Ensure inputs and date picker resize properly */
+.search-input, .date-picker {
+  flex: 1;
+  min-width: 180px;
+}
+
+.responsive-date-picker {
+  width: 100%;
+}
+
+/* Make buttons stack on smaller screens */
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-picker, .search-input {
+    width: 100%;
+  }
+
+  .primary-btn {
+    width: 100%;
+  }
+}
+
+.clear-icon {
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.clear-icon:hover {
+  color: #ff4d4f;
+}
+
+.date-picker {
+  flex: 1;
+  min-width: 200px; /* Ensure it has a minimum width */
+}
+@media (max-width: 768px) {
+  .date-picker {
+    width: 100% !important;
+  }
+}
+
+::ng-deep .ant-picker-dropdown {
+  @media (max-width: 768px) {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 95vw !important;
+    max-width: 320px !important;
+    margin: 0 !important;
+
+    .ant-picker-panel-container,
+    .ant-picker-panels,
+    .ant-picker-panel,
+    .ant-picker-content,
+    .ant-picker-date-panel {
+      width: 100% !important;
+      min-width: unset !important;
+    }
+
+    .ant-picker-range-wrapper {
+      width: 100% !important;
+    }
+
+    .ant-picker-header-view {
+      font-size: 14px;
+    }
+
+    .ant-picker-cell {
+      padding: 2px 0;
+    }
+
+    .ant-picker-cell-inner {
+      min-width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+  }
+
+  @media (max-width: 375px) {
+    max-width: 300px !important;
+  }
+}
+
+.date-picker-container {
+  flex: 1;
+  min-width: 200px;
+}
+
+.date-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.native-date-input {
+  flex: 1;
+  padding: 4px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  height: 32px;
+
+  &:focus {
+    border-color: #40a9ff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+}
+
+.date-separator {
+  color: #666;
+  padding: 0 4px;
+}
+
+@media (max-width: 768px) {
+  .date-input-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .native-date-input {
+    width: 100%;
+  }
+
+  .date-separator {
+    display: none;
+  }
+}
+
+// Container and card layout
+.container {
+  padding: 0 15px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.row {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr); // Default for large screens: 3 cards per row
+
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(2, 1fr); // Medium-large screens: 2 cards per row
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr); // Medium screens: 2 cards per row
+    gap: 15px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; // Small screens: 1 card per row
+    gap: 15px;
+  }
+}
+
+// Card styles
+nz-card {
+  height: 100%;
+
+  ::ng-deep .ant-card-body {
+    padding: 20px;
+
+    @media (max-width: 992px) {
+      padding: 15px;
+    }
+  }
+}
+
+// Search container responsiveness
+.search-container {
+  padding: 20px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+
+  @media (max-width: 1200px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 992px) {
+    .search-filters {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .search-input,
+    .date-picker-container {
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+
+    .search-filters {
+      flex-direction: column;
+    }
+
+    .search-input,
+    .date-picker-container,
+    .primary-btn {
+      width: 100%;
+    }
+  }
+}
+
+// Date input group responsiveness
+.date-input-group {
+  @media (min-width: 769px) {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .native-date-input {
+      flex: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    .date-separator {
+      display: none;
+    }
+  }
+}
+
+// Product details and content
+.product-details {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+
+  @media (max-width: 992px) {
+    font-size: 13px;
+  }
+}
+
+// Action buttons
+.d-flex.justify-content-end {
+  gap: 10px;
+  flex-wrap: wrap;
+
+  button {
+    @media (max-width: 768px) {
+      padding: 4px 12px;
+    }
+  }
+}
+
+// Load more button
+.w-50 {
+  @media (min-width: 769px) {
+    max-width: 300px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+// Status indicators and metadata
+nz-card-meta {
+  ::ng-deep {
+    .ant-card-meta-title {
+      font-size: 16px;
+      margin-bottom: 8px;
+
+      @media (max-width: 992px) {
+        font-size: 15px;
+      }
+    }
+
+    .ant-card-meta-description {
+      font-size: 14px;
+
+      @media (max-width: 992px) {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Global spacing adjustments
+.my-3 {
+  margin: 1rem 0;
+
+  @media (max-width: 768px) {
+    margin: 0.75rem 0;
+  }
+}
+
+// Move shared styles to styles.scss and keep component-specific styles here
+:host {
+  --card-padding: 20px;
+  --mobile-padding: 15px;
+}
+
+.row {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1400px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.search {
+  &-container {
+    padding: var(--card-padding);
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  &-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1;
+  }
+
+  &-input { flex: 1; }
+}
+
+.date-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .search {
+    &-container { padding: var(--mobile-padding); }
+    &-filters { flex-direction: column; }
+  }
+
+  .date-input-group {
+    flex-direction: column;
+    .date-separator { display: none; }
+  }
+
+  .w-50 { width: 100%; }
+}
+
+// Use existing styles from ng-zorro instead of custom styles where possible
+::ng-deep .ant-picker-dropdown {
+  @media (max-width: 768px) {
+    width: 95vw !important;
+    max-width: 320px !important;
+  }
+}
+

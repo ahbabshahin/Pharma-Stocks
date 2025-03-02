@@ -1,36 +1,53 @@
-<div class="d-flex justify-content-between align-items-center my-2 mx-2">
-  <div class="search-filters d-flex gap-3">
+<div class="search-container">
+  <div class="search-filters">
     <div class="search-input">
-      <nz-input-group [nzSuffix]="suffixIcon">
+      <nz-input-group [nzSuffix]="suffixTemplate">
         <input type="text" nz-input placeholder="Search by customer name"
                [(ngModel)]="searchText"
                (input)="onSearch($event)" />
       </nz-input-group>
-      <ng-template #suffixIcon>
+
+      <ng-template #suffixTemplate>
         <span nz-icon nzType="search"></span>
+        <span *ngIf="searchText" nz-icon nzType="close-circle" class="clear-icon" (click)="clearSearch()"></span>
       </ng-template>
     </div>
 
-    <div class="date-picker">
-      <nz-range-picker
-        [(ngModel)]="dateRange"
-        (ngModelChange)="onDateChange($event)"
-      ></nz-range-picker>
+    <div class="date-picker-container">
+      <div class="date-input-group">
+        <input
+          nz-input
+          nzAllowClear
+          type="date"
+          [(ngModel)]="startDate"
+          (ngModelChange)="onDateInputChange()"
+          placeholder="Start Date"
+          class="native-date-input">
+        <span class="date-separator">to</span>
+        <input
+          nz-input
+          nzAllowClear
+          type="date"
+          [(ngModel)]="endDate"
+          (ngModelChange)="onDateInputChange()"
+          placeholder="End Date"
+          class="native-date-input">
+      </div>
     </div>
 
-    <!-- Add reset button -->
-    <button nz-button nzType="default" (click)="resetSearch()" *ngIf="searchText || dateRange.length">
+    <button nz-button nzType="default" (click)="resetSearch()" *ngIf="searchText || (startDate && endDate)">
       <span nz-icon nzType="clear"></span> Reset
     </button>
   </div>
 
-  <!-- Existing add button -->
   <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addInvoice()">
     New Invoice
   </button>
 </div>
 
-<app-global-loader *ngIf="loader$ | async"></app-global-loader>
+
+
+<app-global-loader class="my-3" *ngIf="loader$ | async"></app-global-loader>
 
 <ng-container *ngIf="!(loader$ | async)">
   <div class="container my-3" *ngIf="invoices?.length">
