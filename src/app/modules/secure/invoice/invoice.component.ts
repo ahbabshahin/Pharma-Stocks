@@ -67,7 +67,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   loadInvoice() {
-    this.invoiceStoreService.setLoader(true);
     this.invoiceStoreService.loadInvoice(this.params, this.isMore);
   }
 
@@ -100,6 +99,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .getInvoiceLoaded()
       .subscribe((loaded: boolean) => {
         if (loaded === false) {
+          this.invoiceStoreService.setLoader(true);
           this.loadInvoice();
         }
       });
@@ -261,6 +261,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       endDate: '',
     };
     this.isMore = false;
+    this.invoiceStoreService.setLoader(true);
     this.loadInvoice();
   }
 
