@@ -36,7 +36,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     startDate: '',
     endDate: ''
   };
-  dateRange: Date[] = [];
+  startDate: string = '';
+  endDate: string = '';
   loader$: Observable<boolean> = of(true);
   subLoader$: Observable<boolean> = of(false);
   invoices: Invoice[] = [];
@@ -186,6 +187,18 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearSearch() {
+    this.searchText = '';
+    this.onSearch('');
+    this.searchParams = {
+      ...this.searchParams,
+      customer: this.searchText,
+    };
+
+    this.searchInvoice();
+  }
+
+
   onSearch(e: any) {
     if (e?.target) {
       this.searchText = e.target.value?.trim();
@@ -194,7 +207,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           page: 1,
           customer: this.searchText,
         };
-        if(this.dateRange.length == 0){
+        if(this.startDate == '' && this.endDate == ''){
           delete this.searchParams.startDate;
           delete this.searchParams.endDate;
         }
@@ -213,30 +226,21 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     return this.datePipe.transform(date, 'yyyy-MM-dd');
   }
 
-  onDateChange(dates: Date[]) {
-    if (dates && dates.length === 2) {
-      this.dateRange = dates;
+  onDateInputChange() {
+    if (this.startDate && this.endDate) {
       this.searchParams = {
         ...this.searchParams,
-        startDate: this.formatDate(dates[0]) as string,
-        endDate: this.formatDate(dates[1]) as string,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        page: 1,
       }
       if(this.searchText == ''){
         delete this.searchParams.customer;
       }
     } else {
-      this.searchParams = {
-        ...this.searchParams,
-      }
-      if(this.dateRange.length == 0){
-        delete this.searchParams.startDate;
-        delete this.searchParams.endDate;
-      }
+      delete this.searchParams.startDate;
+      delete this.searchParams.endDate;
     }
-    this.searchParams = {
-      ...this.searchParams,
-      page: 1,
-    };
     this.isMore = false;
     this.searchInvoice();
   }
@@ -247,6 +251,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       page: 1,
     };
     this.searchText = '';
+    this.startDate = '';
+    this.endDate = '';
     this.searchParams = {
       ...this.searchParams,
       page: 1,
@@ -254,7 +260,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       startDate: '',
       endDate: '',
     };
-    this.dateRange = [];
     this.isMore = false;
     this.loadInvoice();
   }
