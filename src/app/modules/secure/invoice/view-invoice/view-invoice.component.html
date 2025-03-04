@@ -10,6 +10,10 @@
   <button *ngIf="isAdmin" class="mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
     Delete
   </button>
+
+  <button *ngIf="isAdmin" nz-button class="mx-2 mt-20" type="button" (click)="showLogs()">
+    Logs
+  </button>
 </div>
 </nz-affix>
 <div class="invoice-container">

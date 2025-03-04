@@ -1,0 +1,21 @@
+<div class="log-container" *ngIf="logs.length > 0">
+  <table class="log-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Message</th>
+        <th>When</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of logs">
+        <td>{{ log.name }}</td>
+        <td>{{ log.description }}</td>
+        <td>{{ log.when | date:'dd-MMM-yyyy hh:mm:ss a' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-container class="no-data" *ngIf="logs.length === 0">
+  <app-global-no-data></app-global-no-data>
+ </ng-container>
