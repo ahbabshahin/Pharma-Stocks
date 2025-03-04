@@ -1,3 +1,5 @@
+import { ActivityLog } from "./common.model";
+
 export interface Invoice {
   _id?: string;
   sn:string;
@@ -8,6 +10,7 @@ export interface Invoice {
   status: string;
   customer: string;
   createdAt?: string;
+  activity_log?: ActivityLog[];
 }
 
 export interface Product {

@@ -13,6 +13,7 @@ import { BusinessService } from '../../../../service/business/business.service';
 import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LogComponent } from '../../../../common-component/log/log.component';
 
 @Component({
   selector: 'app-view-invoice',
@@ -21,15 +22,15 @@ import autoTable from 'jspdf-autotable';
 })
 export class ViewInvoiceComponent {
   subs = new SubSink();
-  invoice!: Invoice;
-  business!: Business;
-  customer!: Customer;
-  invoiceNumber!: number;
-  date!: string;
-  invoiceStatus!: string;
+  invoice: Invoice;
+  business: Business;
+  customer: Customer;
+  invoiceNumber: number;
+  date: string;
+  invoiceStatus: string;
   products: any;
-  discount!: number;
-  totalAmount!: number;
+  discount: number;
+  totalAmount: number;
   isAdmin: boolean = false;
 
   constructor(
@@ -206,6 +207,18 @@ export class ViewInvoiceComponent {
       doc.autoPrint();
       window.open(doc.output('bloburl'), '_blank');
     };
+  }
+
+  showLogs() {
+    this.drawerService.create({
+      nzTitle: 'Activity Logs',
+      nzWidth: '100%',
+      nzWrapClassName: 'full-drawer',
+      nzContent: LogComponent,
+      nzData: {
+        logs: this.invoice?.activity_log,
+      },
+    });
   }
 
 
