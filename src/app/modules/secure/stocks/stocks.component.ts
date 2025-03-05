@@ -32,8 +32,7 @@ export class StocksComponent {
     private stockStore: StockStoreService,
     private commonService: CommonService,
     private drawerService: NzDrawerService,
-    private authStore: AuthStoreService,
-
+    private authStore: AuthStoreService
   ) {}
 
   ngOnInit() {
@@ -57,7 +56,6 @@ export class StocksComponent {
         }
       });
   }
-
 
   async isAdminUser() {
     console.log('admin');
@@ -87,7 +85,7 @@ export class StocksComponent {
     });
   }
 
-  getTotalStocks(){
+  getTotalStocks() {
     this.subs.sink = this.stockStore.getTotalStock().subscribe({
       next: (total: number) => {
         console.log('total: ', total);
@@ -99,26 +97,28 @@ export class StocksComponent {
 
   addStock(stock?: Stock) {
     console.log('stock: ', stock);
-     this.drawerService.create({
+    this.drawerService.create({
       nzTitle: 'New Stock',
       nzClosable: true,
       nzMaskClosable: false,
       nzWidth: '50%',
       // nzWrapClassName: 'md-drawer',
       nzContent: NewStockComponent,
-      nzData: {stock}
+      nzData: { stock },
     });
   }
 
-  async deleteStock(id: string){
-    const ok = await this.commonService.showConfirmModal('Are you sure you want to delete this product?');
+  async deleteStock(id: string) {
+    const ok = await this.commonService.showConfirmModal(
+      'Are you sure you want to delete this product?'
+    );
     if (!ok) return;
 
     this.commonService.presentLoading();
     this.stockStore.deleteStock(id);
   }
 
-  search(){
+  search() {
     console.log('search ', this.searchText);
     this.searchText = this.searchText?.trim();
     if (this.searchText !== '') {
@@ -130,26 +130,41 @@ export class StocksComponent {
     }
   }
 
-  resetSearch(){
+  resetSearch() {
     this.searchText = '';
     this.params = {
       ...this.params,
-      page: 1
-    }
+      page: 1,
+    };
     this.isMore = false;
     this.loadStock();
   }
 
-  loadMore(){
-    if(this.stocks?.length < this.total){
+  loadMore() {
+    if (this.stocks?.length < this.total) {
       this.params = {
         ...this.params,
-        page: this.params.page + 1
-      }
+        page: this.params.page + 1,
+      };
       this.stockStore.setStockSubLoader(true);
       this.isMore = true;
       this.loadStock();
     }
+  }
+
+  async showLogs(stock: Stock) {
+    const { LogComponent } = await import(
+      '../../../common-component/log/log.component'
+    );
+    this.drawerService.create({
+      nzTitle: 'Activity Logs',
+      nzWidth: '100%',
+      nzWrapClassName: 'full-drawer',
+      nzContent: LogComponent,
+      nzData: {
+        logs: stock?.activity_log,
+      },
+    });
   }
 
   ngOnDestroy() {

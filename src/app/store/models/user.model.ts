@@ -1,3 +1,5 @@
+import { ActivityLog } from "./common.model";
+
 export interface User {
   _id?: string;
   name: string;
@@ -7,6 +9,7 @@ export interface User {
   image?: string;
   accessToken?: string;
   isPasswordSet?: boolean;
+  activity_log?: ActivityLog[];
 }
 
 export interface LoginCred {

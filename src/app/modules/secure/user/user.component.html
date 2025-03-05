@@ -1,37 +1,40 @@
 <div class="d-flex justify-content-end my-2 mx-2">
-  <button type="button" nz-button class="primary-btn" nzShape="round" (click)="editUser()">
+    <button type="button" nz-button class="primary-btn" nzShape="round" (click)="editUser()">
     Add User
   </button>
 </div>
 <app-global-loader *ngIf="loader$ | async"></app-global-loader>
 
 <ng-container *ngIf="!(loader$ | async)">
-  <ng-container *ngIf="users?.length">
-    <div class="user-card-wrapper">
-      <div class="user-card-container" *ngFor="let user of users">
-        <nz-card nzHoverable class="user-card">
-          <nz-card-meta [nzTitle]="(user.name ?? '') | titlecase" [nzAvatar]="avatarTemplate" [nzDescription]="user?.role | titlecase">
-          </nz-card-meta>
-          <ng-template #avatarTemplate>
-            <img [src]="'assets/img/profile.jpg'" alt="Avatar" class="user-avatar" />
-          </ng-template>
-          <div class="card-details">
-            <p class="user-email">{{ user?.email }}</p>
-            <div class="action-buttons">
-              <button nz-button nzSize="small" nzShape="circle" [nzType]="user?.role === 'office' ? 'primary' : 'default'"  (click)="editRole(user)">
+    <ng-container *ngIf="users?.length">
+        <div class="user-card-wrapper">
+            <div class="user-card-container" *ngFor="let user of users">
+                <nz-card nzHoverable class="user-card">
+                    <nz-card-meta [nzTitle]="(user.name ?? '') | titlecase" [nzAvatar]="avatarTemplate" [nzDescription]="user?.role | titlecase">
+                    </nz-card-meta>
+                    <ng-template #avatarTemplate>
+                        <img [src]="'assets/img/profile.jpg'" alt="Avatar" class="user-avatar" />
+                    </ng-template>
+                    <div class="card-details">
+                        <p class="user-email">{{ user?.email }}</p>
+                        <div class="action-buttons">
+                            <button nz-button nzSize="small" nzShape="circle" [nzType]="user?.role === 'office' ? 'primary' : 'default'" (click)="editRole(user)">
                 <span nz-icon nzType="user-switch" [nz-tooltip]="user?.role === 'office' ? 'Make Admin' : 'Remove Admin'" nzTheme="outline"></span>
               </button>
-              <button nz-button nzSize="small" nzShape="circle" nz-tooltip="edit user" nzType="default" (click)="editUser(user)">
+                            <button nz-button nzSize="small" nzShape="circle" nz-tooltip="edit user" nzType="default" (click)="editUser(user)">
                 <span nz-icon nzType="edit" nzTheme="outline"></span>
               </button>
-              <button nz-button nzSize="small" nzShape="circle" nzDanger nz-tooltip="delete user" (click)="deleteUser(user)">
+                            <button nz-button nzSize="small" nzShape="circle" nzDanger nz-tooltip="delete user" (click)="deleteUser(user)">
                 <span nz-icon nzType="delete" nzTheme="outline"></span>
               </button>
+                            <button nz-button nzSize="small" nzShape="circle" nz-tooltip="view logs" (click)="showLogs(user)">
+                <span nz-icon nzType="eye" nzTheme="outline"></span>
+              </button>
+                        </div>
+                    </div>
+                </nz-card>
             </div>
-          </div>
-        </nz-card>
-      </div>
-    </div>
-  </ng-container>
-  <app-global-no-data *ngIf="!users?.length" bodyText="No user found"></app-global-no-data>
+        </div>
+    </ng-container>
+    <app-global-no-data *ngIf="!users?.length" bodyText="No user found"></app-global-no-data>
 </ng-container>

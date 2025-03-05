@@ -18,8 +18,8 @@ export class UserComponent {
   subs = new SubSink();
   params = {
     page: 1,
-    limit: 10
-  }
+    limit: 10,
+  };
   total: number = 0;
   isMore: boolean = false;
   loader$: Observable<boolean> = of(true);
@@ -27,59 +27,60 @@ export class UserComponent {
   constructor(
     private commonService: CommonService,
     private userStore: UserStoreService,
-    private drawerService: NzDrawerService,
-  ){}
+    private drawerService: NzDrawerService
+  ) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.initialize();
   }
 
-  initialize(){
+  initialize() {
     this.getLoader();
     this.isUserLoaded();
     this.getUsers();
   }
 
-  getLoader(){
+  getLoader() {
     this.loader$ = this.userStore.getUserLoader();
     this.subloader$ = this.userStore.getUserSubLoader();
   }
 
-  isUserLoaded(){
+  isUserLoaded() {
     this.subs.sink = this.userStore.getUserLoaded().subscribe({
-      next: (loaded: boolean) =>{
-        if(!loaded)
-          this.loadUsers();
+      next: (loaded: boolean) => {
+        if (!loaded) this.loadUsers();
       },
-    })
+    });
   }
 
-  loadUsers(){
+  loadUsers() {
     this.userStore.loadUsers(this.params, this.isMore);
   }
 
-  getUsers(){
-    this.subs.sink = this.userStore
-      .getUsers()
-      .subscribe({ next: (res: User[]) => {
+  getUsers() {
+    this.subs.sink = this.userStore.getUsers().subscribe({
+      next: (res: User[]) => {
         console.log('users list: ', res);
         this.users = res;
-        this.getTotalUser()
+        this.getTotalUser();
         // this.total = res?.total
         // this.loader = false;
-      }, error: () => {
+      },
+      error: () => {
         // this.loader = false;
-      } });
+      },
+    });
   }
 
-  getTotalUser(){
-    this.subs.sink = this.userStore
-     .getTotalUser()
-     .subscribe({ next: (res: number) => {
+  getTotalUser() {
+    this.subs.sink = this.userStore.getTotalUser().subscribe({
+      next: (res: number) => {
         this.total = res;
-      }, error: () => {
-        this.commonService.showErrorToast('')
-      } });
+      },
+      error: () => {
+        this.commonService.showErrorToast('');
+      },
+    });
   }
 
   addUser(user: User) {
@@ -95,49 +96,62 @@ export class UserComponent {
     });
   }
 
-  async editRole(user: User){
+  async editRole(user: User) {
     const ok = await this.commonService.showConfirmModal(
       `Are you sure, you want to make ${user?.name} as Admin?`
     );
 
-    if(!ok) return;
+    if (!ok) return;
 
     this.commonService.presentLoading();
 
-    let payload : EditRolePayload = {
+    let payload: EditRolePayload = {
       _id: user?._id as string,
-      role: user?.role === 'office' ? 'admin' : 'office'
-    }
+      role: user?.role === 'office' ? 'admin' : 'office',
+    };
     this.userStore.editRole(payload);
   }
 
-   editUser(user?: User){
-     console.log('user: ', user);
-      this.drawerService.create({
-       nzTitle: `${user ? 'Update': 'Add'} user`,
-       nzClosable: true,
-       nzMaskClosable: false,
-       nzWidth: '100%',
-       // nzWrapClassName: 'md-drawer',
-       nzContent: NewUserComponent,
-       nzData: {user}
-     });
+  editUser(user?: User) {
+    console.log('user: ', user);
+    this.drawerService.create({
+      nzTitle: `${user ? 'Update' : 'Add'} user`,
+      nzClosable: true,
+      nzMaskClosable: false,
+      nzWidth: '100%',
+      // nzWrapClassName: 'md-drawer',
+      nzContent: NewUserComponent,
+      nzData: { user },
+    });
   }
 
-  async deleteUser(user: User){
+  async deleteUser(user: User) {
     const ok = await this.commonService.showConfirmModal(
       `Are you sure, you want to delete ${user?.name}?`
     );
 
-    if(!ok) return;
+    if (!ok) return;
 
     this.commonService.presentLoading();
     this.userStore.deleteUser(user._id as string);
   }
 
+  async showLogs(user: User) {
+    const { LogComponent } = await import(
+      '../../../common-component/log/log.component'
+    );
+    this.drawerService.create({
+      nzTitle: 'Activity Logs',
+      nzWidth: '100%',
+      nzWrapClassName: 'full-drawer',
+      nzContent: LogComponent,
+      nzData: {
+        logs: user?.activity_log,
+      },
+    });
+  }
 
-
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subs.unsubscribe();
   }
 }

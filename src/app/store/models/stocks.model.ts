@@ -1,3 +1,5 @@
+import { ActivityLog } from "./common.model";
+
 export interface Stock {
   _id: string;
   name: string;
@@ -7,4 +9,5 @@ export interface Stock {
   dosage: string;
   lowStockThreshold: number;
   isLowStock?: boolean;
+  activity_log?: ActivityLog[];
 }
