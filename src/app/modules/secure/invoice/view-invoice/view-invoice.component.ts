@@ -13,7 +13,6 @@ import { BusinessService } from '../../../../service/business/business.service';
 import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { LogComponent } from '../../../../common-component/log/log.component';
 
 @Component({
   selector: 'app-view-invoice',
@@ -209,7 +208,8 @@ export class ViewInvoiceComponent {
     };
   }
 
-  showLogs() {
+  async showLogs() {
+    const { LogComponent } = await import('../../../../common-component/log/log.component');
     this.drawerService.create({
       nzTitle: 'Activity Logs',
       nzWidth: '100%',

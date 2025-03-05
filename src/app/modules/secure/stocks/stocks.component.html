@@ -1,84 +1,80 @@
 <div class="search-container">
-  <div class="search-filters">
-    <div class="search-input">
-      <nz-input-group [nzSuffix]="suffixTemplate">
-        <input type="text" nz-input placeholder="Search by product name"
-               [(ngModel)]="searchText"
-               (input)="search()" />
-      </nz-input-group>
+    <div class="search-filters">
+        <div class="search-input">
+            <nz-input-group [nzSuffix]="suffixTemplate">
+                <input type="text" nz-input placeholder="Search by product name" [(ngModel)]="searchText" (input)="search()" />
+            </nz-input-group>
 
-      <ng-template #suffixTemplate>
-        <span nz-icon nzType="search"></span>
-        <span *ngIf="searchText" nz-icon nzType="close-circle" class="clear-icon" (click)="resetSearch()"></span>
-      </ng-template>
+            <ng-template #suffixTemplate>
+                <span nz-icon nzType="search"></span>
+                <span *ngIf="searchText" nz-icon nzType="close-circle" class="clear-icon" (click)="resetSearch()"></span>
+            </ng-template>
+        </div>
     </div>
-  </div>
 
-  <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addStock()">
+    <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addStock()">
     Add Stock
   </button>
 </div>
 
 <app-global-loader *ngIf="loader$ | async"></app-global-loader>
 <ng-container *ngIf="!(loader$ | async)">
-  <div class="container my-3" *ngIf="stocks?.length">
-    <nz-collapse>
-      <nz-collapse-panel *ngFor="let list of stocks; let i = index"
-        [nzHeader]="collapseHeader"
-        [nzActive]="false"
-        class="stock-panel">
-        <ng-template #collapseHeader>
-          <div class="collapse-header" (click)="$event.stopPropagation()">
-            <span class="product-name">
+    <div class="container my-3" *ngIf="stocks?.length">
+        <nz-collapse>
+            <nz-collapse-panel *ngFor="let list of stocks; let i = index" [nzHeader]="collapseHeader" [nzActive]="false" class="stock-panel">
+                <ng-template #collapseHeader>
+                    <div class="collapse-header" (click)="$event.stopPropagation()">
+                        <span class="product-name">
               {{ list?.name }}
             </span>
-            <div class="header-details">
-              <nz-tag [nzColor]="list?.quantity <= list?.lowStockThreshold ? 'error' : 'success'">
-                Quantity: {{ list?.quantity }}
-              </nz-tag>
-              <div class="action-buttons" *ngIf="isAdmin">
-                <button nz-button nzType="link" (click)="addStock(list)">
+                        <div class="header-details">
+                            <nz-tag [nzColor]="list?.quantity <= list?.lowStockThreshold ? 'error' : 'success'">
+                                Quantity: {{ list?.quantity }}
+                            </nz-tag>
+                            <div class="action-buttons" *ngIf="isAdmin">
+                                <button nz-button nzType="link" (click)="addStock(list)">
                   <i nz-icon nzType="edit" nzTheme="outline"></i>
                 </button>
-                <button nz-button nzType="link" (click)="deleteStock(list._id)">
+                                <button nz-button nzType="link" (click)="deleteStock(list._id)">
                   <i nz-icon nzType="delete" nzTheme="outline"></i>
                 </button>
-              </div>
-            </div>
-          </div>
-        </ng-template>
+                                <button nz-button nzType="link" (click)="showLogs(list)">
+                  <i nz-icon nzType="eye" nzTheme="outline"></i>
+                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
 
-        <!-- Panel Content -->
-        <div class="panel-content">
-          <div class="stock-details">
-            <div class="detail-row" *ngIf="list?.brand">
-              <strong>Brand:</strong> {{ list?.brand }}
-            </div>
-            <div class="detail-row" *ngIf="list?.price">
-              <strong>Price:</strong> ৳ {{ list?.price | number : "1.2-2" }}
-            </div>
-            <div class="detail-row" *ngIf="list?.dosage">
-              <strong>Dosage:</strong> {{ list?.dosage }}
-            </div>
-            <div class="detail-row" *ngIf="list?.lowStockThreshold">
-              <strong>Low stock limit:</strong> {{ list?.lowStockThreshold }}
-            </div>
-          </div>
-        </div>
-      </nz-collapse-panel>
-    </nz-collapse>
+                <!-- Panel Content -->
+                <div class="panel-content">
+                    <div class="stock-details">
+                        <div class="detail-row" *ngIf="list?.brand">
+                            <strong>Brand:</strong> {{ list?.brand }}
+                        </div>
+                        <div class="detail-row" *ngIf="list?.price">
+                            <strong>Price:</strong> ৳ {{ list?.price | number : "1.2-2" }}
+                        </div>
+                        <div class="detail-row" *ngIf="list?.dosage">
+                            <strong>Dosage:</strong> {{ list?.dosage }}
+                        </div>
+                        <div class="detail-row" *ngIf="list?.lowStockThreshold">
+                            <strong>Low stock limit:</strong> {{ list?.lowStockThreshold }}
+                        </div>
+                    </div>
+                </div>
+            </nz-collapse-panel>
+        </nz-collapse>
 
-    <p *ngIf="stocks?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
-      Showing product(s) {{ stocks.length }} out of {{ total }}
-    </p>
-    <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
-    <div *ngIf="total > params.limit && stocks.length < total"
-      class="d-flex justify-content-center align-items-center my-2 mx-2">
-      <button [disabled]="(subLoader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round"
-        class="w-50">
+        <p *ngIf="stocks?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
+            Showing product(s) {{ stocks.length }} out of {{ total }}
+        </p>
+        <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
+        <div *ngIf="total > params.limit && stocks.length < total" class="d-flex justify-content-center align-items-center my-2 mx-2">
+            <button [disabled]="(subLoader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
         Load more
       </button>
+        </div>
     </div>
-  </div>
-  <app-global-no-data *ngIf="!stocks?.length" bodyText="No stock found"></app-global-no-data>
+    <app-global-no-data *ngIf="!stocks?.length" bodyText="No stock found"></app-global-no-data>
 </ng-container>
