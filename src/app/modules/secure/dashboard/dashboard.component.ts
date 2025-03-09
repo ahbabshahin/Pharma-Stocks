@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { BusinessService } from '../../../service/business/business.service';
 import { Business } from '../../../store/models/business.model';
+import { SubSink } from 'subsink';
+import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,8 +10,12 @@ import { Business } from '../../../store/models/business.model';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  subs = new SubSink();
   business!: Business;
-  constructor(private businessService: BusinessService) {}
+  constructor(
+    private businessService: BusinessService,
+    private invoiceApiService: InvoiceApiService,
+    ) {}
 
   ngOnInit() {
     this.initialize();
@@ -17,6 +23,7 @@ export class DashboardComponent {
 
   initialize() {
     this.getBusiness();
+    // this.getSalesReportByPrice();
   }
 
   getBusiness() {
@@ -24,6 +31,7 @@ export class DashboardComponent {
 
     if (business) this.business = business;
   }
+
 
   ngOnDestroy() {}
 }
