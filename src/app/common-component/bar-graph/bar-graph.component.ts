@@ -5,6 +5,7 @@ import { getRelativePosition } from 'chart.js/helpers';
 import { InvoiceApiService } from '../../service/invoice/invoice-api.service';
 import { SubSink } from 'subsink';
 import { SalesReportByPrice } from '../../store/models/invoice.model';
+import { BarGraph } from '../../store/models/common.model';
 
 @Component({
   selector: 'app-bar-graph',
@@ -17,6 +18,7 @@ import { SalesReportByPrice } from '../../store/models/invoice.model';
 export class BarGraphComponent {
   subs = new SubSink();
   salesReportByPrice: SalesReportByPrice[] = [];
+  barGraph: BarGraph;
   constructor(
     private invoiceApiService: InvoiceApiService,
 
@@ -28,6 +30,7 @@ export class BarGraphComponent {
 
   initialize(){
     this.getSalesReportByPrice();
+    this.initializeChart();
   }
 
 
@@ -45,16 +48,25 @@ export class BarGraphComponent {
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: this.salesReportByPrice.map((item) => item.product),
-        datasets: [{
-          label: 'Total Revenue',
-          borderColor: 'rgb(255, 99, 132)',
-          backgroundColor: this.salesReportByPrice.map(() => `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`),
-          data: this.salesReportByPrice.map((item) => item.totalRevenue)
-        }]
+        labels: this.barGraph?.labels,
+        datasets: [
+          {
+            label: this.barGraph?.datasets?.label,
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: this.salesReportByPrice.map(
+              () =>
+                `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+                  Math.random() * 255
+                )}, ${Math.floor(Math.random() * 255)})`
+            ),
+            data: this.barGraph?.datasets?.data,
+          },
+        ],
       },
     });
   }
+
+
 
   ngOnDestroy() {}
 }

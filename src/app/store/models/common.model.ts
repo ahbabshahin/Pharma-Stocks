@@ -5,3 +5,11 @@ export interface ActivityLog {
   when: Date;
   description: string;
 }
+
+export interface BarGraph {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+  };
+}

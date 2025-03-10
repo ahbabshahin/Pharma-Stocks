@@ -40,4 +40,10 @@ export class InvoiceApiService {
       .get(`${this.env.rootURL}/v1/invoice/reports/by-price`)
       .pipe(map((res: any) => res?.body));
   }
+
+  getMonthlySalesReport(){
+    return this.http
+      .get(`${this.env.rootURL}/v1/invoice/reports/monthly`)
+      .pipe(map((res: any) => res?.body));
+  }
 }
