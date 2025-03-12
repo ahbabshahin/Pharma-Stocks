@@ -25,8 +25,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   routes: { label: string; path: string; roles: string[] }[] = [
     { label: 'dashboard', path: '/dashboard', roles: ['admin', 'office'] },
     { label: 'stocks', path: '/stocks', roles: ['admin', 'office'] },
-    { label: 'invoice', path: '/invoice', roles: ['admin', 'office','field'] },
-    { label: 'customer', path: '/customer', roles: ['admin',] },
+    { label: 'invoice', path: '/invoice', roles: ['admin', 'office', 'field'] },
+    { label: 'customer', path: '/customer', roles: ['admin','office'] },
     { label: 'user', path: '/user', roles: ['admin',] },
     { label: 'profile', path: '/profile', roles: ['admin', 'office', 'field', 'delivery'] },
   ];

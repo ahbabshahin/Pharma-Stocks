@@ -29,6 +29,7 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { FindPipe } from '../pipe/find.pipe';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { DatePipe } from '@angular/common';
 
 export const components = [
   FormsModule,
@@ -63,5 +64,6 @@ export const components = [
   NzInputNumberModule,
   NzCollapseModule,
   FindPipe,
+  DatePipe,
   NzTagModule,
 ];

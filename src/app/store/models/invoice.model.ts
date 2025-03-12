@@ -19,3 +19,17 @@ export interface Product {
   price: number;
   _id: string;
 }
+
+export interface SalesReportByPrice {
+  product: string;
+  price: number;
+  totalQuantity: number;
+  totalRevenue: number;
+}
+
+export interface DailyReport {
+  totalInvoices: number;
+  date: string;
+  totalRevenue: number;
+  averageInvoiceValue: number;
+}
