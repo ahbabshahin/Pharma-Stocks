@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { label: 'dashboard', path: '/dashboard', roles: ['admin', 'office'] },
     { label: 'stocks', path: '/stocks', roles: ['admin', 'office'] },
     { label: 'invoice', path: '/invoice', roles: ['admin', 'office', 'field'] },
-    { label: 'customer', path: '/customer', roles: ['admin',] },
+    { label: 'customer', path: '/customer', roles: ['admin','office'] },
     { label: 'user', path: '/user', roles: ['admin',] },
     { label: 'profile', path: '/profile', roles: ['admin', 'office', 'field', 'delivery'] },
   ];
