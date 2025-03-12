@@ -1,22 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import Chart from 'chart.js/auto';
-import { getRelativePosition } from 'chart.js/helpers';
-import { InvoiceApiService } from '../../service/invoice/invoice-api.service';
-import { SubSink } from 'subsink';
-import { SalesReportByPrice } from '../../store/models/invoice.model';
 import { BarGraph } from '../../store/models/common.model';
+import { Chart } from 'chart.js';
 
 @Component({
-  selector: 'app-bar-graph',
+  selector: 'app-line-graph',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './bar-graph.component.html',
-  styleUrl: './bar-graph.component.scss',
+  templateUrl: './line-graph.component.html',
+  styleUrl: './line-graph.component.scss'
 })
-export class BarGraphComponent {
-  subs = new SubSink();
-  salesReportByPrice: SalesReportByPrice[] = [];
+export class LineGraphComponent {
   barGraph: BarGraph;
   constructor() {}
 
@@ -32,14 +26,14 @@ export class BarGraphComponent {
   initializeChart(){
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
     const myChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: this.barGraph?.labels,
         datasets: [
           {
             label: this.barGraph?.datasets?.label,
             borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: this.salesReportByPrice.map(
+            backgroundColor: this.barGraph?.datasets?.data?.map(
               () =>
                 `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
                   Math.random() * 255
@@ -52,7 +46,4 @@ export class BarGraphComponent {
     });
   }
 
-
-
-  ngOnDestroy() {}
 }

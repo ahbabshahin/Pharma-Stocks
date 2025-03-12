@@ -5,6 +5,8 @@ import { SubSink } from 'subsink';
 import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
 import { SalesReportByPrice } from '../../../store/models/invoice.model';
 import { BarGraph } from '../../../store/models/common.model';
+import { SalesReportApiService } from '../../../service/sales-report/sales-report-api.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +20,8 @@ export class DashboardComponent {
   monthlySalesReportBarGraph: BarGraph;
   constructor(
     private businessService: BusinessService,
-    private invoiceApiService: InvoiceApiService,
+    private salesReportApi: SalesReportApiService,
+    private datePipe: DatePipe,
     ) {}
 
   ngOnInit() {
@@ -37,9 +40,14 @@ export class DashboardComponent {
   }
 
   getMonthlySalesReport() {
-    this.subs.sink = this.invoiceApiService
-      .getMonthlySalesReport()
+    const today = new Date();
+    const formattedDate: string = this.datePipe.transform(today, 'yyyy-MM-dd') || '';
+
+    this.subs.sink = this.salesReportApi
+      .getDailySalesReport('2025-02-01')
       .subscribe((res) => {
+        console.log('res of daily sales report', res);
+
         this.monthlySalesReport = res;
         // this.initializeChart();
       });
