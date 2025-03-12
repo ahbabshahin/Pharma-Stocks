@@ -26,3 +26,10 @@ export interface SalesReportByPrice {
   totalQuantity: number;
   totalRevenue: number;
 }
+
+export interface DailyReport {
+  totalInvoices: number;
+  date: string;
+  totalRevenue: number;
+  averageInvoiceValue: number;
+}

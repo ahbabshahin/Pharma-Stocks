@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoaderComponent } from './loader/loader.component';
-import { NoDataComponent } from './no-data/no-data.component';
-import { BarGraphComponent } from './bar-graph/bar-graph.component';
-
+import { components } from './index';
 
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, LoaderComponent, NoDataComponent, BarGraphComponent],
-  exports: [CommonModule, LoaderComponent, NoDataComponent, BarGraphComponent],
+  imports: [CommonModule, ...components],
+  exports: [CommonModule, ...components],
 })
 export class CommonComponentModule {}
