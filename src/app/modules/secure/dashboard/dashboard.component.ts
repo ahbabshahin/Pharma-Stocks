@@ -3,7 +3,7 @@ import { BusinessService } from '../../../service/business/business.service';
 import { Business } from '../../../store/models/business.model';
 import { SubSink } from 'subsink';
 import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
-import { SalesReportByPrice } from '../../../store/models/invoice.model';
+import { DailyReport, SalesReportByPrice } from '../../../store/models/invoice.model';
 import { BarGraph } from '../../../store/models/common.model';
 import { SalesReportApiService } from '../../../service/sales-report/sales-report-api.service';
 import { DatePipe } from '@angular/common';
@@ -16,13 +16,17 @@ import { DatePipe } from '@angular/common';
 export class DashboardComponent {
   subs = new SubSink();
   business!: Business;
-  monthlySalesReport: SalesReportByPrice[] = [];
-  monthlySalesReportBarGraph: BarGraph;
+  dailyReport: DailyReport[] = [];
+  dailySalesReportBarGraph: BarGraph;
+
+  selectedDate: Date = new Date(); // Default to current date
+  formattedDate: string = '';
+
   constructor(
     private businessService: BusinessService,
     private salesReportApi: SalesReportApiService,
-    private datePipe: DatePipe,
-    ) {}
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit() {
     this.initialize();
@@ -30,6 +34,7 @@ export class DashboardComponent {
 
   initialize() {
     this.getBusiness();
+    this.formatSelectedDate();
     // this.getMonthlySalesReport();
   }
 
@@ -39,30 +44,43 @@ export class DashboardComponent {
     if (business) this.business = business;
   }
 
+  onDateChange(): void {
+    this.formatSelectedDate();
+  }
+
+  formatSelectedDate(): void {
+    const year = this.selectedDate?.getFullYear();
+    const month = this.selectedDate?.getMonth() + 1; // Months are 0-based
+    this.formattedDate = `${year}-${String(month)?.padStart(2, '0')}-01`;
+    this.getMonthlySalesReport();
+  }
+
   getMonthlySalesReport() {
     const today = new Date();
-    const formattedDate: string = this.datePipe.transform(today, 'yyyy-MM-dd') || '';
+    const formattedDate: string =
+      this.datePipe.transform(today, 'yyyy-MM-dd') || '';
 
     this.subs.sink = this.salesReportApi
-      .getDailySalesReport('2025-02-01')
+      .getDailySalesReport(this.formattedDate)
       .subscribe((res) => {
         console.log('res of daily sales report', res);
-
-        this.monthlySalesReport = res;
+        this.dailyReport = res;
+        this.processDailySalesReport()
         // this.initializeChart();
       });
   }
 
-  processMonthlySalesReport() {
-    this.monthlySalesReportBarGraph = {
-      labels: this.monthlySalesReport.map((item: any) => item.month),
+  processDailySalesReport() {
+    this.dailySalesReportBarGraph = {
+      labels: this.dailyReport.map((item: DailyReport) => item.date),
       datasets: {
-        label: 'Monthly Sales Report',
-        data: this.monthlySalesReport.map((item) => item.totalRevenue),
+        label: 'Daily Sales Report',
+        data: this.dailyReport.map((item) => item.totalRevenue),
       },
     };
   }
 
-
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }
