@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  loader: boolean = true;
   subs = new SubSink();
   business!: Business;
   dailyReport: DailyReport[] = [];
@@ -62,11 +63,18 @@ export class DashboardComponent {
 
     this.subs.sink = this.salesReportApi
       .getDailySalesReport(this.formattedDate)
-      .subscribe((res) => {
-        console.log('res of daily sales report', res);
-        this.dailyReport = res;
-        this.processDailySalesReport()
-        // this.initializeChart();
+      .subscribe({
+        next: (res) => {
+          console.log('res of daily sales report', res);
+          this.dailyReport = res;
+          this.processDailySalesReport();
+          // this.initializeChart();
+        },
+        error: (err) => {
+          this.loader = false;
+          console.log('err of daily sales report', err);
+        },
+
       });
   }
 
@@ -78,6 +86,7 @@ export class DashboardComponent {
         data: this.dailyReport.map((item) => item.totalRevenue),
       },
     };
+    this.loader = false;
   }
 
   ngOnDestroy() {
