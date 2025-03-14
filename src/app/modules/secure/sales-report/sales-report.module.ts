@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { SalesReportRoutingModule } from './sales-report-routing.module';
 
 
@@ -8,7 +7,7 @@ import { SalesReportRoutingModule } from './sales-report-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    SalesReportRoutingModule
-  ]
+    SalesReportRoutingModule,
+  ],
 })
-export class SalesReportModule { }
+export class SalesReportModule {}

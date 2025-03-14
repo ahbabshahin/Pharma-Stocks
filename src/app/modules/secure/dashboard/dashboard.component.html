@@ -26,10 +26,11 @@
             <p>{{ this.business.post_code }}</p>
         </div>
     </div> -->
-<div>
+<div class="d-flex justify-content-between mb-3">
     <h3>Dashboard</h3>
-    <app-daily-report></app-daily-report>
+    <button *ngIf="isAdmin" nz-button nzType="default" (click)="salesReport()">View All Sales Report</button>
 </div>
+<app-daily-report></app-daily-report>
 
 <div class="footer-section">
     <p>&copy; 2025 Nutri-Heal Pharma Ltd. All Rights Reserved.</p>

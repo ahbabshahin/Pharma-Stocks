@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { BarGraph } from '../../store/models/common.model';
+import { LineGraph, } from '../../store/models/common.model';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -11,7 +11,7 @@ import { Chart } from 'chart.js';
   styleUrl: './line-graph.component.scss',
 })
 export class LineGraphComponent {
-  @Input() barGraph: BarGraph;
+  @Input() lineGraph: LineGraph;
   chart: Chart;
   constructor() {}
 
@@ -28,18 +28,13 @@ export class LineGraphComponent {
   }
 
   ngOnChanges() {
-    console.log(this.barGraph);
-    if (this.chart) {
-    }
+    console.log(this.lineGraph);
     this.initializeChart();
-    if (this.chart) {
-    }
   }
 
   initializeChart() {
-    // if (!this.barGraph) return;
-    if (this.barGraph === undefined) return;
-    console.log('barGraph inside line graph', this.barGraph);
+    if (this.lineGraph === undefined) return;
+    console.log('lineGraph inside line graph', this.lineGraph);
 
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -48,7 +43,7 @@ export class LineGraphComponent {
     this.chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.barGraph.labels, // X-axis (Date)
+        labels: this.lineGraph.labels, // X-axis (Date)
         datasets: [
           {
             label: 'Total Revenue',
@@ -56,7 +51,7 @@ export class LineGraphComponent {
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderWidth: 2,
             fill: true,
-            data: this.barGraph.datasets.data, // Y-axis (Revenue)
+            data: this.lineGraph.datasets.data, // Y-axis (Revenue)
           },
         ],
       },
@@ -71,10 +66,10 @@ export class LineGraphComponent {
         },
         scales: {
           x: {
-            title: { display: true, text: 'Date' },
+            title: { display: true, text: this.lineGraph.xTitle },
           },
           y: {
-            title: { display: true, text: 'Daily Sales' },
+            title: { display: true, text: this.lineGraph.yTitle },
             beginAtZero: true,
           },
         },

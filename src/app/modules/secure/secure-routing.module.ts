@@ -51,6 +51,12 @@ const routes: Routes = [
         path: 'not-authorized',
         component: NotAuthorizedComponent,
       },
+      {
+        path: 'sales-report',
+        loadChildren: () =>
+          import('./sales-report/sales-report.module').then((m) => m.SalesReportModule),
+        canActivate: [AuthGuard, AdminGuard],
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route
     ],
