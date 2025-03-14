@@ -10,9 +10,9 @@ export class SalesReportApiService {
 
   constructor(private http: HttpClient, private env: Config) { }
 
-  getSalesReportByPrice(){
+  getSalesReportByPrice(date: string){
     return this.http
-      .get(`${this.env.rootURL}/v1/sales-report/by-price`)
+      .get(`${this.env.rootURL}/v1/sales-report/by-price?date=${date}`)
       .pipe(map((res: any) => res?.body));
   }
 

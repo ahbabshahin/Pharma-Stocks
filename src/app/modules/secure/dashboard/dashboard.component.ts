@@ -2,11 +2,8 @@ import { Component } from '@angular/core';
 import { BusinessService } from '../../../service/business/business.service';
 import { Business } from '../../../store/models/business.model';
 import { SubSink } from 'subsink';
-import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
-import { DailyReport, SalesReportByPrice } from '../../../store/models/invoice.model';
-import { BarGraph } from '../../../store/models/common.model';
-import { SalesReportApiService } from '../../../service/sales-report/sales-report-api.service';
-import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthStoreService } from '../../../service/auth/auth-store.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,26 +14,26 @@ export class DashboardComponent {
   loader: boolean = true;
   subs = new SubSink();
   business!: Business;
-  dailyReport: DailyReport[] = [];
-  dailySalesReportBarGraph: BarGraph;
-
-  selectedDate: Date = new Date(); // Default to current date
-  formattedDate: string = '';
-
+  isAdmin: boolean = false;
   constructor(
     private businessService: BusinessService,
-    private salesReportApi: SalesReportApiService,
-    private datePipe: DatePipe
+    private router: Router,
+    private authStore: AuthStoreService,
   ) {}
 
   ngOnInit() {
     this.initialize();
   }
 
-  initialize() {
+  async initialize() {
+    await this.isAdminUser();
     this.getBusiness();
-    // this.formatSelectedDate();
-    // this.getMonthlySalesReport();
+  }
+
+  async isAdminUser() {
+    console.log('admin');
+    this.isAdmin = await this.authStore.isAdminUser();
+    console.log('this.isAdmin: ', this.isAdmin);
   }
 
   getBusiness() {
@@ -45,7 +42,9 @@ export class DashboardComponent {
     if (business) this.business = business;
   }
 
-
+  salesReport() {
+    this.router.navigate(['/sales-report']);
+  }
 
   ngOnDestroy() {
     this.subs.unsubscribe();

@@ -4,10 +4,10 @@ import { LineGraphComponent } from '../../../../common-component/line-graph/line
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { FormsModule } from '@angular/forms';
-import { BarGraph } from '../../../../store/models/common.model';
+import { BarGraph, LineGraph } from '../../../../store/models/common.model';
 import { SalesReportApiService } from '../../../../service/sales-report/sales-report-api.service';
-import { DailyReport } from '../../../../store/models/invoice.model';
 import { SubSink } from 'subsink';
+import { DailyReport } from '../../../../store/models/sales-report.model';
 
 @Component({
   selector: 'app-daily-report',
@@ -27,6 +27,7 @@ export class DailyReportComponent {
   selectedDate: Date = new Date();
   loader: boolean = true;
   dailySalesReportBarGraph: BarGraph;
+  dailySalesReportLineGraph: LineGraph;
   formattedDate: string = '';
   dailyReport: DailyReport[] = [];
 
@@ -47,36 +48,29 @@ export class DailyReportComponent {
   }
 
   formatSelectedDate(): void {
-    const year = this.selectedDate?.getFullYear();
-    const month = this.selectedDate?.getMonth() + 1; // Months are 0-based
-    this.formattedDate = `${year}-${String(month)?.padStart(2, '0')}-01`;
+    this.formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-01') || '';
     this.getMonthlySalesReport();
   }
 
   getMonthlySalesReport() {
-    const today = new Date();
-    const formattedDate: string =
-      this.datePipe.transform(today, 'yyyy-MM-dd') || '';
-
     this.subs.sink = this.salesReportApi
       .getDailySalesReport(this.formattedDate)
       .subscribe({
         next: (res) => {
-          console.log('res of daily sales report', res);
           this.dailyReport = res;
           this.processDailySalesReport();
-          // this.initializeChart();
         },
         error: (err) => {
           this.loader = false;
-          console.log('err of daily sales report', err);
         },
       });
   }
 
   processDailySalesReport() {
-    this.dailySalesReportBarGraph = {
+    this.dailySalesReportLineGraph = {
       labels: this.dailyReport.map((item: DailyReport) => item.date),
+      xTitle: 'Date',
+      yTitle: 'Total Revenue',
       datasets: {
         label: 'Daily Sales Report',
         data: this.dailyReport.map((item) => item.totalRevenue),
