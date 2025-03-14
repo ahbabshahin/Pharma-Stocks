@@ -26,20 +26,10 @@
             <p>{{ this.business.post_code }}</p>
         </div>
     </div> -->
-
-<!-- Date Picker for Year & Month Selection -->
-<div class="d-flex justify-content-between">
+<div>
     <h3>Dashboard</h3>
-    <div class="date-selection">
-        <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MM-yyyy" nzPlaceHolder="Select Year & Month">
-        </nz-date-picker>
-    </div>
+    <app-daily-report></app-daily-report>
 </div>
-<app-global-loader *ngIf="loader"></app-global-loader>
-<!-- Line Graph with Selected Date -->
-<ng-container *ngIf="!loader">
-    <app-line-graph [barGraph]="dailySalesReportBarGraph"></app-line-graph>
-</ng-container>
 
 <div class="footer-section">
     <p>&copy; 2025 Nutri-Heal Pharma Ltd. All Rights Reserved.</p>

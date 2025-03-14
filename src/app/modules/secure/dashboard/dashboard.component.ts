@@ -35,7 +35,7 @@ export class DashboardComponent {
 
   initialize() {
     this.getBusiness();
-    this.formatSelectedDate();
+    // this.formatSelectedDate();
     // this.getMonthlySalesReport();
   }
 
@@ -45,49 +45,7 @@ export class DashboardComponent {
     if (business) this.business = business;
   }
 
-  onDateChange(): void {
-    this.formatSelectedDate();
-  }
 
-  formatSelectedDate(): void {
-    const year = this.selectedDate?.getFullYear();
-    const month = this.selectedDate?.getMonth() + 1; // Months are 0-based
-    this.formattedDate = `${year}-${String(month)?.padStart(2, '0')}-01`;
-    this.getMonthlySalesReport();
-  }
-
-  getMonthlySalesReport() {
-    const today = new Date();
-    const formattedDate: string =
-      this.datePipe.transform(today, 'yyyy-MM-dd') || '';
-
-    this.subs.sink = this.salesReportApi
-      .getDailySalesReport(this.formattedDate)
-      .subscribe({
-        next: (res) => {
-          console.log('res of daily sales report', res);
-          this.dailyReport = res;
-          this.processDailySalesReport();
-          // this.initializeChart();
-        },
-        error: (err) => {
-          this.loader = false;
-          console.log('err of daily sales report', err);
-        },
-
-      });
-  }
-
-  processDailySalesReport() {
-    this.dailySalesReportBarGraph = {
-      labels: this.dailyReport.map((item: DailyReport) => item.date),
-      datasets: {
-        label: 'Daily Sales Report',
-        data: this.dailyReport.map((item) => item.totalRevenue),
-      },
-    };
-    this.loader = false;
-  }
 
   ngOnDestroy() {
     this.subs.unsubscribe();
