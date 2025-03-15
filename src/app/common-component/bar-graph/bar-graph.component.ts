@@ -30,7 +30,6 @@ export class BarGraphComponent {
   }
 
   ngOnChanges() {
-    console.log(this.barGraph);
     this.initializeChart();
   }
 

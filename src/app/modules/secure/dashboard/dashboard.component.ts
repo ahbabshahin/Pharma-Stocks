@@ -18,7 +18,7 @@ export class DashboardComponent {
   constructor(
     private businessService: BusinessService,
     private router: Router,
-    private authStore: AuthStoreService,
+    private authStore: AuthStoreService
   ) {}
 
   ngOnInit() {
@@ -31,9 +31,7 @@ export class DashboardComponent {
   }
 
   async isAdminUser() {
-    console.log('admin');
     this.isAdmin = await this.authStore.isAdminUser();
-    console.log('this.isAdmin: ', this.isAdmin);
   }
 
   getBusiness() {

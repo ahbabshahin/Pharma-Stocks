@@ -58,11 +58,10 @@ export class ProductReportByPriceComponent {
       .subscribe({
         next: (res) => {
           this.salesReportByPrice = res;
-          console.log('this.salesReportByPrice : ', this.salesReportByPrice);
+
           this.processDailySalesReport();
         },
         error: (err) => {
-          console.log(err);
           this.loader = false;
         },
       });
@@ -78,7 +77,7 @@ export class ProductReportByPriceComponent {
         data: this.salesReportByPrice.map((item) => item.totalRevenue),
       },
     };
-    console.log('this.barGraph : ', this.barGraph );
+
     this.loader = false;
   }
 

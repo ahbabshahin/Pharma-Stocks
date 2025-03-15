@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { LineGraph, } from '../../store/models/common.model';
+import { LineGraph } from '../../store/models/common.model';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -28,18 +28,15 @@ export class LineGraphComponent {
   }
 
   ngOnChanges() {
-    console.log(this.lineGraph);
     this.initializeChart();
   }
 
   initializeChart() {
     if (this.lineGraph === undefined) return;
-    console.log('lineGraph inside line graph', this.lineGraph);
 
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
     if (!ctx) return;
-    if (this.chart)
-      this.chart.destroy();
+    if (this.chart) this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -75,6 +72,6 @@ export class LineGraphComponent {
         },
       },
     });
-      this.chart.update();
+    this.chart.update();
   }
 }
