@@ -8,6 +8,16 @@ export interface ActivityLog {
 
 export interface BarGraph {
   labels: string[];
+  indexAxis: string;
+  datasets: {
+    label: string;
+    data: number[];
+  };
+}
+export interface LineGraph {
+  labels: string[];
+  xTitle: string;
+  yTitle: string;
   datasets: {
     label: string;
     data: number[];

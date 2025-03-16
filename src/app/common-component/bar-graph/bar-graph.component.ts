@@ -1,10 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { getRelativePosition } from 'chart.js/helpers';
-import { InvoiceApiService } from '../../service/invoice/invoice-api.service';
 import { SubSink } from 'subsink';
-import { SalesReportByPrice } from '../../store/models/invoice.model';
 import { BarGraph } from '../../store/models/common.model';
 
 @Component({
@@ -15,23 +12,32 @@ import { BarGraph } from '../../store/models/common.model';
   styleUrl: './bar-graph.component.scss',
 })
 export class BarGraphComponent {
+  @Input() barGraph: BarGraph;
   subs = new SubSink();
-  salesReportByPrice: SalesReportByPrice[] = [];
-  barGraph: BarGraph;
+  chart: Chart;
   constructor() {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.initialize();
   }
 
-  initialize(){
+  initialize() {
     this.initializeChart();
   }
 
+  ngAfterViewInit() {
+    this.initializeChart();
+  }
 
-  initializeChart(){
+  ngOnChanges() {
+    this.initializeChart();
+  }
+
+  initializeChart() {
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
-    const myChart = new Chart(ctx, {
+    if (!ctx) return;
+    if (this.chart) this.chart.destroy();
+    this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: this.barGraph?.labels,
@@ -39,7 +45,7 @@ export class BarGraphComponent {
           {
             label: this.barGraph?.datasets?.label,
             borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: this.salesReportByPrice.map(
+            backgroundColor: this.barGraph?.datasets?.data.map(
               () =>
                 `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
                   Math.random() * 255
@@ -49,10 +55,17 @@ export class BarGraphComponent {
           },
         ],
       },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            beginAtZero: true,
+          },
+        },
+      },
     });
+    this.chart.update();
   }
-
-
 
   ngOnDestroy() {}
 }

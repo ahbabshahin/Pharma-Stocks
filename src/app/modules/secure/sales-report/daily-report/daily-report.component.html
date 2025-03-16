@@ -1,0 +1,12 @@
+<!-- Date Picker for Year & Month Selection -->
+<div class="d-flex justify-content-end">
+    <div class="date-selection">
+        <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
+        </nz-date-picker>
+    </div>
+</div>
+<app-global-loader *ngIf="loader"></app-global-loader>
+<!-- Line Graph with Selected Date -->
+<ng-container *ngIf="!loader">
+    <app-line-graph [lineGraph]="dailySalesReportLineGraph"></app-line-graph>
+</ng-container>

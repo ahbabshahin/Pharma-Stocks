@@ -15,30 +15,29 @@
 
 
 <nz-layout class="layout">
-  <!-- Header Section -->
-   <nz-affix nzOffsetTop>
-  <nz-header class="header">
-    <div class="header-content">
-      <h4 class="header-title">Nutri Heal</h4>
-      <button (click)="sidebar()" nz-button nzType="primary" type="button">
+    <!-- Header Section -->
+    <nz-affix nzOffsetTop>
+        <nz-header class="header">
+            <div class="header-content">
+                <h4 class="header-title" [routerLink]="['/dashboard']">Nutri Heal</h4>
+                <button (click)="sidebar()" nz-button nzType="primary" type="button">
         Menu
       </button>
-    </div>
-  </nz-header>
-  </nz-affix>
+            </div>
+        </nz-header>
+    </nz-affix>
 
-  <!-- Content Section -->
-  <nz-content class="content-container">
-    <div class="content-wrapper">
-      <router-outlet></router-outlet>
-    </div>
-  </nz-content>
+    <!-- Content Section -->
+    <nz-content class="content-container">
+        <div class="content-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </nz-content>
 
-  <!-- Footer Section -->
-  <nz-affix nzOffsetBottom="10">
+    <!-- Footer Section -->
+    <!-- <nz-affix nzOffsetBottom="10">
     <nz-footer class="footer">
       All rights reserved to Nutri Heal
     </nz-footer>
-  </nz-affix>
+  </nz-affix> -->
 </nz-layout>
-

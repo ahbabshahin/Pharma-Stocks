@@ -1,0 +1,13 @@
+<div class="product-report-by-price">
+    <div class="product-report-by-price__header">
+        <h1 class="product-report-by-price__title">Product Report by Price</h1>
+        <div class="date-selection d-flex justify-content-end">
+            <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
+            </nz-date-picker>
+        </div>
+    </div>
+    <app-global-loader *ngIf="loader"></app-global-loader>
+    <div class="product-report-by-price__body" *ngIf="!loader">
+        <app-bar-graph [barGraph]="barGraph"></app-bar-graph>
+    </div>
+</div>
