@@ -1,10 +1,10 @@
 <div class="product-report-by-price">
     <div class="product-report-by-price__header">
-        <h1 class="product-report-by-price__title">Product Report by Price</h1>
+        <h1 class="product-report-by-price__title">Product Report by Quantity</h1>
         <div class="d-flex justify-content-between">
             <div>
-                <span>Total Revenue</span>
-                <p>৳ {{totalRevenue | number : '1.2-2'}}</p>
+                <span>Total Quantity </span>
+                <p>৳ {{totalQuantity | number : '1.2-2'}}</p>
             </div>
             <div class="date-selection">
                 <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
@@ -16,10 +16,10 @@
     <div class="product-report-by-price__body" *ngIf="!loader">
         <app-bar-graph [barGraph]="barGraph"></app-bar-graph>
     </div>
-    <!-- <div class="mt-2 d-flex justify-content-start">
+    <div class="mt-2 d-flex justify-content-start">
         <nz-radio-group [(ngModel)]="radioValue">
             <label nz-radio-button [nzValue]="0">Amount</label>
             <label nz-radio-button [nzValue]="1">Quantity</label>
         </nz-radio-group>
-    </div> -->
+    </div>
 </div>
