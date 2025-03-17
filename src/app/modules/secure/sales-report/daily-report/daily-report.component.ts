@@ -30,6 +30,7 @@ export class DailyReportComponent {
   dailySalesReportLineGraph: LineGraph;
   formattedDate: string = '';
   dailyReport: DailyReport[] = [];
+  totalRevenue: number = 0;
 
   constructor(
     private salesReportApi: SalesReportApiService,
@@ -56,8 +57,10 @@ export class DailyReportComponent {
     this.subs.sink = this.salesReportApi
       .getDailySalesReport(this.formattedDate)
       .subscribe({
-        next: (res) => {
-          this.dailyReport = res;
+        next: (res: any) => {
+          console.log('res: ', res);
+          this.dailyReport = res?.body ?? [];
+          this.totalRevenue = res?.total ?? 0;
           this.processDailySalesReport();
         },
         error: (err) => {
@@ -68,12 +71,12 @@ export class DailyReportComponent {
 
   processDailySalesReport() {
     this.dailySalesReportLineGraph = {
-      labels: this.dailyReport.map((item: DailyReport) => item.date),
+      labels: this.dailyReport?.map((item: DailyReport) => item.date),
       xTitle: 'Date',
       yTitle: 'Total Revenue',
       datasets: {
         label: 'Daily Sales Report',
-        data: this.dailyReport.map((item) => item.totalRevenue),
+        data: this.dailyReport?.map((item) => item.totalRevenue),
       },
     };
     this.loader = false;
