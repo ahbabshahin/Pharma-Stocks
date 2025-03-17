@@ -8,6 +8,7 @@ import { SalesReportByPrice } from '../../../../store/models/sales-report.model'
 import { FormsModule } from '@angular/forms';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 @Component({
   selector: 'app-product-report-by-price',
@@ -18,6 +19,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzDatePickerModule,
     CommonComponentModule,
     FormsModule,
+    NzRadioModule,
   ],
   templateUrl: './product-report-by-price.component.html',
   styleUrl: './product-report-by-price.component.scss',
@@ -30,6 +32,8 @@ export class ProductReportByPriceComponent {
   formattedDate: string;
   loader: boolean = true;
   salesReportByPrice: SalesReportByPrice[] = [];
+  totalRevenue: number = 0;
+  radioValue: number = 0;
   constructor(
     private salesReportApi: SalesReportApiService,
     private datePipe: DatePipe
@@ -56,9 +60,9 @@ export class ProductReportByPriceComponent {
     this.subs.sink = this.salesReportApi
       .getSalesReportByPrice(this.formattedDate)
       .subscribe({
-        next: (res) => {
-          this.salesReportByPrice = res;
-
+        next: (res: { body: SalesReportByPrice[]; total: number }) => {
+          this.salesReportByPrice = res?.body ?? [];
+          this.totalRevenue = res?.total ?? 0;
           this.processDailySalesReport();
         },
         error: (err) => {
