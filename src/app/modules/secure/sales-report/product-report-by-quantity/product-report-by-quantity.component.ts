@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
@@ -6,6 +6,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
 import { BarGraph } from '../../../../store/models/common.model';
 import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
+import { SubSink } from 'subsink';
+import { SalesReportByQuantity } from '../../../../store/models/sales-report.model';
 
 @Component({
   selector: 'app-product-report-by-quantity',
@@ -19,19 +21,63 @@ import { SalesReportService } from '../../../../service/sales-report/sales-repor
   ],
   templateUrl: './product-report-by-quantity.component.html',
   styleUrl: './product-report-by-quantity.component.scss',
+  providers: [SalesReportService, DatePipe],
 })
 export class ProductReportByQuantityComponent {
   loader: boolean = true;
   barGraph: BarGraph;
   selectedDate: Date = new Date();
-  radioValue: number = 0;
   formattedDate: string = '';
   totalQuantity: number = 0;
+  subs = new SubSink();
+  salesReportByQuantity: any;
   constructor(private salesReport: SalesReportService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('asd');
+    this.initialize();
+  }
 
-  onDateChange() {}
+  initialize() {
+    this.formatDate();
+  }
 
-  ngOnDestroy() {}
+  onDateChange() {
+    this.formatDate();
+  }
+
+  formatDate(){
+    this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
+    this.getSalesReportByQuantity();
+  }
+
+  getSalesReportByQuantity() {
+    this.subs.sink = this.salesReport
+      .getSalesReportByQuantity(this.formattedDate)
+      .subscribe({
+        next: (res: { body: SalesReportByQuantity[]; total: number }) => {
+          this.salesReportByQuantity = res?.body ?? [];
+          this.totalQuantity = res?.total ?? 0;
+          this.processSalesReport();
+        },
+        error: () => [],
+      });
+  }
+
+  processSalesReport() {
+    this.barGraph = {
+      labels: this.salesReportByQuantity.map((item: SalesReportByQuantity) => item.product),
+      indexAxis: 'y',
+      datasets: {
+        label: 'Product Report by Quantity',
+        data: this.salesReportByQuantity.map((item: SalesReportByQuantity) => item.totalQuantity),
+      },
+    };
+
+    this.loader = false;
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }
