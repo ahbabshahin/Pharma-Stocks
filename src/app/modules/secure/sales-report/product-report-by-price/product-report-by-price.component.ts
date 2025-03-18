@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
 
 @Component({
   selector: 'app-product-report-by-price',
@@ -23,7 +24,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
   ],
   templateUrl: './product-report-by-price.component.html',
   styleUrl: './product-report-by-price.component.scss',
-  providers: [SalesReportApiService, DatePipe],
+  providers: [SalesReportService, DatePipe],
 })
 export class ProductReportByPriceComponent {
   barGraph: BarGraph;
@@ -35,7 +36,7 @@ export class ProductReportByPriceComponent {
   totalRevenue: number = 0;
   radioValue: number = 0;
   constructor(
-    private salesReportApi: SalesReportApiService,
+    private salesReport: SalesReportService,
     private datePipe: DatePipe
   ) {}
 
@@ -51,13 +52,12 @@ export class ProductReportByPriceComponent {
   }
 
   formatSelectedDate(): void {
-    this.formattedDate =
-      this.datePipe.transform(this.selectedDate, 'yyyy-MM-01') || '';
+    this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
     this.getProductReportByPrice();
   }
 
   getProductReportByPrice() {
-    this.subs.sink = this.salesReportApi
+    this.subs.sink = this.salesReport
       .getSalesReportByPrice(this.formattedDate)
       .subscribe({
         next: (res: { body: SalesReportByPrice[]; total: number }) => {
@@ -70,6 +70,7 @@ export class ProductReportByPriceComponent {
         },
       });
   }
+
   processDailySalesReport() {
     this.barGraph = {
       labels: this.salesReportByPrice.map(
