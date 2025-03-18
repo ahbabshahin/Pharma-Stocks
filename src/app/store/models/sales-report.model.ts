@@ -6,6 +6,12 @@ export interface SalesReportByPrice {
   month: string;
   year: number;
 }
+export interface SalesReportByQuantity {
+  product: string;
+  totalQuantity: number;
+  totalRevenue: number;
+  averagePrice: number;
+}
 
 export interface DailyReport {
   totalInvoices: number;

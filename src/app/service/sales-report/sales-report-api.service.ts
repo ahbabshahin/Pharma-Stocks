@@ -16,6 +16,12 @@ export class SalesReportApiService {
       .pipe(map((res: any) => res));
   }
 
+  getSalesReportByQuantity(date: string){
+    return this.http
+      .get(`${this.env.rootURL}/v1/sales-report/by-quantity?date=${date}`)
+      .pipe(map((res: any) => res));
+  }
+
   getDailySalesReport(date: string){
     return this.http
       .get(`${this.env.rootURL}/v1/sales-report/daily?date=${date}`)
