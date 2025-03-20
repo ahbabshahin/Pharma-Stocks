@@ -13,6 +13,7 @@ import { BusinessService } from '../../../../service/business/business.service';
 import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-view-invoice',
@@ -39,7 +40,8 @@ export class ViewInvoiceComponent {
     private customerStore: CustomerStoreService,
     private businessService: BusinessService,
     private authStore: AuthStoreService,
-    private drawerRef: NzDrawerRef
+    private drawerRef: NzDrawerRef,
+    private datePipe: DatePipe,
   ) {}
 
   ngOnInit() {
@@ -50,7 +52,7 @@ export class ViewInvoiceComponent {
     await this.isAdminUser();
     this.getBusiness();
     this.getCustomers();
-    this.date = this.invoice.createdAt as string;
+    this.date = this.datePipe.transform(this.invoice.createdAt, 'dd-MM-yyyy') as string;
   }
 
   getBusiness() {
@@ -146,13 +148,14 @@ export class ViewInvoiceComponent {
       // Invoice Details
       doc.setFontSize(12);
       doc.text(`Invoice #: ${this.invoice?.sn || 'N/A'}`, 140, 20);
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 140, 30);
+      doc.text(`Date: ${this.date}`, 140, 30);
       doc.text(`Status: ${this.invoice?.status || 'N/A'}`, 140, 40);
 
       // Line Separator
       doc.line(15, 50, 195, 50);
 
       // Customer Details
+      doc.text(`Customer code: #${this.customer?.sn || 'N/A'}`, 15, 55);
       doc.text(`Customer: ${this.customer?.name || 'N/A'}`, 15, 60);
       if (this.customer?.contacts) {
         doc.text(`Phone: ${this.customer.contacts}`, 15, 70);
