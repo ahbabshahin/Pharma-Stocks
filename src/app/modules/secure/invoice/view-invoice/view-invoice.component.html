@@ -1,106 +1,105 @@
 <nz-affix nzOffsetTop>
-<div class="d-flex justify-content-end my-2 mx-2">
-  <button nz-button class="primary-btn mt-20" type="button" (click)="printInvoice()">
+    <div class="d-flex justify-content-end my-2 mx-2">
+        <button nz-button class="primary-btn mt-20" type="button" (click)="printInvoice()">
     Print
   </button>
-  <button *ngIf="isAdmin" class="mx-2 mt-20 primary-btn" type="button" nz-button (click)="updateInvoice()">
+        <button *ngIf="isAdmin" class="mx-2 mt-20 primary-btn" type="button" nz-button (click)="updateInvoice()">
     Update
   </button>
 
-  <button *ngIf="isAdmin" class="mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
+        <button *ngIf="isAdmin" class="mt-20" type="button" nz-button nzType="primary" nzDanger (click)="deleteInvoice()">
     Delete
   </button>
 
-  <button *ngIf="isAdmin" nz-button class="mx-2 mt-20" type="button" (click)="showLogs()">
+        <button *ngIf="isAdmin" nz-button class="mx-2 mt-20" type="button" (click)="showLogs()">
     Logs
   </button>
-</div>
+    </div>
 </nz-affix>
 <div class="invoice-container">
 
-  <header class="invoice-header">
-    <div class="logo">
-      <img src="assets/img/company_logo.jpeg" alt="Company Logo" class="responsive-img" />
-    </div>
-    <div class="company-details">
-      <h1>{{ business?.name | titlecase }}</h1>
-      <address>
+    <header class="invoice-header">
+        <div class="logo">
+            <img src="assets/img/company_logo.jpeg" alt="Company Logo" class="responsive-img" />
+        </div>
+        <div class="company-details">
+            <h1>{{ business?.name | titlecase }}</h1>
+            <address>
         {{ business?.address | titlecase }}<br />
         Phone: {{ business?.contact }}
       </address>
-    </div>
-  </header>
+        </div>
+    </header>
 
-  <section class="invoice-info">
-    <div class="info-group">
-      <!-- <h3>From:</h3> -->
-      <p>{{ business?.name | titlecase }}</p>
-      <address>
+    <section class="invoice-info">
+        <div class="info-group">
+            <!-- <h3>From:</h3> -->
+            <p>{{ business?.name | titlecase }}</p>
+            <address>
         {{ business?.address | titlecase }}<br />
         Phone: {{ business?.contact }}
       </address>
-    </div>
-    <div class="info-group">
-      <h6>Customer Details:</h6>
-      <span *ngIf="customer?.sn">Customer Code: #{{ customer?.sn }}</span>
-      <p>{{ customer?.name | titlecase }}</p>
-      <address>
+        </div>
+        <div class="info-group">
+            <h6>Customer Details:</h6>
+            <span *ngIf="customer?.sn">Customer Code: #{{ customer?.sn }}</span>
+            <p>{{ customer?.name | titlecase }}</p>
+            <address>
         <span *ngIf="customer?.address">{{ customer.address }}</span><br />
         <span *ngIf="customer?.contacts">Phone: {{ customer.contacts }}</span>
       </address>
-    </div>
-    <div class="info-group invoice-meta">
-      <span>Invoice #: <span>{{ invoice?.sn || "N/A" }}</span></span><br />
-      <span>Date: <span>{{ date | date: "dd-MM-yyyy" }}</span></span><br />
-      <span>Status: <span>{{ invoice?.status | titlecase }}</span></span>
-    </div>
-  </section>
+        </div>
+        <div class="info-group invoice-meta">
+            <span>Invoice #: <span>{{ invoice?.sn || "N/A" }}</span></span><br />
+            <span>Date: <span>{{ date  }}</span></span><br />
+            <span>Status: <span>{{ invoice?.status | titlecase }}</span></span>
+        </div>
+    </section>
 
-  <section class="product-list">
-    <table>
-      <thead>
-        <tr>
-          <th>Product Name</th>
-          <th>Quantity</th>
-          <th>Price (৳)</th>
-          <th>Total (৳)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of invoice?.products">
-          <td>{{ product.name | titlecase }}</td>
-          <td>{{ product.quantity }}</td>
-          <td>{{ product.price | number: "1.2-2" }}</td>
-          <td>{{ calculateProductTotal(product) }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+    <section class="product-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price (৳)</th>
+                    <th>Total (৳)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of invoice?.products">
+                    <td>{{ product.name | titlecase }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.price | number: "1.2-2" }}</td>
+                    <td>{{ calculateProductTotal(product) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
-  <footer class="invoice-footer">
-    <div class="summary">
-      <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p>
-      <p>Discount: {{ invoice.discount || 0 }}%</p>
-      <hr />
-      <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
+    <footer class="invoice-footer">
+        <div class="summary">
+            <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p>
+            <p>Discount: {{ invoice.discount || 0 }}%</p>
+            <hr />
+            <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
+        </div>
+    </footer>
+
+    <div class="invoice-signatures">
+        <div class="signature">
+            <div class="signature-line"></div>
+            <p>Customer Signature</p>
+        </div>
+        <div class="signature">
+            <div class="signature-line"></div>
+            <p>Depo In-Charge</p>
+        </div>
+        <div class="signature">
+            <div class="signature-line"></div>
+            <p>Authorized By</p>
+        </div>
+
     </div>
-  </footer>
-
-<div class="invoice-signatures">
-  <div class="signature">
-    <div class="signature-line"></div>
-    <p>Customer Signature</p>
-  </div>
-  <div class="signature">
-    <div class="signature-line"></div>
-    <p>Depo In-Charge</p>
-  </div>
-  <div class="signature">
-    <div class="signature-line"></div>
-    <p>Authorized By</p>
-  </div>
 
 </div>
-
-</div>
-
