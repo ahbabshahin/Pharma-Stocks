@@ -7,6 +7,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
 import { SalesReportService } from '../../../service/sales-report/sales-report.service';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzAffixModule } from 'ng-zorro-antd/affix';
 
 @Component({
   selector: 'app-sales-report',
@@ -19,6 +20,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzRadioModule,
     FormsModule,
     NzDatePickerModule,
+    NzAffixModule,
   ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
@@ -28,10 +30,10 @@ export class SalesReportComponent {
   priceQuantity: boolean = true;
   formattedDate: string = '';
   selectedDate: Date = new Date();
-
+  navHeight: number = 60;
   constructor(private salesReport: SalesReportService) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.onDateChange();
   }
   onDateChange(): void {
