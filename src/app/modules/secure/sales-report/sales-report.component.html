@@ -1,6 +1,16 @@
+<div class="d-flex justify-content-between">
+  <h3>Sales Report</h3>
+  <div class="date-selection justify-content-end">
+    <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month"
+      nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
+    </nz-date-picker>
+  </div>
+</div>
+<hr />
 <div>
-  <app-product-report-by-price *ngIf="priceQuantity"></app-product-report-by-price>
-  <app-product-report-by-quantity *ngIf="!priceQuantity"></app-product-report-by-quantity>
+  <app-product-report-by-price [formattedDate]="formattedDate" *ngIf="priceQuantity"></app-product-report-by-price>
+  <app-product-report-by-quantity [formattedDate]="formattedDate" *ngIf="!priceQuantity">
+  </app-product-report-by-quantity>
   <div class="mt-2 d-flex justify-content-start">
     <nz-radio-group [(ngModel)]="priceQuantity">
       <label nz-radio-button [nzValue]="true">Amount</label>
