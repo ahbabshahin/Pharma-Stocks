@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { CommonComponentModule } from '../../../common-component/common-component.module';
 import { ProductReportByPriceComponent } from './product-report-by-price/product-report-by-price.component';
@@ -6,6 +6,8 @@ import { ProductReportByQuantityComponent } from './product-report-by-quantity/p
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
 import { SalesReportService } from '../../../service/sales-report/sales-report.service';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzAffixModule } from 'ng-zorro-antd/affix';
 
 @Component({
   selector: 'app-sales-report',
@@ -17,11 +19,24 @@ import { SalesReportService } from '../../../service/sales-report/sales-report.s
     ProductReportByQuantityComponent,
     NzRadioModule,
     FormsModule,
+    NzDatePickerModule,
+    NzAffixModule,
   ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
-  providers: [SalesReportService]
+  providers: [SalesReportService, DatePipe],
 })
 export class SalesReportComponent {
   priceQuantity: boolean = true;
+  formattedDate: string = '';
+  selectedDate: Date = new Date();
+  navHeight: number = 60;
+  constructor(private salesReport: SalesReportService) {}
+
+  ngOnInit() {
+    this.onDateChange();
+  }
+  onDateChange(): void {
+    this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
+  }
 }
