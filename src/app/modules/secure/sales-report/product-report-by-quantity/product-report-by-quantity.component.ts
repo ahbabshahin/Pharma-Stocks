@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
@@ -27,29 +27,34 @@ export class ProductReportByQuantityComponent {
   loader: boolean = true;
   barGraph: BarGraph;
   selectedDate: Date = new Date();
-  formattedDate: string = '';
+  @Input() formattedDate: string;
   totalQuantity: number = 0;
   subs = new SubSink();
   salesReportByQuantity: any;
   constructor(private salesReport: SalesReportService) {}
 
   ngOnInit() {
-    console.log('asd');
     this.initialize();
   }
 
   initialize() {
-    this.formatDate();
+    // this.formatDate();
   }
 
-  onDateChange() {
-    this.formatDate();
-  }
+  // onDateChange() {
+  //   this.formatDate();
+  // }
 
   formatDate(){
     this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
     this.getSalesReportByQuantity();
   }
+
+  ngOnChanges() {
+    console.log('on changes');
+    this.getSalesReportByQuantity();
+  }
+
 
   getSalesReportByQuantity() {
     this.subs.sink = this.salesReport

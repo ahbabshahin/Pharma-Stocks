@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BarGraphComponent } from '../../../../common-component/bar-graph/bar-graph.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { BarGraph } from '../../../../store/models/common.model';
@@ -30,7 +30,7 @@ export class ProductReportByPriceComponent {
   barGraph: BarGraph;
   subs = new SubSink();
   selectedDate: Date = new Date();
-  formattedDate: string;
+  @Input() formattedDate: string;
   loader: boolean = true;
   salesReportByPrice: SalesReportByPrice[] = [];
   totalRevenue: number = 0;
@@ -45,14 +45,18 @@ export class ProductReportByPriceComponent {
   }
 
   initialize() {
-    this.formatSelectedDate();
+    // this.formatSelectedDate();
   }
-  onDateChange(): void {
-    this.formatSelectedDate();
-  }
+  // onDateChange(): void {
+  //   this.formatSelectedDate();
+  // }
 
   formatSelectedDate(): void {
     this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
+    this.getProductReportByPrice();
+  }
+
+  ngOnChanges() {
     this.getProductReportByPrice();
   }
 

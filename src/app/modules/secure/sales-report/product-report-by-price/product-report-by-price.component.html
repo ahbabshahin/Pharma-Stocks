@@ -6,10 +6,10 @@
                 <span>Total Revenue</span>
                 <p>৳ {{totalRevenue | number : '1.2-2'}}</p>
             </div>
-            <div class="date-selection">
+            <!-- <div class="date-selection">
                 <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
                 </nz-date-picker>
-            </div>
+            </div> -->
         </div>
     </div>
     <app-global-loader *ngIf="loader"></app-global-loader>
