@@ -1,8 +1,9 @@
 <!-- Date Picker for Year & Month Selection -->
 <div class="d-flex justify-content-between">
     <div>
-        <span>Total Revenue </span>
-        <p>৳ {{totalRevenue | number : '1.2-2'}}</p>
+        <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
+        <p *ngIf="isAmount">৳ {{totalRevenue | number : '1.2-2'}}</p>
+        <p *ngIf="!isAmount">{{totalQuantity}}</p>
     </div>
     <div class="date-selection">
         <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">

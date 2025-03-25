@@ -1,38 +1,52 @@
 <!-- <h4 class="text-center">Welcome to Nutri-Heal Pharma Ltd</h4> -->
-<!-- <div class="dashboard">
-    <div class="welcome-section">
-        <h4 class="welcome-text">Welcome to {{ this.business.name }}</h4>
-    </div>
+<app-global-loader *ngIf="loader"></app-global-loader>
+<ng-container *ngIf="!loader">
+  <div class="dashboard" *ngIf="!isAdmin">
+      <div class="welcome-section">
+          <h4 class="welcome-text">Welcome to {{ this.business.name }}</h4>
+      </div>
 
-    <div class="business-info">
-        <div class="info-card">
-            <h5>Business Name</h5>
-            <p>{{ this.business.name }}</p>
-        </div>
-        <div class="info-card">
-            <h5>Contact</h5>
-            <p>{{ this.business.contact }}</p>
-        </div>
-        <div class="info-card">
-            <h5>Address</h5>
-            <p>{{ this.business.address }}</p>
-        </div>
-        <div class="info-card">
-            <h5>Description</h5>
-            <p>{{ this.business.description }}</p>
-        </div>
-        <div class="info-card">
-            <h5>Post Code</h5>
-            <p>{{ this.business.post_code }}</p>
-        </div>
-    </div> -->
-<div class="d-flex justify-content-between mb-3">
-    <h3>Dashboard</h3>
-    <button *ngIf="isAdmin" nz-button nzType="default" (click)="salesReport()">View All Sales Report</button>
-</div>
-<app-daily-report></app-daily-report>
+      <div class="business-info">
+          <div class="info-card">
+              <h5>Business Name</h5>
+              <p>{{ this.business.name }}</p>
+          </div>
+          <div class="info-card">
+              <h5>Contact</h5>
+              <p>{{ this.business.contact }}</p>
+          </div>
+          <div class="info-card">
+              <h5>Address</h5>
+              <p>{{ this.business.address }}</p>
+          </div>
+          <div class="info-card">
+              <h5>Description</h5>
+              <p>{{ this.business.description }}</p>
+          </div>
+          <div class="info-card">
+              <h5>Post Code</h5>
+              <p>{{ this.business.post_code }}</p>
+          </div>
+      </div>
+     </div>
+  <ng-container *ngIf="isAdmin">
+      <div class="d-flex justify-content-between mb-3">
+          <h3>Dashboard</h3>
+          <button *ngIf="isAdmin" nz-button nzType="default" (click)="salesReport()">View All Sales Report</button>
+      </div>
+      <div>
+        <app-daily-report [isAmount]="isAmount"></app-daily-report>
+          <div class="mt-2 d-flex justify-content-start">
+            <nz-radio-group [(ngModel)]="isAmount">
+              <label nz-radio-button [nzValue]="true">Amount</label>
+              <label nz-radio-button [nzValue]="false">Quantity</label>
+            </nz-radio-group>
+          </div>
+      </div>
+  </ng-container>
 
-<div class="footer-section">
-    <p>&copy; 2025 Nutri-Heal Pharma Ltd. All Rights Reserved.</p>
-</div>
+  <div class="footer-section">
+      <p>&copy; 2025 Nutri-Heal Pharma Ltd. All Rights Reserved.</p>
+  </div>
+</ng-container>
 <!-- </div> -->

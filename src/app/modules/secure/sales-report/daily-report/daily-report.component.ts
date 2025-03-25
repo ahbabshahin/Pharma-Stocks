@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { LineGraphComponent } from '../../../../common-component/line-graph/line-graph.component';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { BarGraph, LineGraph } from '../../../../store/models/common.model';
 import { SalesReportApiService } from '../../../../service/sales-report/sales-report-api.service';
 import { SubSink } from 'subsink';
-import { DailyReport } from '../../../../store/models/sales-report.model';
+import { DailyReport, DailyReportResponse } from '../../../../store/models/sales-report.model';
 
 @Component({
   selector: 'app-daily-report',
@@ -23,6 +23,7 @@ import { DailyReport } from '../../../../store/models/sales-report.model';
   providers: [SalesReportApiService],
 })
 export class DailyReportComponent {
+  @Input() isAmount: boolean = true;
   subs = new SubSink();
   selectedDate: Date = new Date();
   loader: boolean = true;
@@ -31,7 +32,7 @@ export class DailyReportComponent {
   formattedDate: string = '';
   dailyReport: DailyReport[] = [];
   totalRevenue: number = 0;
-
+  totalQuantity: number = 0;
   constructor(
     private salesReportApi: SalesReportApiService,
     private datePipe: DatePipe
@@ -48,8 +49,13 @@ export class DailyReportComponent {
     this.formatSelectedDate();
   }
 
+  ngOnChanges() {
+    this.processDailySalesReport();
+  }
+
   formatSelectedDate(): void {
-    this.formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-01') || '';
+    this.formattedDate =
+      this.datePipe.transform(this.selectedDate, 'yyyy-MM-01') || '';
     this.getMonthlySalesReport();
   }
 
@@ -57,10 +63,11 @@ export class DailyReportComponent {
     this.subs.sink = this.salesReportApi
       .getDailySalesReport(this.formattedDate)
       .subscribe({
-        next: (res: any) => {
-          console.log('res: ', res);
+        next: (res: DailyReportResponse) => {
+
           this.dailyReport = res?.body ?? [];
           this.totalRevenue = res?.total ?? 0;
+          this.totalQuantity = res?.totalQuantity ?? 0;
           this.processDailySalesReport();
         },
         error: (err) => {
@@ -73,10 +80,12 @@ export class DailyReportComponent {
     this.dailySalesReportLineGraph = {
       labels: this.dailyReport?.map((item: DailyReport) => item.date),
       xTitle: 'Date',
-      yTitle: 'Total Revenue',
+      yTitle: `Total ${this.isAmount ? 'Revenue' : 'Quantity'}`,
       datasets: {
         label: 'Daily Sales Report',
-        data: this.dailyReport?.map((item) => item.totalRevenue),
+        data: this.dailyReport?.map((item) =>
+          this.isAmount ? item?.totalRevenue : item?.totalQuantity
+        ),
       },
     };
     this.loader = false;
