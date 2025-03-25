@@ -43,7 +43,7 @@ export class LineGraphComponent {
         labels: this.lineGraph.labels, // X-axis (Date)
         datasets: [
           {
-            label: 'Total Revenue',
+            label: this.lineGraph.yTitle,
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderWidth: 2,

@@ -18,4 +18,11 @@ export interface DailyReport {
   date: string;
   totalRevenue: number;
   averageInvoiceValue: number;
+  totalQuantity: number;
+}
+
+export interface DailyReportResponse {
+  body: DailyReport[];
+  total: number;
+  totalQuantity: number;
 }
