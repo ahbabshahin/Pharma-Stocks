@@ -15,6 +15,7 @@ export class DashboardComponent {
   subs = new SubSink();
   business!: Business;
   isAdmin: boolean = false;
+  isAmount: boolean = true;
   constructor(
     private businessService: BusinessService,
     private router: Router,
@@ -32,6 +33,7 @@ export class DashboardComponent {
 
   async isAdminUser() {
     this.isAdmin = await this.authStore.isAdminUser();
+    this.loader = false;
   }
 
   getBusiness() {
