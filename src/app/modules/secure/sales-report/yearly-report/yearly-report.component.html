@@ -1,0 +1,18 @@
+<!-- Date Picker for Year & Month Selection -->
+<div class="d-flex justify-content-between">
+  <div>
+    <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
+    <p *ngIf="isAmount">৳ {{totalRevenue | number : '1.2-2'}}</p>
+    <p *ngIf="!isAmount">{{totalQuantity}}</p>
+  </div>
+  <div class="date-selection">
+    <nz-date-picker [(ngModel)]="year" (ngModelChange)="onYearChange()" nzMode="year" nzFormat="yyyy"
+      nzPlaceHolder="Select Year & Month">
+    </nz-date-picker>
+  </div>
+</div>
+<app-global-loader *ngIf="loader"></app-global-loader>
+<!-- Line Graph with Selected Date -->
+<ng-container *ngIf="!loader">
+  <app-line-graph [lineGraph]="yearlySalesReportLineGraph"></app-line-graph>
+</ng-container>

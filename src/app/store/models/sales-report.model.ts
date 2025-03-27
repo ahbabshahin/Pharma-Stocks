@@ -26,3 +26,9 @@ export interface DailyReportResponse {
   total: number;
   totalQuantity: number;
 }
+
+export interface YearlyReportResponse {
+  body: DailyReport[];
+  total: number;
+  totalQuantity: number;
+}

@@ -8,6 +8,7 @@ import { BarGraph, LineGraph } from '../../../../store/models/common.model';
 import { SalesReportApiService } from '../../../../service/sales-report/sales-report-api.service';
 import { SubSink } from 'subsink';
 import { DailyReport, DailyReportResponse } from '../../../../store/models/sales-report.model';
+import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
 
 @Component({
   selector: 'app-daily-report',
@@ -20,7 +21,7 @@ import { DailyReport, DailyReportResponse } from '../../../../store/models/sales
   ],
   templateUrl: './daily-report.component.html',
   styleUrl: './daily-report.component.scss',
-  providers: [SalesReportApiService],
+  providers: [SalesReportApiService, SalesReportService, DatePipe,],
 })
 export class DailyReportComponent {
   @Input() isAmount: boolean = true;
@@ -35,6 +36,7 @@ export class DailyReportComponent {
   totalQuantity: number = 0;
   constructor(
     private salesReportApi: SalesReportApiService,
+    private salesReport: SalesReportService,
     private datePipe: DatePipe
   ) {}
 
@@ -60,11 +62,10 @@ export class DailyReportComponent {
   }
 
   getMonthlySalesReport() {
-    this.subs.sink = this.salesReportApi
+    this.subs.sink = this.salesReport
       .getDailySalesReport(this.formattedDate)
       .subscribe({
         next: (res: DailyReportResponse) => {
-
           this.dailyReport = res?.body ?? [];
           this.totalRevenue = res?.total ?? 0;
           this.totalQuantity = res?.totalQuantity ?? 0;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Config } from '../../config';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { DailyReportResponse } from '../../store/models/sales-report.model';
+import { DailyReportResponse, YearlyReportResponse } from '../../store/models/sales-report.model';
 
 @Injectable({
   providedIn: 'root',
@@ -28,5 +28,13 @@ export class SalesReportApiService {
         `${this.env.rootURL}/v1/sales-report/daily?date=${date}`
       )
       .pipe(map((res: DailyReportResponse) => res));
+  }
+
+  getYearlySalesReport(year: number) {
+    return this.http
+      .get<YearlyReportResponse>(
+        `${this.env.rootURL}/v1/sales-report/yearly?year=${year}`
+      )
+      .pipe(map((res: YearlyReportResponse) => res));
   }
 }
