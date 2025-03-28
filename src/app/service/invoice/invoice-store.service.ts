@@ -63,8 +63,8 @@ export class InvoiceStoreService {
     this.dispatch(invoiceActions.deleteInvoiceFail({ error }));
   }
 
-  searchInvoice(params: { [key: string]: any } ) {
-    this.dispatch(invoiceActions.searchInvoice({ params }));
+  searchInvoice(params: { [key: string]: any }, isMore: boolean) {
+    this.dispatch(invoiceActions.searchInvoice({ params, isMore }));
   }
 
   // selectors
