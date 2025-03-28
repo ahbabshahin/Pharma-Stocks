@@ -70,6 +70,6 @@ export const deleteInvoiceFail = createAction(
 
 export const searchInvoice = createAction(
   '[Invoice] search invoice',
-  props<{ params: { [key: string]: any } }>()
+  props<{ params: { [key: string]: any }; isMore: boolean }>()
 );
 
