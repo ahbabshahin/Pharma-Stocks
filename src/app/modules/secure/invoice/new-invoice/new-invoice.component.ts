@@ -62,6 +62,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initializeForm() {
+    console.log('total ', this.total);
     this.form = this.formBuilder.group({
       sn: [`SN-${this.total + 1}`, [Validators.required]],
       customer: ['', [Validators.required]],

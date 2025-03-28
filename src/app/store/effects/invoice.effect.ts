@@ -130,7 +130,7 @@ export class InvoiceEffects {
               this.invoiceStore.loadInvoiceSuccess(
                 res?.body,
                 res?.total,
-                false
+                action.isMore
               );
               this.invoiceStore.setSubLoader(false)
             }),

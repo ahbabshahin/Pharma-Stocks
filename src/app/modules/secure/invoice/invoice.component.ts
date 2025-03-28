@@ -34,7 +34,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     ...this.params,
     customer: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
   };
   startDate: string = '';
   endDate: string = '';
@@ -51,7 +51,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     private invoiceStoreService: InvoiceStoreService,
     private customerStore: CustomerStoreService,
     private customerApi: CustomerApiService,
-    private datePipe: DatePipe,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
@@ -77,9 +77,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           this.invoices = res;
         }
       },
-      error: (error) => {
-
-      },
+      error: (error) => {},
     });
 
     this.subs.sink = this.invoiceStoreService.getTotalInvoice().subscribe({
@@ -88,9 +86,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           this.total = total;
         }
       },
-      error: (error) => {
-
-      },
+      error: (error) => {},
     });
   }
 
@@ -126,7 +122,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-
         this.customerStore.loadCustomerFail('Customer load failed');
       },
     });
@@ -149,8 +144,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           this.customers = res;
         }
       },
-      error: (error) => {
-      },
+      error: (error) => {},
     });
   }
 
@@ -198,28 +192,30 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.searchInvoice();
   }
 
-
   onSearch(e: any) {
     if (e?.target) {
       this.searchText = e.target.value?.trim();
-        this.searchParams = {
-          ...this.params,
-          page: 1,
-          customer: this.searchText,
-        };
-        if(this.startDate == '' && this.endDate == ''){
-          delete this.searchParams.startDate;
-          delete this.searchParams.endDate;
-        }
-        this.isMore = false;
-        this.searchInvoice();
-
+      this.params = {
+        ...this.params,
+        page: 1,
+      }
+      this.searchParams = {
+        ...this.searchParams,
+        ...this.params,
+        customer: this.searchText,
+      };
+      if (this.startDate == '' && this.endDate == '') {
+        delete this.searchParams.startDate;
+        delete this.searchParams.endDate;
+      }
+      this.isMore = false;
+      this.searchInvoice();
     }
   }
 
   searchInvoice() {
     this.invoiceStoreService.setInvoiceLoaded(true);
-    this.invoiceStoreService.searchInvoice(this.searchParams);
+    this.invoiceStoreService.searchInvoice(this.searchParams, this.isMore);
   }
 
   formatDate(date: Date) {
@@ -228,13 +224,17 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   onDateInputChange() {
     if (this.startDate && this.endDate) {
+      this.params = {
+        ...this.params,
+        page: 1,
+      };
       this.searchParams = {
         ...this.searchParams,
+        ...this.params,
         startDate: this.startDate,
         endDate: this.endDate,
-        page: 1,
-      }
-      if(this.searchText == ''){
+      };
+      if (this.searchText == '') {
         delete this.searchParams.customer;
       }
     } else {
@@ -255,7 +255,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.endDate = '';
     this.searchParams = {
       ...this.searchParams,
-      page: 1,
+      ...this.params,
       customer: '',
       startDate: '',
       endDate: '',
@@ -267,13 +267,26 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   loadMore() {
     if (this.invoices?.length < this.total) {
+      this.invoiceStoreService.setSubLoader(true);
+      this.isMore = true;
       this.params = {
         ...this.params,
         page: this.params.page + 1,
       };
-      this.invoiceStoreService.setSubLoader(true);
-      this.isMore = true;
-      this.loadInvoice();
+      if (
+        this.searchParams?.customer ||
+        this.searchParams?.startDate ||
+        this.searchParams?.endDate
+      ) {
+        this.searchParams = {
+          ...this.searchParams,
+          ...this.params,
+        };
+        this.searchInvoice();
+      } else {
+
+        this.loadInvoice();
+      }
     }
   }
 

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SalesReportApiService } from './sales-report-api.service';
 import { catchError, map, of } from 'rxjs';
 import { CommonService } from '../common/common.service';
-import { SalesReportByPrice, SalesReportByQuantity } from '../../store/models/sales-report.model';
+import { DailyReportResponse, SalesReportByPrice, SalesReportByQuantity, YearlyReportResponse } from '../../store/models/sales-report.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +29,7 @@ export class SalesReportService {
           return res;
         },
         catchError(() => {
+          this.commonService.showErrorToast('Sales report by price load failed')
           return of();
         })
       )
@@ -42,9 +43,45 @@ export class SalesReportService {
           return res;
         },
         catchError(() => {
+          this.commonService.showErrorToast(
+            'Sales report by quantity load failed'
+          );
           return of();
         })
       )
     );
   }
+
+  getDailySalesReport(date: string){
+    return this.salesReportApi.getDailySalesReport(date).pipe(
+      map(
+        (res: DailyReportResponse) => {
+          return res;
+        },
+        catchError(() => {
+          this.commonService.showErrorToast(
+            'Daily Sales report by price and quantity load failed'
+          );
+          return of();
+        })
+      )
+    );
+  }
+
+  getYearlySalesReport(year: number){
+    return this.salesReportApi.getYearlySalesReport(year).pipe(
+      map(
+        (res: YearlyReportResponse) => {
+          return res;
+        },
+        catchError(() => {
+          this.commonService.showErrorToast(
+            'Yearly Sales report by price and quantity load failed'
+          );
+          return of();
+        })
+      )
+    );
+  }
+
 }
