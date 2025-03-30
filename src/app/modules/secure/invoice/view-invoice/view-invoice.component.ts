@@ -174,7 +174,7 @@ export class ViewInvoiceComponent {
           product.price.toFixed(2),
           (product.quantity * product.price).toFixed(2),
         ]),
-        theme: 'striped',
+        theme: 'plain',
         margin: { top: 10 },
       });
 

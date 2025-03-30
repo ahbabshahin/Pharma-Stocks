@@ -27,8 +27,14 @@ export interface DailyReportResponse {
   totalQuantity: number;
 }
 
+export interface YearlyReport {
+  month: string;
+  totalRevenue: number;
+  totalQuantity: number;
+}
+
 export interface YearlyReportResponse {
-  body: DailyReport[];
+  body: YearlyReport[];
   total: number;
   totalQuantity: number;
 }

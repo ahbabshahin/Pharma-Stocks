@@ -22,10 +22,10 @@ export class SalesReportApiService {
       .pipe(map((res: any) => res));
   }
 
-  getDailySalesReport(date: string) {
+  getDailySalesReport(params: {[key: string]: any}) {
     return this.http
       .get<DailyReportResponse>(
-        `${this.env.rootURL}/v1/sales-report/daily?date=${date}`
+        `${this.env.rootURL}/v1/sales-report/daily`, {params}
       )
       .pipe(map((res: DailyReportResponse) => res));
   }

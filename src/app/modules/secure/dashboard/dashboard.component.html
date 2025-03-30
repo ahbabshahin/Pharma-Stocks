@@ -35,8 +35,12 @@
           <button *ngIf="isAdmin" nz-button nzType="default" (click)="salesReport()">View All Sales Report</button>
       </div>
       <div>
-        <app-daily-report [isAmount]="isAmount"></app-daily-report>
-          <div class="mt-2 d-flex justify-content-start">
+        <app-daily-report [isAmount]="isAmount" [status]=status></app-daily-report>
+          <div class="mt-2 d-flex justify-content-between">
+            <nz-radio-group [(ngModel)]="status">
+              <label nz-radio-button nzValue="paid">Paid</label>
+              <label nz-radio-button nzValue="due">Due</label>
+            </nz-radio-group>
             <nz-radio-group [(ngModel)]="isAmount">
               <label nz-radio-button [nzValue]="true">Amount</label>
               <label nz-radio-button [nzValue]="false">Quantity</label>
