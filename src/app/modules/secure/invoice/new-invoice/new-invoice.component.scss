@@ -1,162 +1,154 @@
 .invoice-container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-  .invoice-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e0e0e0;
-
-    .company-details {
-      text-align: right;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e0e0e0;
+        .company-details {
+            text-align: right;
+        }
     }
-  }
-
-  .invoice-info {
-    margin: 16px 0;
-    display: flex;
-    justify-content: space-between;
-
-    .info-group {
-      flex: 1;
-      margin-right: 16px;
+    .invoice-info {
+        margin: 16px 0;
+        display: flex;
+        justify-content: space-between;
+        .info-group {
+            flex: 1;
+            margin-right: 16px;
+        }
     }
-  }
-
-  .product-list table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th, td {
-      padding: 8px;
-      border: 1px solid #e0e0e0;
+    .product-list table {
+        width: 100%;
+        border-collapse: collapse;
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f5f5f5;
+        }
     }
-
-    th {
-      background: #f5f5f5;
+    .invoice-footer {
+        margin-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .summary {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            .discount {
+                display: flex;
+                align-items: flex-end;
+                label {
+                    margin-right: 8px;
+                }
+                input {
+                    width: 50px;
+                    text-align: right;
+                }
+            }
+            p {
+                margin-left: 16px;
+                margin: 0;
+            }
+        }
     }
-  }
-
-.invoice-footer {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  .summary {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-
-    .discount {
-      display: flex;
-      align-items: flex-end;
-
-      label {
-        margin-right: 8px;
-      }
-
-      input {
-        width: 50px;
-        text-align: right;
-      }
-    }
-
-    p {
-      margin-left: 16px;
-      margin: 0;
-    }
-  }
-}
 }
 
 nz-select {
-  width: 200px;
+    width: 200px;
 }
 
 .s_error {
-  padding: 0.2rem;
-  border-radius: 5px;
-  transition: 0.3s;
-  color: #ff4b55;
-  font-size: 12px;
-  margin: 0.5rem 0;
+    padding: 0.2rem;
+    border-radius: 5px;
+    transition: 0.3s;
+    color: #ff4b55;
+    font-size: 12px;
+    margin: 0.5rem 0;
 }
 
 .autocomplete-wrapper {
-  max-height: 300px;
-  overflow-y: auto;
-  position: absolute;
-  background: white;
-  width: 100%;
-  z-index: 1000;
-  // border: 1px solid #ddd;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    position: absolute;
+    background: white;
+    width: 100%;
+    z-index: 1000;
+    // border: 1px solid #ddd;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 .product-list td input[nz-input] {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 
 .product-list td {
-  position: relative;
+    position: relative;
 }
 
 nz-autocomplete {
-  max-height: 300px !important;
-  overflow-y: auto !important;
-  display: block !important;
-  border: none !important; /* Ensure no unwanted border */
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    display: block !important;
+    border: none !important;
+    /* Ensure no unwanted border */
 }
 
 nz-autocomplete .cdk-overlay-pane {
-  -webkit-overflow-scrolling: touch; /* Enables smooth scrolling */
-}
-
-
-@media screen and (max-width: 768px) {
-  .autocomplete-wrapper,
-  nz-autocomplete {
-    width: 100% !important;
-    min-width: 300px !important;
-    max-width: 90vw !important;
-  }
-
-  ::ng-deep .cdk-overlay-pane {
-    width: 100% !important; /* Ensures full width */
-    min-width: 300px !important; /* Expands the dropdown */
-    max-width: 90vw !important;
-  }
-
-  .cdk-overlay-connected-position-bounding-box {
-    width: 100% !important; /* Forces the bounding box to be wider */
-  }
+    -webkit-overflow-scrolling: touch;
+    /* Enables smooth scrolling */
 }
 
 @media screen and (max-width: 768px) {
-  nz-select[formControlName="status"] {
-    width: 100% !important;
-  }
+    .autocomplete-wrapper,
+    nz-autocomplete {
+        width: 100% !important;
+        min-width: 300px !important;
+        max-width: 90vw !important;
+    }
+     ::ng-deep .cdk-overlay-pane {
+        width: 100% !important;
+        /* Ensures full width */
+        min-width: 300px !important;
+        /* Expands the dropdown */
+        max-width: 90vw !important;
+    }
+    .cdk-overlay-connected-position-bounding-box {
+        width: 100% !important;
+        /* Forces the bounding box to be wider */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    nz-select[formControlName="status"] {
+        width: 100% !important;
+    }
 }
 
 .status-select-wrapper {
-  width: 100%;
-}
-nz-select {
-  width: 100%;
-}
-.cdk-overlay-pane {
-  max-width: 45vw !important;
-  min-width: 200px !important;
+    width: 100%;
 }
 
+nz-select {
+    width: 100%;
+}
+
+.cdk-overlay-pane {
+    max-width: 45vw !important;
+    min-width: 200px !important;
+}

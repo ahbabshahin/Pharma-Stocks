@@ -52,8 +52,8 @@ export class SalesReportService {
     );
   }
 
-  getDailySalesReport(date: string){
-    return this.salesReportApi.getDailySalesReport(date).pipe(
+  getDailySalesReport(params: {[key: string]: any}){
+    return this.salesReportApi.getDailySalesReport(params).pipe(
       map(
         (res: DailyReportResponse) => {
           return res;
