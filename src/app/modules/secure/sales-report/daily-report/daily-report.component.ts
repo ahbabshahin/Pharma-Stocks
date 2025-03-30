@@ -24,11 +24,12 @@ import { SalesReportService } from '../../../../service/sales-report/sales-repor
   providers: [SalesReportApiService, SalesReportService, DatePipe,],
 })
 export class DailyReportComponent {
+  @Input() status: string;
   @Input() isAmount: boolean = true;
+  newStatus: string = 'paid';
   subs = new SubSink();
   selectedDate: Date = new Date();
   loader: boolean = true;
-  dailySalesReportBarGraph: BarGraph;
   dailySalesReportLineGraph: LineGraph;
   formattedDate: string = '';
   dailyReport: DailyReport[] = [];
@@ -52,7 +53,13 @@ export class DailyReportComponent {
   }
 
   ngOnChanges() {
-    this.processDailySalesReport();
+    console.log('status ', this.status);
+    if (this.status !== this.newStatus) {
+      this.loader = true;
+      this.newStatus = this.status;
+      this.getMonthlySalesReport();
+      return;
+    } else this.processDailySalesReport();
   }
 
   formatSelectedDate(): void {
@@ -62,8 +69,12 @@ export class DailyReportComponent {
   }
 
   getMonthlySalesReport() {
+    let params = {
+      date: this.formattedDate,
+      status: this.status,
+    }
     this.subs.sink = this.salesReport
-      .getDailySalesReport(this.formattedDate)
+      .getDailySalesReport(params)
       .subscribe({
         next: (res: DailyReportResponse) => {
           this.dailyReport = res?.body ?? [];

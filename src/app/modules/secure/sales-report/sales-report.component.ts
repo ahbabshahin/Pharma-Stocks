@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { SalesReportService } from '../../../service/sales-report/sales-report.service';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
+import { YearlyReportComponent } from './yearly-report/yearly-report.component';
 
 @Component({
   selector: 'app-sales-report',
@@ -21,6 +22,7 @@ import { NzAffixModule } from 'ng-zorro-antd/affix';
     FormsModule,
     NzDatePickerModule,
     NzAffixModule,
+    YearlyReportComponent,
   ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',

@@ -12,7 +12,7 @@ import { Chart } from 'chart.js';
 })
 export class LineGraphComponent {
   @Input() lineGraph: LineGraph;
-  chart: Chart;
+  chart: Chart | null = null;
   constructor() {}
 
   ngOnInit() {
@@ -28,27 +28,33 @@ export class LineGraphComponent {
   }
 
   ngOnChanges() {
+
+    if (this.chart) {
+      this.chart.destroy();
+      this.chart = null;
+    }
     this.initializeChart();
   }
 
   initializeChart() {
-    if (this.lineGraph === undefined) return;
+    if (!this.lineGraph) return;
 
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
+    if(this.lineGraph){
     this.chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.lineGraph.labels, // X-axis (Date)
+        labels: this.lineGraph?.labels, // X-axis (Date)
         datasets: [
           {
-            label: this.lineGraph.yTitle,
+            label: this.lineGraph?.yTitle,
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderWidth: 2,
             fill: true,
-            data: this.lineGraph.datasets.data, // Y-axis (Revenue)
+            data: this.lineGraph?.datasets?.data, // Y-axis (Revenue)
           },
         ],
       },
@@ -63,15 +69,22 @@ export class LineGraphComponent {
         },
         scales: {
           x: {
-            title: { display: true, text: this.lineGraph.xTitle },
+            title: { display: true, text: this.lineGraph?.xTitle },
           },
           y: {
-            title: { display: true, text: this.lineGraph.yTitle },
+            title: { display: true, text: this.lineGraph?.yTitle },
             beginAtZero: true,
           },
         },
       },
     });
     this.chart.update();
+  }
+  }
+
+  ngOnDestroy(){
+    if (this.chart) {
+      this.chart.destroy();
+    }
   }
 }

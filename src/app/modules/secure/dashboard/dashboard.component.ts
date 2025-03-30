@@ -16,6 +16,7 @@ export class DashboardComponent {
   business!: Business;
   isAdmin: boolean = false;
   isAmount: boolean = true;
+  status: string = 'paid';
   constructor(
     private businessService: BusinessService,
     private router: Router,
