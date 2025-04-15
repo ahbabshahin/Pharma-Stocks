@@ -57,9 +57,11 @@ export class AuthEffects {
               this.router.navigate(['/auth']);
             }),
             catchError((err: any) => {
+              console.log('err: ', err);
+              const errMsg = err?.error?.message ?? 'Register failed';
               this.commonService.dismissLoading();
-              this.commonService.showErrorToast(err?.message);
-              this.authStore.registerFail(err?.message);
+              this.commonService.showErrorToast(errMsg);
+              this.authStore.registerFail(errMsg);
               return of(err);
             })
           )
