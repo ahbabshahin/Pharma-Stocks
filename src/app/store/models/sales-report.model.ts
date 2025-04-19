@@ -6,6 +6,11 @@ export interface SalesReportByPrice {
   month: string;
   year: number;
 }
+export interface SalesReportResponse {
+  body: SalesReportByPrice[];
+  total: number;
+  totalQuantity: number;
+}
 export interface SalesReportByQuantity {
   product: string;
   totalQuantity: number;
