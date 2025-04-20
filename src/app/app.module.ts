@@ -25,6 +25,7 @@ import { authReducer } from './store/reducers/auth.reducer';
 import { AuthEffects } from './store/effects/auth.effect';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { SalesReportEffects } from './store/effects/sales-report.effect';
 registerLocaleData(en);
 
 export function loadConfig(config: Config): () => Promise<void> {
@@ -41,7 +42,7 @@ export function loadConfig(config: Config): () => Promise<void> {
     RouterOutlet,
     HttpClientModule,
     StoreModule.forRoot(appReducer, { metaReducers }),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, SalesReportEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     IconsProviderModule,
     FormsModule,
