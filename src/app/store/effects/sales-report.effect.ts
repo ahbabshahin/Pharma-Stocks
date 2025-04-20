@@ -4,7 +4,7 @@ import { SalesReportApiService } from '../../service/sales-report/sales-report-a
 import { SalesReportStoreService } from '../../service/sales-report/sales-report-store.service';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
 import { catchError, exhaustMap, map, of, switchMap } from 'rxjs';
-import { DailyReportResponse } from '../models/sales-report.model';
+import { DailyReportResponse, SalesReportResponse } from '../models/sales-report.model';
 import { CommonService } from '../../service/common/common.service';
 
 @Injectable()
@@ -27,6 +27,25 @@ export class SalesReportEffects {
             }),
             catchError((err) => {
               this.commonService.showErrorToast('Daily sales load failed');
+              return of(err);
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  loadProductReport$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(salesReportActions.loadProductReport),
+        switchMap((action) => {
+          return this.salesReportApi.getSalesReportByPrice(action.date).pipe(
+            map((res: SalesReportResponse) => {
+              this.salesReportStore.loadProductReportSuccess(res);
+            }),
+            catchError((err) => {
+              this.commonService.showErrorToast('Product report load failed');
               return of(err);
             })
           );
