@@ -10,6 +10,7 @@ import { CommonComponentModule } from '../../../../common-component/common-compo
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
+import { SalesReportStoreService } from '../../../../service/sales-report/sales-report-store.service';
 
 @Component({
   selector: 'app-product-report-by-price',
@@ -24,7 +25,7 @@ import { SalesReportService } from '../../../../service/sales-report/sales-repor
   ],
   templateUrl: './product-report-by-price.component.html',
   styleUrl: './product-report-by-price.component.scss',
-  providers: [SalesReportService, DatePipe],
+  providers: [],
 })
 export class ProductReportByPriceComponent {
   barGraph: BarGraph;
@@ -37,7 +38,7 @@ export class ProductReportByPriceComponent {
   radioValue: number = 0;
   constructor(
     private salesReport: SalesReportService,
-    private datePipe: DatePipe
+    private salesReportStore: SalesReportStoreService,
   ) {}
 
   ngOnInit() {
@@ -47,9 +48,6 @@ export class ProductReportByPriceComponent {
   initialize() {
     // this.formatSelectedDate();
   }
-  // onDateChange(): void {
-  //   this.formatSelectedDate();
-  // }
 
   formatSelectedDate(): void {
     this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);

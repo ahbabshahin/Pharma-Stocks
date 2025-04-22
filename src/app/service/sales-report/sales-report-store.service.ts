@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { SalesReportState } from '../../store/reducers/sales-report.reducer';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
-import { DailyReport, DailyReportResponse, SalesReportByPrice, SalesReportResponse } from '../../store/models/sales-report.model';
+import { DailyReport, DailyReportResponse, ProductReport, ProductReportResponse, SalesReportByPrice, SalesReportResponse } from '../../store/models/sales-report.model';
 import { Observable } from 'rxjs';
 import * as salesReportSelectors from '../../store/selectors/sales-report.selector';
 
@@ -28,7 +28,7 @@ export class SalesReportStoreService {
   loadProductReport(date: string) {
     this.dispatch(salesReportActions.loadProductReport({ date }));
   }
-  loadProductReportSuccess(res: SalesReportResponse) {
+  loadProductReportSuccess(res: ProductReportResponse) {
     this.dispatch(salesReportActions.loadProductReportSuccess({ res }));
   }
   loadProductReportFail(error: string) {
@@ -53,7 +53,7 @@ export class SalesReportStoreService {
     this.select(salesReportSelectors.getProductReportTotalRevenue);
   getProductReportTotalQuantity = (): Observable<number> =>
     this.select(salesReportSelectors.getProductReportTotalQuantity);
-  getProductReport = (): Observable<SalesReportByPrice[]> =>
+  getProductReport = (): Observable<ProductReport[]> =>
     this.select(salesReportSelectors.getProductReport);
 
   getSalesReportError = (): Observable<string> =>

@@ -4,7 +4,7 @@ import { SalesReportApiService } from '../../service/sales-report/sales-report-a
 import { SalesReportStoreService } from '../../service/sales-report/sales-report-store.service';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
 import { catchError, exhaustMap, map, of, switchMap } from 'rxjs';
-import { DailyReportResponse, SalesReportResponse } from '../models/sales-report.model';
+import { DailyReportResponse, ProductReportResponse, SalesReportResponse } from '../models/sales-report.model';
 import { CommonService } from '../../service/common/common.service';
 
 @Injectable()
@@ -40,8 +40,8 @@ export class SalesReportEffects {
       this.actions$.pipe(
         ofType(salesReportActions.loadProductReport),
         switchMap((action) => {
-          return this.salesReportApi.getSalesReportByPrice(action.date).pipe(
-            map((res: SalesReportResponse) => {
+          return this.salesReportApi.getProductReport(action.date).pipe(
+            map((res: ProductReportResponse) => {
               this.salesReportStore.loadProductReportSuccess(res);
             }),
             catchError((err) => {
