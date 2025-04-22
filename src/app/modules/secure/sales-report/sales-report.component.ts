@@ -10,6 +10,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { YearlyReportComponent } from './yearly-report/yearly-report.component';
 import { ProductReportTableComponent } from './product-report-table/product-report-table.component';
+import { SalesReportStoreService } from '../../../service/sales-report/sales-report-store.service';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-sales-report',
@@ -27,19 +29,49 @@ import { ProductReportTableComponent } from './product-report-table/product-repo
   ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
-  providers: [SalesReportService, DatePipe],
+  providers: [],
 })
 export class SalesReportComponent {
+  subs = new SubSink();
   priceQuantity: boolean = true;
   formattedDate: string = '';
   selectedDate: Date = new Date();
   navHeight: number = 60;
-  constructor(private salesReport: SalesReportService) {}
+  constructor(
+    private salesReport: SalesReportService,
+    private salesReportStore: SalesReportStoreService
+  ) {}
 
   ngOnInit() {
-    this.onDateChange();
+    this.initialize();
   }
+
+  initialize() {
+    // this.onDateChange();
+    this.getSalesReportDate();
+  }
+
+  loadProductReport() {
+    this.salesReportStore.loadProductReport(this.formattedDate);
+  }
+
+  getSalesReportDate(){
+    this.subs.sink = this.salesReportStore.getSalesReportDate().subscribe((date: string) =>{
+      if(date !== '') {
+        this.selectedDate = new Date(date);
+        this.formattedDate = date;
+        this.loadProductReport();
+      }
+      else this.onDateChange()
+    })
+  }
+
   onDateChange(): void {
     this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
+    this.loadProductReport();
+  }
+
+  ngOnDestroy(){
+    this.subs.unsubscribe();
   }
 }

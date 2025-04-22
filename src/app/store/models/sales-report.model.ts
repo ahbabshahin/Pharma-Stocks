@@ -11,6 +11,16 @@ export interface SalesReportResponse {
   total: number;
   totalQuantity: number;
 }
+
+export interface ProductReport extends SalesReportByPrice {
+  discount: number;
+}
+
+export interface ProductReportResponse {
+  body: ProductReport[];
+  total: number;
+  totalQuantity: number;
+}
 export interface SalesReportByQuantity {
   product: string;
   totalQuantity: number;

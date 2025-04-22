@@ -1,5 +1,5 @@
 import { isDevMode, NgModule, APP_INITIALIZER } from '@angular/core';
-import { CommonModule, registerLocaleData } from '@angular/common';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -70,6 +70,7 @@ export function loadConfig(config: Config): () => Promise<void> {
     provideAnimationsAsync(),
     provideHttpClient(),
     // provideToastr(),
+    DatePipe,
   ],
 })
 export class AppModule {}

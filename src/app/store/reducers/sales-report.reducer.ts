@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { DailyReport, SalesReportByPrice } from '../models/sales-report.model';
+import { DailyReport, ProductReport, SalesReportByPrice } from '../models/sales-report.model';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
 
 export interface SalesReportState {
@@ -9,7 +9,7 @@ export interface SalesReportState {
   dailyReportTotalRevenue: number;
   dailyReportTotalQuantity: number;
   productReportLoader: boolean;
-  productReport: SalesReportByPrice[];
+  productReport: ProductReport[];
   productReportTotalRevenue: number;
   productReportTotalQuantity: number;
   error: string;

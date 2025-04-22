@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { DailyReportResponse, SalesReportResponse } from "../models/sales-report.model";
+import { DailyReportResponse, ProductReportResponse, SalesReportResponse } from "../models/sales-report.model";
 
 export const loadDailyReport = createAction(
   '[Sales Report: Daily Report] load daily report',
@@ -20,7 +20,7 @@ export const loadProductReport = createAction(
 );
 export const loadProductReportSuccess = createAction(
   '[Sales Report: Product Report] load product report success',
-  props<{ res: SalesReportResponse }>()
+  props<{ res: ProductReportResponse }>()
 );
 export const loadProductReportFail = createAction(
   '[Sales Report: Product Report] load product report fail',
