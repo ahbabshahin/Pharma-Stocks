@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { SalesReportStoreService } from '../../../../service/sales-report/sales-report-store.service';
+import { SubSink } from 'subsink';
+import { ProductReport } from '../../../../store/models/sales-report.model';
+import { Observable, of } from 'rxjs';
 
 interface DataItem {
   name: string;
@@ -16,52 +20,54 @@ interface DataItem {
   styleUrl: './product-report-table.component.scss',
 })
 export class ProductReportTableComponent {
+  subs = new SubSink();
   listOfColumn = [
     {
       title: 'Name',
-      compare: (a: DataItem, b: DataItem) => a.name.localeCompare(b.name),
+      compare: (a: ProductReport, b: ProductReport) =>
+        a.product.localeCompare(b.product),
       priority: false,
     },
     {
-      title: 'Chinese Score',
-      compare: (a: DataItem, b: DataItem) => a.chinese - b.chinese,
-      priority: 3,
-    },
-    {
-      title: 'Math Score',
-      compare: (a: DataItem, b: DataItem) => a.math - b.math,
+      title: 'Quantity',
+      compare: (a: ProductReport, b: ProductReport) =>
+        a.totalQuantity - b.totalQuantity,
       priority: 2,
     },
     {
-      title: 'English Score',
-      compare: (a: DataItem, b: DataItem) => a.english - b.english,
+      title: 'Price',
+      compare: (a: ProductReport, b: ProductReport) => a.price - b.price,
+      priority: 1,
+    },
+    {
+      title: 'Discount',
+      compare: (a: ProductReport, b: ProductReport) => a.discount - b.discount,
+      priority: 2,
+    },
+    {
+      title: 'Total Revenue',
+      compare: (a: ProductReport, b: ProductReport) =>
+        a.totalRevenue - b.totalRevenue,
       priority: 1,
     },
   ];
-  listOfData: DataItem[] = [
-    {
-      name: 'John Brown',
-      chinese: 98,
-      math: 60,
-      english: 70,
-    },
-    {
-      name: 'Jim Green',
-      chinese: 98,
-      math: 66,
-      english: 89,
-    },
-    {
-      name: 'Joe Black',
-      chinese: 98,
-      math: 90,
-      english: 70,
-    },
-    {
-      name: 'Jim Red',
-      chinese: 88,
-      math: 99,
-      english: 89,
-    },
-  ];
+  productReport$: Observable<ProductReport[]> = of([]);
+
+  constructor(private salesReportStore: SalesReportStoreService) {}
+
+  ngOnInit() {
+    this.initialize();
+  }
+
+  initialize() {
+    this.getProductReport();
+  }
+
+  getProductReport() {
+    this.productReport$ = this.salesReportStore.getProductReport();
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }

@@ -57,10 +57,14 @@ export class SalesReportComponent {
 
   getSalesReportDate(){
     this.subs.sink = this.salesReportStore.getSalesReportDate().subscribe((date: string) =>{
-      if(date !== '') {
-        this.selectedDate = new Date(date);
-        this.formattedDate = date;
-        this.loadProductReport();
+      if(date !== '' ) {
+        if (date !== this.formattedDate) {
+          this.selectedDate = new Date(date);
+          this.formattedDate = date;
+          this.loadProductReport();
+        }else{
+          console.log('reset');
+        }
       }
       else this.onDateChange()
     })
