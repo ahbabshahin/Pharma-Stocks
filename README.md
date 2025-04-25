@@ -3,6 +3,8 @@ An activity log has been added for activity tracking, and a daily sales revenue 
 
 Sales table added. Next update, CSV Download options for sales data. 
 
+Need to add notifications for low stock alerts.
+
 There would be a dump management to track return product.
 
 It's being made with MEAN stack.
