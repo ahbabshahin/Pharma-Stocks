@@ -1,0 +1,23 @@
+@if((productReport$ | async)?.length){
+  <div class="d-flex justify-content-end my-2">
+  <button type="button" class="btn btn-primary" (click)="csvDownload()">CSV Download</button>
+</div>
+<nz-table #sortTable [nzData]="productReport$ | async" nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">
+        {{ column?.title }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of sortTable.data">
+      <td>{{ data?.product | titlecase}}</td>
+      <td>{{ data?.totalQuantity }}</td>
+      <td>৳ {{ data?.price | number: '1.2-2' }}</td>
+      <td>{{ data?.discount  }}%</td>
+      <td>৳ {{ data?.totalRevenue | number: '1.2-2'}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+}
