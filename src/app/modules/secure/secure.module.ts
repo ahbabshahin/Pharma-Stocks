@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { SidebarComponent } from '../../common-component/sidebar/sidebar.component';
 import { StoreModule } from '@ngrx/store';
 import { appReducer } from '../../store/app.state';
+import { NavBarComponent } from '../../common-component/nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [SecureComponent],
@@ -15,6 +16,7 @@ import { appReducer } from '../../store/app.state';
     SecureRoutingModule,
     SharedModule,
     SidebarComponent,
+    NavBarComponent,
     // StoreModule.forFeature('secure', appReducer),
   ],
 })
