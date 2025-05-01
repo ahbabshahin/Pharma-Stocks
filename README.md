@@ -3,7 +3,7 @@ An activity log has been added for activity tracking, and a daily sales revenue 
 
 Sales table added. Added CSV Download options for sales data. 
 
-Next update, facebook like profile button and modal on navbar. Dark mode.
+Next update, facebook like profile button and modal on navbar. Dark mode. Customer wise sales report.
 
 Need to add notifications for low stock alerts.
 
