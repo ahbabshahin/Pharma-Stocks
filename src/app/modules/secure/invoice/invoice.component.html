@@ -3,13 +3,14 @@
     <div class="search-input">
       <nz-input-group [nzSuffix]="suffixTemplate">
         <input type="text" nz-input placeholder="Search by customer name"
-               [(ngModel)]="searchText"
+               [(ngModel)]="componentState.searchText"
                (input)="onSearch($event)" />
       </nz-input-group>
 
       <ng-template #suffixTemplate>
         <span nz-icon nzType="search"></span>
-        <span *ngIf="searchText" nz-icon nzType="close-circle" class="clear-icon" (click)="clearSearch()"></span>
+        <span *ngIf="componentState?.searchText" nz-icon nzType="close-circle" class="clear-icon"
+          (click)="clearSearch()"></span>
       </ng-template>
     </div>
 
@@ -19,7 +20,7 @@
           nz-input
           nzAllowClear
           type="date"
-          [(ngModel)]="startDate"
+          [(ngModel)]="componentState.startDate"
           (ngModelChange)="onDateInputChange()"
           placeholder="Start Date"
           class="native-date-input">
@@ -28,14 +29,15 @@
           nz-input
           nzAllowClear
           type="date"
-          [(ngModel)]="endDate"
+          [(ngModel)]="componentState.endDate"
           (ngModelChange)="onDateInputChange()"
           placeholder="End Date"
           class="native-date-input">
       </div>
     </div>
 
-    <button nz-button nzType="default" (click)="resetSearch()" *ngIf="searchText || (startDate && endDate)">
+    <button nz-button nzType="default" (click)="resetSearch()"
+      *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate)">
       <span nz-icon nzType="clear"></span> Reset
     </button>
   </div>
@@ -46,11 +48,12 @@
 </div>
 
 
-
-<app-global-loader class="my-3" *ngIf="loader$ | async"></app-global-loader>
-
-<ng-container *ngIf="!(loader$ | async)">
-  <div class="container my-3" *ngIf="invoices?.length">
+@if(loader?.loader$ | async){
+<app-global-loader class="my-3"></app-global-loader>
+}@else{
+<ng-container>
+  @if(componentState?.invoices?.length){
+  <div class="container my-3" *ngIf="componentState?.invoices as invoices;">
     <nz-collapse>
       <nz-collapse-panel *ngFor="let list of invoices; let i = index"
         [nzHeader]="collapseHeader"
@@ -59,7 +62,7 @@
         <ng-template #collapseHeader>
           <div class="collapse-header" (click)="$event.stopPropagation()">
             <span class="customer-name">
-              {{ (customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
+              {{ (componentState?.customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
             </span>
             <div class="header-details">
               <span class="date">{{ list?.createdAt | date : 'dd-MM-yyyy' }}</span>
@@ -97,18 +100,20 @@
     </nz-collapse>
 
     <p *ngIf="invoices?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
-      Showing invoice(s) {{ invoices?.length }} out of {{ total }}
+      Showing invoice(s) {{ invoices?.length }} out of {{ componentState?.total }}
     </p>
 
-    <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
+    <app-global-loader *ngIf="loader?.subLoader$ | async"></app-global-loader>
 
-    <div *ngIf="total > params.limit && invoices.length < total"
+    <div *ngIf="componentState?.total > params.limit && invoices.length < componentState?.total"
       class="d-flex justify-content-center align-items-center my-3">
-      <button [disabled]="subLoader$ | async" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
+      <button [disabled]="loader?.subLoader$ | async" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
         Load More
       </button>
     </div>
   </div>
-
-  <app-global-no-data *ngIf="!invoices?.length" bodyText="No invoice found"></app-global-no-data>
+  }@else{
+  <app-global-no-data bodyText="No invoice found"></app-global-no-data>
+  }
 </ng-container>
+}

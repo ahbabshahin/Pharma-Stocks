@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { NewInvoiceComponent } from './new-invoice/new-invoice.component';
 import { SubSink } from 'subsink';
 import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
@@ -8,13 +7,21 @@ import { CustomerStoreService } from '../../../service/customer/customer-store.s
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { Observable, of } from 'rxjs';
 import { Customer } from '../../../store/models/customer.model';
-import { ViewInvoiceComponent } from './view-invoice/view-invoice.component';
 import { DatePipe } from '@angular/common';
 
+type ComponentState = {
+  invoices: Invoice[];
+  total: number;
+  isMore: boolean;
+  customers: Customer[];
+  startDate: string;
+  endDate: string;
+  searchText: string;
+};
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.scss'], // Fixed styleUrl to styleUrls
+  styleUrl: './invoice.component.scss',
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   subs = new SubSink();
@@ -36,15 +43,14 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     startDate: '',
     endDate: '',
   };
-  startDate: string = '';
-  endDate: string = '';
-  loader$: Observable<boolean> = of(true);
-  subLoader$: Observable<boolean> = of(false);
-  invoices: Invoice[] = [];
-  total: number = 0;
-  isMore: boolean = false;
-  customers: Customer[] = [];
-  searchText: string = '';
+  componentState: ComponentState;
+  loader: {
+    loader$: Observable<boolean>;
+    subLoader$: Observable<boolean>;
+  } = {
+    loader$: of(true),
+    subLoader$: of(false),
+  };
 
   constructor(
     private drawerService: NzDrawerService,
@@ -59,6 +65,16 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    this.componentState = {
+      ...this.componentState,
+      invoices: [],
+      customers: [],
+      total: 0,
+      isMore: false,
+      startDate: '',
+      endDate: '',
+      searchText: '',
+    };
     this.getLoader();
     this.isCustomerLoaded();
     this.getCustomers();
@@ -67,14 +83,20 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   loadInvoice() {
-    this.invoiceStoreService.loadInvoice(this.params, this.isMore);
+    this.invoiceStoreService.loadInvoice(
+      this.params,
+      this.componentState?.isMore
+    );
   }
 
   getInvoices() {
     this.subs.sink = this.invoiceStoreService.getInvoices().subscribe({
       next: (res: Invoice[]) => {
         if (res) {
-          this.invoices = res;
+          this.componentState = {
+            ...this.componentState,
+            invoices: res,
+          };
         }
       },
       error: (error) => {},
@@ -83,7 +105,10 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.subs.sink = this.invoiceStoreService.getTotalInvoice().subscribe({
       next: (total: number) => {
         if (total !== undefined) {
-          this.total = total;
+          this.componentState = {
+            ...this.componentState,
+            total,
+          };
         }
       },
       error: (error) => {},
@@ -102,8 +127,13 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   getLoader() {
-    this.loader$ = this.invoiceStoreService.getInvoiceLoader();
-    this.subLoader$ = this.invoiceStoreService.getInvoiceSubLoader();
+    const { getInvoiceLoader, getInvoiceSubLoader } = this.invoiceStoreService;
+
+    this.loader = {
+      ...this.loader,
+      loader$: getInvoiceLoader(),
+      subLoader$: getInvoiceSubLoader(),
+    };
   }
 
   loadCustomer() {
@@ -141,14 +171,20 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
         if (res) {
-          this.customers = res;
+          this.componentState = {
+            ...this.componentState,
+            customers: res,
+          };
         }
       },
       error: (error) => {},
     });
   }
 
-  addInvoice(invoice?: Invoice) {
+  async addInvoice(invoice?: Invoice) {
+    const { NewInvoiceComponent } = await import(
+      './new-invoice/new-invoice.component'
+    );
     this.drawerService.create({
       nzTitle: 'New Invoice',
       nzClosable: true,
@@ -156,11 +192,14 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       nzWidth: '100%',
       nzWrapClassName: 'full-drawer',
       nzContent: NewInvoiceComponent,
-      nzData: { invoice, total: this.total },
+      nzData: { invoice, total: this.componentState?.total },
     });
   }
 
-  viewInvoice(invoice: Invoice) {
+  async viewInvoice(invoice: Invoice) {
+    const { ViewInvoiceComponent } = await import(
+      './view-invoice/view-invoice.component'
+    );
     if (invoice) {
       this.drawerService.create({
         nzTitle: 'View Invoice',
@@ -174,19 +213,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteInvoice(list?: Invoice) {
-    if (list) {
-      // Implement delete functionality
-      this.invoiceStoreService.deleteInvoice(list._id as string);
-    }
-  }
-
   clearSearch() {
-    this.searchText = '';
+    this.componentState = {
+      ...this.componentState,
+      searchText: '',
+    };
     this.onSearch('');
     this.searchParams = {
       ...this.searchParams,
-      customer: this.searchText,
+      customer: this.componentState?.searchText,
     };
 
     this.searchInvoice();
@@ -194,28 +229,40 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   onSearch(e: any) {
     if (e?.target) {
-      this.searchText = e.target.value?.trim();
+      this.componentState = {
+        ...this.componentState,
+        searchText: e.target.value?.trim(),
+      };
       this.params = {
         ...this.params,
         page: 1,
-      }
+      };
       this.searchParams = {
         ...this.searchParams,
         ...this.params,
-        customer: this.searchText,
+        customer: this.componentState?.searchText,
       };
-      if (this.startDate == '' && this.endDate == '') {
+      if (
+        this.componentState?.startDate == '' &&
+        this.componentState?.endDate == ''
+      ) {
         delete this.searchParams.startDate;
         delete this.searchParams.endDate;
       }
-      this.isMore = false;
+      this.componentState = {
+        ...this.componentState,
+        isMore: false,
+      };
       this.searchInvoice();
     }
   }
 
   searchInvoice() {
     this.invoiceStoreService.setInvoiceLoaded(true);
-    this.invoiceStoreService.searchInvoice(this.searchParams, this.isMore);
+    this.invoiceStoreService.searchInvoice(
+      this.searchParams,
+      this.componentState?.isMore
+    );
   }
 
   formatDate(date: Date) {
@@ -223,7 +270,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   onDateInputChange() {
-    if (this.startDate && this.endDate) {
+    if (this.componentState?.startDate && this.componentState?.endDate) {
       this.params = {
         ...this.params,
         page: 1,
@@ -231,17 +278,20 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.searchParams = {
         ...this.searchParams,
         ...this.params,
-        startDate: this.startDate,
-        endDate: this.endDate,
+        startDate: this.componentState?.startDate,
+        endDate: this.componentState?.endDate,
       };
-      if (this.searchText == '') {
+      if (this.componentState?.searchText == '') {
         delete this.searchParams.customer;
       }
     } else {
       delete this.searchParams.startDate;
       delete this.searchParams.endDate;
     }
-    this.isMore = false;
+    this.componentState = {
+      ...this.componentState,
+      isMore: false,
+    };
     this.searchInvoice();
   }
 
@@ -250,9 +300,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       ...this.params,
       page: 1,
     };
-    this.searchText = '';
-    this.startDate = '';
-    this.endDate = '';
     this.searchParams = {
       ...this.searchParams,
       ...this.params,
@@ -260,15 +307,25 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       startDate: '',
       endDate: '',
     };
-    this.isMore = false;
+    this.componentState = {
+      ...this.componentState,
+      isMore: false,
+      startDate: '',
+      endDate: '',
+      searchText: '',
+    };
     this.invoiceStoreService.setLoader(true);
     this.loadInvoice();
   }
 
   loadMore() {
-    if (this.invoices?.length < this.total) {
+    const { invoices, total } = this.componentState;
+    if (invoices?.length < total) {
       this.invoiceStoreService.setSubLoader(true);
-      this.isMore = true;
+      this.componentState = {
+        ...this.componentState,
+        isMore: true,
+      };
       this.params = {
         ...this.params,
         page: this.params.page + 1,
@@ -284,14 +341,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         };
         this.searchInvoice();
       } else {
-
         this.loadInvoice();
       }
     }
-  }
-
-  generatePDF() {
-    // Implement PDF generation
   }
 
   ngOnDestroy() {
