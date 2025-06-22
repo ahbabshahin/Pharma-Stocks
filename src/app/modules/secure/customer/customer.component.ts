@@ -12,6 +12,7 @@ type ComponentState = {
   isAdmin: boolean;
   isMore: boolean;
   total: number;
+  searchText: string;
 };
 
 @Component({
@@ -24,19 +25,16 @@ export class CustomerComponent {
   params = {
     page: 1,
     limit: 10,
+    search: '',
   };
   componentState: ComponentState;
-  // customers: Customer[] = [];
   loader: {
     loader$: Observable<boolean>;
     subLoader$: Observable<boolean>;
   } = {
     loader$: of(true),
     subLoader$: of(false),
-  }
-  // isAdmin: boolean = false;
-  // isMore: boolean = false;
-  // total: number = 0;
+  };
 
   constructor(
     private commonService: CommonService,
@@ -56,6 +54,7 @@ export class CustomerComponent {
       isAdmin: false,
       isMore: false,
       total: 0,
+      searchText: '',
     };
     this.getLoader();
     this.isCustomerLoaded();
@@ -77,17 +76,17 @@ export class CustomerComponent {
     this.componentState = {
       ...this.componentState,
       isAdmin: await this.authStore.isAdminUser(),
-    }
-    console.log('this.isAdmin: ', this.componentState.isAdmin);
+    };
+
   }
 
   getLoader() {
-    const { getCustomerLoader, getCustomerSubLoader,  } = this.customerStore;
+    const { getCustomerLoader, getCustomerSubLoader } = this.customerStore;
     this.loader = {
       ...this.loader,
       loader$: getCustomerLoader(),
       subLoader$: getCustomerSubLoader(),
-    }
+    };
   }
 
   loadCustomer() {
@@ -111,15 +110,14 @@ export class CustomerComponent {
         };
       },
     });
-    this.subs.sink = this.customerStore
-      .getCustomerTotal()
-      .subscribe({next:(total: number) => {
+    this.subs.sink = this.customerStore.getCustomerTotal().subscribe({
+      next: (total: number) => {
         this.componentState = {
           ...this.componentState,
           total,
         };
       },
-    error: () => {}
+      error: () => {},
     });
   }
 
@@ -150,13 +148,13 @@ export class CustomerComponent {
     this.customerStore.deleteCustomer(_id as string);
   }
 
-  loadMore(){
+  loadMore() {
     const { customers, total } = this.componentState;
-    if(customers?.length < total){
+    if (customers?.length < total) {
       this.params = {
         ...this.params,
-        page: this.params.page + 1
-      }
+        page: this.params.page + 1,
+      };
       this.componentState = {
         ...this.componentState,
         isMore: true,
@@ -164,6 +162,36 @@ export class CustomerComponent {
       this.loadCustomer();
       this.customerStore.setCustomerSubLoader(true);
     }
+  }
+
+  onSearch(e: any){
+    this.componentState = {
+      ...this.componentState,
+      searchText: e?.target?.value,
+    };
+    const { searchText, isMore } = this.componentState;
+    this.params = {
+      ...this.params,
+      page: 1,
+      search: searchText,
+    }
+
+    // this.loadCustomer();
+    if(searchText)
+    this.customerStore.searchCustomer(this.params, isMore);
+  }
+
+  clearSearch() {
+    this.componentState = {
+      ...this.componentState,
+      searchText: '',
+    };
+    this.params = {
+      ...this.params,
+      search: '',
+    }
+
+    this.loadCustomer();
   }
 
   ngOnDestroy() {

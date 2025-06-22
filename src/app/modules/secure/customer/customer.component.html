@@ -3,6 +3,23 @@
     Add Customer
   </button>
 </div>
+<div class="search-container">
+  <div class="search-filters">
+    <div class="search-input">
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input type="text" nz-input placeholder="Search by customer name" [(ngModel)]="componentState.searchText"
+          (input)="onSearch($event)" />
+      </nz-input-group>
+
+      <ng-template #suffixTemplate>
+        <span nz-icon nzType="search"></span>
+        <span *ngIf="componentState?.searchText" nz-icon nzType="close-circle" class="clear-icon"
+          (click)="clearSearch()"></span>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
 @if(loader?.loader$ | async){
 <app-global-loader></app-global-loader>
 }@else{
