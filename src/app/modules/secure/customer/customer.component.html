@@ -3,11 +3,28 @@
     Add Customer
   </button>
 </div>
+<div class="search-container">
+  <div class="search-filters">
+    <div class="search-input">
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input type="text" nz-input placeholder="Search by customer name, area code, contact number" [(ngModel)]="componentState.searchText"
+          (input)="onSearch($event)" />
+      </nz-input-group>
 
-<app-global-loader *ngIf="loader$ | async"></app-global-loader>
+      <ng-template #suffixTemplate>
+        <span nz-icon nzType="search"></span>
+        <span *ngIf="componentState?.searchText" nz-icon nzType="close-circle" class="clear-icon"
+          (click)="clearSearch()"></span>
+      </ng-template>
+    </div>
+  </div>
+</div>
 
-<ng-container *ngIf="!(loader$ | async)">
-  <div class="container my-3" *ngIf="customers?.length">
+@if(loader?.loader$ | async){
+<app-global-loader></app-global-loader>
+}@else{
+  @if(componentState?.customers?.length){
+  <div class="container my-3" *ngIf="componentState?.customers as customers;">
     <div class="row">
       <ng-container *ngFor="let list of customers; let i = index">
         <div class="col-lg-4 col-md-6 col-sm-12">
@@ -15,6 +32,9 @@
             <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
             <p class="mt-2" *ngIf="list?.contacts">
               <strong>Phone Number:</strong> {{ list?.contacts }}
+            </p>
+            <p class="mt-2" *ngIf="list?.areaCode">
+              <strong>Area code:</strong> {{ list?.areaCode }}
             </p>
           </nz-card>
         </div>
@@ -27,16 +47,18 @@
       </ng-container>
     </div>
     <p *ngIf="customers?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
-      Showing customer(s) {{ customers.length }} out of {{ total }}
+      Showing customer(s) {{ customers?.length }} out of {{ componentState?.total }}
     </p>
-    <app-global-loader *ngIf="subLoader$ | async"></app-global-loader>
-    <div *ngIf="total > params.limit && customers.length < total"
+    <app-global-loader *ngIf="loader?.subLoader$ | async"></app-global-loader>
+    <div *ngIf="componentState?.total > params?.limit && customers?.length < componentState?.total"
       class="d-flex justify-content-center align-items-center my-2 mx-2">
-      <button [disabled]="(subLoader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round"
+      <button [disabled]="(loader?.subLoader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round"
         class="primary-btn w-50">
         Load more
       </button>
     </div>
   </div>
-  <app-global-no-data *ngIf="!customers?.length" bodyText="No customer found"></app-global-no-data>
-</ng-container>
+}@else{
+  <app-global-no-data bodyText="No customer found"></app-global-no-data>
+}
+}

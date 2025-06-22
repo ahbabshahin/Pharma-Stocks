@@ -91,3 +91,32 @@ button.primary-btn:hover {
     /* Adjust text size for better readability */
   }
 }
+
+// Search section
+.search {
+  &-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  &-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  &-input {
+    flex: 1;
+    min-width: 180px;
+  }
+}

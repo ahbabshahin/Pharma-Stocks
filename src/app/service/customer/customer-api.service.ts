@@ -9,6 +9,10 @@ export class CustomerApiService {
   constructor(private env: Config, private http: HttpClient) {}
 
   getCustomers(params: { [key: string]: any }) {
+    params = {
+      ...params
+    }
+    for (let x in params) if (params[x] == '') delete params[x];
     return this.http.get(`${this.env.rootURL}/v1/customer`, { params });
   }
 
