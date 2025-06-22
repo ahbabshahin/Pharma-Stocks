@@ -61,7 +61,7 @@ export const deleteCustomerFail = createAction(
 
 export const searchCustomer = createAction(
   '[Customer] search customer',
-  props<{ params: {[key: string]: any} }>()
+  props<{ params: {[key: string]: any}, isMore?: boolean }>()
 );
 export const searchCustomerSuccess = createAction(
   '[Customer] search customer success',

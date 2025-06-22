@@ -4,7 +4,7 @@ import { CommonService } from '../../service/common/common.service';
 import { CustomerStoreService } from '../../service/customer/customer-store.service';
 import { CustomerApiService } from '../../service/customer/customer-api.service';
 import * as customerActions from '../../store/actions/customer.action';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, exhaustMap, map, mergeMap, of, switchMap } from 'rxjs';
 import { Customer } from '../models/customer.model';
 import { Update } from '@ngrx/entity';
 
@@ -22,7 +22,7 @@ export class CustomerEffects {
       this.actions$.pipe(
         ofType(customerActions.loadCustomer),
         mergeMap((action) => {
-        console.log('action ', action);
+
           return this.customerApi.getCustomers(action.params).pipe(
             map((res: any) => {
               this.customerStore.loadCustomerSuccess(
@@ -48,7 +48,7 @@ export class CustomerEffects {
     () =>
       this.actions$.pipe(
         ofType(customerActions.addCustomer),
-        mergeMap((action) => {
+        exhaustMap((action) => {
           return this.customerApi.addCustomer(action.payload).pipe(
             map((res: Customer) => {
               this.customerStore.addCustomerSuccess(res);
@@ -73,7 +73,7 @@ export class CustomerEffects {
     () =>
       this.actions$.pipe(
         ofType(customerActions.updateCustomer),
-        mergeMap((action) => {
+        exhaustMap((action) => {
           return this.customerApi.updateCustomer(action.payload).pipe(
             map((res: Customer) => {
               let response: Update<Customer> = {
@@ -105,7 +105,7 @@ export class CustomerEffects {
     () =>
       this.actions$.pipe(
         ofType(customerActions.deleteCustomer),
-        mergeMap((action) => {
+        exhaustMap((action) => {
           return this.customerApi.deleteCustomer(action.id).pipe(
             map(() => {
               this.customerStore.deleteCustomerSuccess(action.id);
@@ -130,10 +130,14 @@ export class CustomerEffects {
     () =>
       this.actions$.pipe(
         ofType(customerActions.searchCustomer),
-        mergeMap((action) => {
-          return this.customerApi.searchCustomer(action.params).pipe(
+        switchMap((action) => {
+          return this.customerApi.getCustomers(action.params).pipe(
             map((res: any) => {
-              this.customerStore.searchCustomerSuccess(res?.body ?? []);
+              this.customerStore.loadCustomerSuccess(
+                res?.body ?? [],
+                res?.total,
+                action.isMore as boolean
+              );
             }),
             catchError(() => {
               this.customerStore.searchCustomerFail('Customer search failed');

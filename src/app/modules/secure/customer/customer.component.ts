@@ -6,7 +6,14 @@ import { Customer } from '../../../store/models/customer.model';
 import { Observable, of } from 'rxjs';
 import { AuthStoreService } from '../../../service/auth/auth-store.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { NewCustomerComponent } from './new-customer/new-customer.component';
+
+type ComponentState = {
+  customers: Customer[];
+  isAdmin: boolean;
+  isMore: boolean;
+  total: number;
+  searchText: string;
+};
 
 @Component({
   selector: 'app-customer',
@@ -18,13 +25,16 @@ export class CustomerComponent {
   params = {
     page: 1,
     limit: 10,
+    search: '',
   };
-  customers: Customer[] = [];
-  loader$: Observable<boolean> = of(true);
-  subLoader$: Observable<boolean> = of(false);
-  isAdmin: boolean = false;
-  isMore: boolean = false;
-  total: number = 0;
+  componentState: ComponentState;
+  loader: {
+    loader$: Observable<boolean>;
+    subLoader$: Observable<boolean>;
+  } = {
+    loader$: of(true),
+    subLoader$: of(false),
+  };
 
   constructor(
     private commonService: CommonService,
@@ -38,6 +48,14 @@ export class CustomerComponent {
   }
 
   async initialize() {
+    this.componentState = {
+      ...this.componentState,
+      customers: [],
+      isAdmin: false,
+      isMore: false,
+      total: 0,
+      searchText: '',
+    };
     this.getLoader();
     this.isCustomerLoaded();
     this.getCustomer();
@@ -55,40 +73,58 @@ export class CustomerComponent {
   }
 
   async isAdminUser() {
-    console.log('admin');
-    this.isAdmin = await this.authStore.isAdminUser();
-    console.log('this.isAdmin: ', this.isAdmin);
+    this.componentState = {
+      ...this.componentState,
+      isAdmin: await this.authStore.isAdminUser(),
+    };
+
   }
 
   getLoader() {
-    this.loader$ = this.customerStore.getCustomerLoader();
-    this.subLoader$ = this.customerStore.getCustomerSubLoader();
+    const { getCustomerLoader, getCustomerSubLoader } = this.customerStore;
+    this.loader = {
+      ...this.loader,
+      loader$: getCustomerLoader(),
+      subLoader$: getCustomerSubLoader(),
+    };
   }
 
   loadCustomer() {
-    this.customerStore.loadCustomer(this.params, this.isMore);
+    const { isMore } = this.componentState;
+    this.customerStore.loadCustomer(this.params, isMore);
   }
 
   getCustomer() {
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
-        this.customers = res;
-        if(this.isMore) this.isMore = false;
+        this.componentState = {
+          ...this.componentState,
+          customers: res,
+          isMore: false,
+        };
       },
       error: () => {
-        if (this.isMore) this.isMore = false;
+        this.componentState = {
+          ...this.componentState,
+          isMore: false,
+        };
       },
     });
-    this.subs.sink = this.customerStore
-      .getCustomerTotal()
-      .subscribe({next:(total: number) => {
-        this.total = total;
+    this.subs.sink = this.customerStore.getCustomerTotal().subscribe({
+      next: (total: number) => {
+        this.componentState = {
+          ...this.componentState,
+          total,
+        };
       },
-    error: () => {}
+      error: () => {},
     });
   }
 
-  addCustomer(customer?: Customer) {
+  async addCustomer(customer?: Customer) {
+    const { NewCustomerComponent } = await import(
+      './new-customer/new-customer.component'
+    );
     this.drawerService.create({
       nzTitle: 'New Customer',
       nzClosable: true,
@@ -101,26 +137,61 @@ export class CustomerComponent {
   }
 
   async deleteCustomer(customer: Customer) {
+    const { name, _id } = customer;
     const ok = await this.commonService.showConfirmModal(
-      `Are you sure you want to delete ${customer?.name}?`
+      `Are you sure you want to delete ${name}?`
     );
 
     if (!ok) return;
 
     this.commonService.presentLoading();
-    this.customerStore.deleteCustomer(customer._id as string);
+    this.customerStore.deleteCustomer(_id as string);
   }
 
-  loadMore(){
-    if(this.customers?.length < this.total){
+  loadMore() {
+    const { customers, total } = this.componentState;
+    if (customers?.length < total) {
       this.params = {
         ...this.params,
-        page: this.params.page + 1
-      }
-      this.isMore = true;
+        page: this.params.page + 1,
+      };
+      this.componentState = {
+        ...this.componentState,
+        isMore: true,
+      };
       this.loadCustomer();
       this.customerStore.setCustomerSubLoader(true);
     }
+  }
+
+  onSearch(e: any){
+    this.componentState = {
+      ...this.componentState,
+      searchText: e?.target?.value,
+    };
+    const { searchText, isMore } = this.componentState;
+    this.params = {
+      ...this.params,
+      page: 1,
+      search: searchText,
+    }
+
+    // this.loadCustomer();
+    if(searchText)
+    this.customerStore.searchCustomer(this.params, isMore);
+  }
+
+  clearSearch() {
+    this.componentState = {
+      ...this.componentState,
+      searchText: '',
+    };
+    this.params = {
+      ...this.params,
+      search: '',
+    }
+
+    this.loadCustomer();
   }
 
   ngOnDestroy() {

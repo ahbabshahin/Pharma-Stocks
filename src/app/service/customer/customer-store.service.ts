@@ -64,8 +64,8 @@ export class CustomerStoreService {
   }
 
   // Search Customer
-  searchCustomer(params: { [key: string]: any }) {
-    this.dispatch(customerActions.searchCustomer({ params }));
+  searchCustomer(params: { [key: string]: any }, isMore: boolean) {
+    this.dispatch(customerActions.searchCustomer({ params, isMore }));
   }
   searchCustomerSuccess(res: Customer[]) {
     this.dispatch(customerActions.searchCustomerSuccess({ res }));
