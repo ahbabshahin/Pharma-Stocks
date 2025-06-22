@@ -81,6 +81,26 @@
       </small>
     </div>
   </div>
+  <div class="form-group my-2">
+    <label>Area code</label>
+    <textarea
+      nz-input
+      type="text"
+      class="form-control"
+      formControlName="areaCode"
+      placeholder="GB"
+    ></textarea>
+    <div class="text-danger"
+      *ngIf="
+        form?.get('areaCode')?.invalid &&
+        (form.get('areaCode')?.touched || form.get('areaCode')?.dirty)
+      "
+    >
+      <small *ngIf="form.get('areaCode')?.errors?.['minlength']">
+        Area code must be at least 3 characters.
+      </small>
+    </div>
+  </div>
 
   <div nz-flex nzJustify="flex-end" class="my-2">
     <button type="submit" [disabled]="form.invalid" class="primary-btn" nz-button nzShape="round">

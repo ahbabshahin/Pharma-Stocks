@@ -7,4 +7,5 @@ export interface Customer {
   address: string;
   invoices?: string[];
   sn: string;
+  areaCode: string;
 }

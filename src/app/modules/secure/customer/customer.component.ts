@@ -177,7 +177,7 @@ export class CustomerComponent {
     }
 
     // this.loadCustomer();
-    if(searchText)
+    // if(searchText)
     this.customerStore.searchCustomer(this.params, isMore);
   }
 

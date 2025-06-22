@@ -36,6 +36,7 @@ export class NewCustomerComponent {
       contacts: ['',],
       email: [''],
       address: ['', [Validators.required, Validators.minLength(3)]],
+      areaCode: ['', [Validators.minLength(3)]],
       sn: [this.customerStore.generateSerialNumber()],
     });
   }

@@ -7,7 +7,7 @@
   <div class="search-filters">
     <div class="search-input">
       <nz-input-group [nzSuffix]="suffixTemplate">
-        <input type="text" nz-input placeholder="Search by customer name" [(ngModel)]="componentState.searchText"
+        <input type="text" nz-input placeholder="Search by customer name, area code, contact number" [(ngModel)]="componentState.searchText"
           (input)="onSearch($event)" />
       </nz-input-group>
 
@@ -32,6 +32,9 @@
             <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
             <p class="mt-2" *ngIf="list?.contacts">
               <strong>Phone Number:</strong> {{ list?.contacts }}
+            </p>
+            <p class="mt-2" *ngIf="list?.areaCode">
+              <strong>Area code:</strong> {{ list?.areaCode }}
             </p>
           </nz-card>
         </div>
