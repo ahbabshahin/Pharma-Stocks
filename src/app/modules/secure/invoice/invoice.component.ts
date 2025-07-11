@@ -139,7 +139,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   loadCustomer() {
     const params = {
       page: 1,
-      limit: 100,
+      limit: 1000,
     };
     this.subs.sink = this.customerApi.getCustomers(params).subscribe({
       next: (res: any) => {
