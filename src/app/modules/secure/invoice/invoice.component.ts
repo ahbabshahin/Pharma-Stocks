@@ -28,18 +28,18 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   params = {
     page: 1,
     limit: 10,
-    status: 'due',
+    status: '',
   };
   searchParams: {
     page: number;
     limit: number;
     status: string;
-    customer?: string;
+    search?: string;
     startDate?: string;
     endDate?: string;
   } = {
     ...this.params,
-    customer: '',
+    search: '',
     startDate: '',
     endDate: '',
   };
@@ -83,6 +83,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   loadInvoice() {
+    if(!this.params.status) this.params.status = '';
     this.invoiceStoreService.loadInvoice(
       this.params,
       this.componentState?.isMore
@@ -221,7 +222,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.onSearch('');
     this.searchParams = {
       ...this.searchParams,
-      customer: this.componentState?.searchText,
+      search: this.componentState?.searchText,
     };
 
     this.searchInvoice();
@@ -240,7 +241,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.searchParams = {
         ...this.searchParams,
         ...this.params,
-        customer: this.componentState?.searchText,
+        search: this.componentState?.searchText,
       };
       if (
         this.componentState?.startDate == '' &&
@@ -282,7 +283,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         endDate: this.componentState?.endDate,
       };
       if (this.componentState?.searchText == '') {
-        delete this.searchParams.customer;
+        delete this.searchParams.search;
       }
     } else {
       delete this.searchParams.startDate;
@@ -299,13 +300,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.params = {
       ...this.params,
       page: 1,
+      status: '',
     };
     this.searchParams = {
       ...this.searchParams,
       ...this.params,
-      customer: '',
+      search: '',
       startDate: '',
       endDate: '',
+      status:'',
     };
     this.componentState = {
       ...this.componentState,
@@ -331,7 +334,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         page: this.params.page + 1,
       };
       if (
-        this.searchParams?.customer ||
+        this.searchParams?.search ||
         this.searchParams?.startDate ||
         this.searchParams?.endDate
       ) {
@@ -343,6 +346,35 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       } else {
         this.loadInvoice();
       }
+    }
+  }
+
+  onStatusChange(status: string){
+    if(status){
+      this.params = {
+        ...this.params,
+        page: 1,
+      };
+      this.searchParams = {
+        ...this.searchParams,
+        ...this.params,
+        status,
+      };
+
+      if (
+        this.componentState?.startDate == '' &&
+        this.componentState?.endDate == ''
+      ) {
+        delete this.searchParams.startDate;
+        delete this.searchParams.endDate;
+      }
+
+      if(this.componentState.searchText === '') delete this.searchParams.search;
+      this.invoiceStoreService.setLoader(true);
+      this.searchInvoice();
+    }else{
+      this.invoiceStoreService.setLoader(true);
+      this.loadInvoice();
     }
   }
 
