@@ -2,7 +2,7 @@
   <div class="search-filters">
     <div class="search-input">
       <nz-input-group [nzSuffix]="suffixTemplate">
-        <input type="text" nz-input placeholder="Search by customer name"
+        <input type="text" nz-input placeholder="Search by SN, customer name"
                [(ngModel)]="componentState.searchText"
                (input)="onSearch($event)" />
       </nz-input-group>
@@ -36,8 +36,19 @@
       </div>
     </div>
 
+    <div>
+      <nz-select
+          [(ngModel)]="params.status"
+          (ngModelChange)="onStatusChange($event)"
+          nzAllowClear
+      >
+        <nz-option nzLabel="Due" nzValue="due"></nz-option>
+        <nz-option nzLabel="Paid" nzValue="paid"></nz-option>
+      </nz-select>
+    </div>
+
     <button nz-button nzType="default" (click)="resetSearch()"
-      *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate)">
+      *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || params.status">
       <span nz-icon nzType="clear"></span> Reset
     </button>
   </div>
@@ -62,7 +73,7 @@
         <ng-template #collapseHeader>
           <div class="collapse-header" (click)="$event.stopPropagation()">
             <span class="customer-name">
-              {{ (componentState?.customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
+              {{list?.sn}} - {{ (componentState?.customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
             </span>
             <div class="header-details">
               <span class="date">{{ list?.createdAt | date : 'dd-MM-yyyy' }}</span>
