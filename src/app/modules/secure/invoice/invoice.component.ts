@@ -300,6 +300,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.params = {
       ...this.params,
       page: 1,
+      status: '',
     };
     this.searchParams = {
       ...this.searchParams,
