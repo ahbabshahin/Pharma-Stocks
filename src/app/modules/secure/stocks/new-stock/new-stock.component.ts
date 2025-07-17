@@ -53,7 +53,7 @@ export class NewStockComponent {
   onSubmit(){
     if (this.form?.valid) {
       this.commonService.presentLoading();
-      console.log('form ', this.form.value);
+
       const formRes: Stock = this.form?.value;
       let payload: Stock = {
         ...formRes,

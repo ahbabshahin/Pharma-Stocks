@@ -82,7 +82,7 @@ export class LoginComponent {
       },
       error:(err) => {
         this.commonService.dismissLoading();
-        console.error('Error checking user:', err);
+
         this.commonService.showErrorToast('User does not exist');
       }
     });
@@ -121,7 +121,7 @@ export class LoginComponent {
         this.commonService.dismissLoading();
       },
       error:(err) => {
-        console.error('Error setting password:', err);
+
         this.commonService.showErrorToast('Error setting password');
         this.commonService.dismissLoading();
       }

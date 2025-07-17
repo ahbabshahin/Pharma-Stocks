@@ -61,9 +61,9 @@ export class ViewInvoiceComponent {
   }
 
   async isAdminUser() {
-    console.log('admin');
+
     this.isAdmin = await this.authStore.isAdminUser();
-    console.log('this.isAdmin: ', this.isAdmin);
+
   }
 
   calculateProductTotal(product: any): number {
@@ -100,14 +100,14 @@ export class ViewInvoiceComponent {
   getCustomers() {
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (customers: Customer[]) => {
-        console.log('res: ', customers);
+
         if (customers?.length)
           this.customer = customers.find(
             (item) => item?._id === this.invoice?.customer
           ) as Customer;
       },
       error: () => {
-        console.log('error');
+
       },
     });
   }

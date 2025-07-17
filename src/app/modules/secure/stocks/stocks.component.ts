@@ -58,9 +58,9 @@ export class StocksComponent {
   }
 
   async isAdminUser() {
-    console.log('admin');
+
     this.isAdmin = await this.authStore.isAdminUser();
-    console.log('this.isAdmin: ', this.isAdmin);
+
   }
 
   getLoader() {
@@ -76,7 +76,7 @@ export class StocksComponent {
     this.subs.sink = this.stockStore.getStocks().subscribe({
       next: (res: Stock[]) => {
         if (res?.length) this.stocks = res;
-        console.log('this.stocks: ', this.stocks);
+
         if (this.isMore) this.isMore = false;
       },
       error: () => {
@@ -88,7 +88,7 @@ export class StocksComponent {
   getTotalStocks() {
     this.subs.sink = this.stockStore.getTotalStock().subscribe({
       next: (total: number) => {
-        console.log('total: ', total);
+
         this.total = total;
       },
       error: () => {},
@@ -96,7 +96,7 @@ export class StocksComponent {
   }
 
   addStock(stock?: Stock) {
-    console.log('stock: ', stock);
+
     this.drawerService.create({
       nzTitle: 'New Stock',
       nzClosable: true,
@@ -119,7 +119,7 @@ export class StocksComponent {
   }
 
   search() {
-    console.log('search ', this.searchText);
+
     this.searchText = this.searchText?.trim();
     if (this.searchText !== '') {
       let params = {
