@@ -60,7 +60,7 @@ export class UserComponent {
   getUsers() {
     this.subs.sink = this.userStore.getUsers().subscribe({
       next: (res: User[]) => {
-        console.log('users list: ', res);
+
         this.users = res;
         this.getTotalUser();
         // this.total = res?.total
@@ -113,7 +113,7 @@ export class UserComponent {
   }
 
   editUser(user?: User) {
-    console.log('user: ', user);
+
     this.drawerService.create({
       nzTitle: `${user ? 'Update' : 'Add'} user`,
       nzClosable: true,

@@ -37,7 +37,7 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    console.log('form ', this.registerForm?.value);
+
     const formRes: {
       name: string,
       username:  string,
@@ -58,7 +58,7 @@ export class RegisterComponent {
         ...payload,
         username: payload?.username?.trim(),
       }
-      console.log('payload: ', payload);
+
       this.commonService.presentLoading();
       this.authStore.register(payload);
     }

@@ -62,7 +62,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initializeForm() {
-    console.log('total ', this.total);
+
     this.form = this.formBuilder.group({
       sn: [`SN-${this.total + 1}`, [Validators.required]],
       customer: ['', [Validators.required]],
@@ -140,13 +140,13 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   getCustomers() {
-    console.log('customer');
+
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
         this.customers = res;
       },
       error: () => {
-        console.log('error');
+
       },
     });
   }
@@ -185,8 +185,8 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   onProductSelect(selectedProduct: Stock, index: number): void {
-    console.log('selectedProduct: ', selectedProduct);
-    console.log('index: ', index);
+
+
     this.stock = selectedProduct;
     const productGroup = this.productsFormArray.at(index);
     if (productGroup) {
@@ -205,7 +205,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log('Invoice Data:', this.form.value);
+
       const formRes = this.form.value;
       let payload: Invoice = {
         sn: formRes?.sn,

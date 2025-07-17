@@ -49,7 +49,7 @@ export class NewCustomerComponent {
   }
 
   onSubmit(){
-    console.log('form ', this.form.value);
+
     let formRes: Customer = this.form?.value;
     let payload: Customer = formRes;
 
@@ -60,7 +60,7 @@ export class NewCustomerComponent {
         ...payload,
       }
 
-      // console.log('payload ', payload);
+      //
       this.customerStore.updateCustomer(payload);
     }else{
       this.customerStore.addCustomer(payload)
