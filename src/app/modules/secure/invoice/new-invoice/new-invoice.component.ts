@@ -51,6 +51,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   initialize() {
     this.getBusiness();
     this.getCustomers();
+    this.getTotalInvoice();
     this.initializeForm();
 
     if (this.invoice) this.populateForm();
@@ -64,7 +65,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   initializeForm() {
 
     this.form = this.formBuilder.group({
-      sn: [`SN-${this.total + 1}`, [Validators.required]],
+      sn: [`SN-${this.total + 1}`],
       customer: ['', [Validators.required]],
       status: ['due', Validators.required],
       products: this.formBuilder.array([]),
@@ -151,6 +152,17 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     });
   }
 
+  getTotalInvoice(){
+    this.subs.sink = this.invoiceStore.getTotalInvoice().subscribe({
+      next: (total: number) => {
+        if (total !== undefined) {
+          this.total = total;
+        }
+      },
+      error: (error) => {},
+    });
+  }
+
   searchCustomer(e: any) {
     let searchTerm = e?.target?.value?.trim();
     if (searchTerm !== '') {
@@ -208,7 +220,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
       const formRes = this.form.value;
       let payload: Invoice = {
-        sn: formRes?.sn,
+        sn: `SN-${this.total + 1}`,
         products: formRes?.products,
         discount: formRes?.discount,
         totalAmount: this.totalAmount,
