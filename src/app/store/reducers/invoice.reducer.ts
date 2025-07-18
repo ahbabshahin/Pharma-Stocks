@@ -65,7 +65,7 @@ export const invoiceReducer = createReducer(
   }),
   on(invoiceActions.loadInvoiceSuccess, (state, action) => {
     let response = [...selectAll(state), ...action.res];
-    if(!action.isMore) response = action.res
+    if (!action.isMore) response = action.res;
     return invoiceAdapter.setAll(response, {
       ...state,
       loaded: true,
@@ -82,7 +82,7 @@ export const invoiceReducer = createReducer(
 
   // Add Invoice
   on(invoiceActions.addInvoiceSuccess, (state, { res }) =>
-    invoiceAdapter.addOne(res, state)
+    invoiceAdapter.addOne(res, { ...state, total: state.total + 1 })
   ),
   on(invoiceActions.addInvoiceFail, (state, { error }) => ({
     ...state,
@@ -100,7 +100,7 @@ export const invoiceReducer = createReducer(
 
   // Delete Invoice
   on(invoiceActions.deleteInvoiceSuccess, (state, action) =>
-    invoiceAdapter.removeOne(action.id, state)
+    invoiceAdapter.removeOne(action.id, { ...state, total: state.total - 1 })
   ),
   on(invoiceActions.deleteInvoiceFail, (state, { error }) => ({
     ...state,
