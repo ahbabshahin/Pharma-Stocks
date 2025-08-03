@@ -58,7 +58,7 @@ export const salesReportReducer = createReducer(
   on(salesReportActions.loadProductReport, (state, action) => {
     return {
       ...state,
-      date: action.date,
+      date: action.params['date'],
       productReportLoader: true,
     }
   }),

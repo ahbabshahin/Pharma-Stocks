@@ -1,10 +1,9 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { LineGraphComponent } from '../../../../common-component/line-graph/line-graph.component';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { FormsModule } from '@angular/forms';
-import { BarGraph, LineGraph } from '../../../../store/models/common.model';
+import { LineGraph } from '../../../../store/models/common.model';
 import { SalesReportApiService } from '../../../../service/sales-report/sales-report-api.service';
 import { SubSink } from 'subsink';
 import { DailyReport, DailyReportResponse } from '../../../../store/models/sales-report.model';
@@ -36,7 +35,6 @@ export class DailyReportComponent {
   totalRevenue: number = 0;
   totalQuantity: number = 0;
   constructor(
-    private salesReportApi: SalesReportApiService,
     private salesReport: SalesReportService,
     private datePipe: DatePipe
   ) {}

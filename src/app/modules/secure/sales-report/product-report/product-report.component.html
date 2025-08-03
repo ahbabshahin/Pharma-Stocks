@@ -1,0 +1,14 @@
+<!-- Date Picker for Year & Month Selection -->
+<div class="d-flex justify-content-between">
+  <div *ngIf="componentState as state">
+    <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
+    <p *ngIf="isAmount">৳ {{(state?.totalRevenue$ | async) | number : '1.2-2'}}</p>
+    <p *ngIf="!isAmount">{{(state?.totalQuantity$ | async)}}</p>
+  </div>
+
+</div>
+<app-global-loader *ngIf="loader"></app-global-loader>
+<!-- Bar Graph with Selected Date -->
+<ng-container *ngIf="!loader">
+   <app-bar-graph [barGraph]="componentState?.productReportBarGraph"></app-bar-graph>
+</ng-container>

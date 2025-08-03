@@ -16,7 +16,7 @@ export const loadDailyReportFail = createAction(
 
 export const loadProductReport = createAction(
   '[Sales Report: Product Report] load product report',
-  props<{ date: string }>()
+  props<{ params: { [key: string]: any } }>()
 );
 export const loadProductReportSuccess = createAction(
   '[Sales Report: Product Report] load product report success',
