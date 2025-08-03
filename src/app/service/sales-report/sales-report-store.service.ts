@@ -25,8 +25,8 @@ export class SalesReportStoreService {
     this.dispatch(salesReportActions.loadDailyReportFail({ error }));
   }
 
-  loadProductReport(date: string) {
-    this.dispatch(salesReportActions.loadProductReport({ date }));
+  loadProductReport(params: { [key: string]: any }) {
+    this.dispatch(salesReportActions.loadProductReport({ params }));
   }
   loadProductReportSuccess(res: ProductReportResponse) {
     this.dispatch(salesReportActions.loadProductReportSuccess({ res }));
