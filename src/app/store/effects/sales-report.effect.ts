@@ -40,7 +40,7 @@ export class SalesReportEffects {
       this.actions$.pipe(
         ofType(salesReportActions.loadProductReport),
         switchMap((action) => {
-          return this.salesReportApi.getProductReport(action.date).pipe(
+          return this.salesReportApi.getProductReport(action.params).pipe(
             map((res: ProductReportResponse) => {
               this.salesReportStore.loadProductReportSuccess(res);
             }),

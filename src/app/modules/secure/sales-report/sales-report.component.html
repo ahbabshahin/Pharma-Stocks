@@ -12,12 +12,24 @@
 </nz-affix>
 
 <div class="report-container">
-  <app-product-report-by-price [formattedDate]="formattedDate" *ngIf="priceQuantity"></app-product-report-by-price>
+  <!-- <app-product-report-by-price [formattedDate]="formattedDate" *ngIf="priceQuantity"></app-product-report-by-price>
   <app-product-report-by-quantity [formattedDate]="formattedDate" *ngIf="!priceQuantity">
-  </app-product-report-by-quantity>
+  </app-product-report-by-quantity> -->
 
-  <div class="mt-2 d-flex justify-content-start">
+  <app-product-report [status]="status" [isAmount]="isAmount"></app-product-report>
+
+  <!-- <div class="mt-2 d-flex justify-content-start">
     <nz-radio-group [(ngModel)]="priceQuantity">
+      <label nz-radio-button [nzValue]="true">Amount</label>
+      <label nz-radio-button [nzValue]="false">Quantity</label>
+    </nz-radio-group>
+  </div> -->
+  <div class="mt-2 d-flex justify-content-between">
+    <nz-radio-group [(ngModel)]="status" (ngModelChange)="onStatusChange($event)">
+      <label nz-radio-button nzValue="paid">Paid</label>
+      <label nz-radio-button nzValue="due">Due</label>
+    </nz-radio-group>
+    <nz-radio-group [(ngModel)]="isAmount">
       <label nz-radio-button [nzValue]="true">Amount</label>
       <label nz-radio-button [nzValue]="false">Quantity</label>
     </nz-radio-group>

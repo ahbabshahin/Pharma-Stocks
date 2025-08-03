@@ -38,10 +38,12 @@ export class SalesReportApiService {
       .pipe(map((res: YearlyReportResponse) => res));
   }
 
-  getProductReport(date: string): Observable<ProductReportResponse> {
+  getProductReport(params: {
+    [key: string]: any;
+  }): Observable<ProductReportResponse> {
     return this.http
       .get<ProductReportResponse>(
-        `${this.env.rootURL}/v1/sales-report/product?date=${date}`
+        `${this.env.rootURL}/v1/sales-report/product`, {params}
       )
       .pipe(map((res: ProductReportResponse) => res));
   }
