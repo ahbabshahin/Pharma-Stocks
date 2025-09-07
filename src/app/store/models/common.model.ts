@@ -6,20 +6,24 @@ export interface ActivityLog {
   description: string;
 }
 
-export interface BarGraph {
-  labels: string[];
-  indexAxis: string;
-  datasets: {
+interface DataSets {
     label: string;
     data: number[];
   };
+
+export interface BarGraph {
+  labels: string[];
+  indexAxis: string;
+  datasets: DataSets;
 }
 export interface LineGraph {
   labels: string[];
   xTitle: string;
   yTitle: string;
-  datasets: {
-    label: string;
-    data: number[];
-  };
+  datasets: DataSets;
+}
+
+export interface PieGraph {
+  labels: string[];
+  datasets: DataSets;
 }

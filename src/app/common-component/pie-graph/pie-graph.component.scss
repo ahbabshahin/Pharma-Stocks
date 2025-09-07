@@ -1,0 +1,18 @@
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  /* ✅ limits chart size */
+  height: 400px;
+  /* ✅ fixed height */
+  margin: auto;
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    max-width: 100%;
+    /* full width on mobile */
+    height: 300px;
+    /* smaller height on mobile */
+  }
+}

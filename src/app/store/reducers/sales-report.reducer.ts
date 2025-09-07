@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { DailyReport, ProductReport, SalesReportByPrice } from '../models/sales-report.model';
+import { DailyReport, ProductReport, SalesReportByPrice, SalesSummaryByArea } from '../models/sales-report.model';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
 
 export interface SalesReportState {
@@ -12,6 +12,7 @@ export interface SalesReportState {
   productReport: ProductReport[];
   productReportTotalRevenue: number;
   productReportTotalQuantity: number;
+  salesSummaryByArea: SalesSummaryByArea;
   error: string;
 }
 
@@ -25,6 +26,16 @@ const defaultSales: SalesReportState = {
   productReport: [],
   productReportTotalRevenue: 0,
   productReportTotalQuantity: 0,
+  salesSummaryByArea: {
+    month: '',
+    year: 0,
+    report: [],
+    grandTotals: {
+      totalInvoices: 0,
+      totalQuantity: 0,
+      totalRevenue: 0
+    }
+  },
   error: '',
 };
 
@@ -78,4 +89,25 @@ export const salesReportReducer = createReducer(
       error: action.error
     }
   }),
+
+  on(salesReportActions.loadSalesSummaryByAllArea, (state, action) => {
+    return {
+      ...state,
+      date: action.params['date'],
+      productReportLoader: true,
+    }
+  }),
+  on(salesReportActions.loadSalesSummaryByAllAreaSuccess, (state, action) => {
+    return {
+      ...state,
+      salesSummaryByArea: action.res
+    };
+  }),
+  on(salesReportActions.loadSalesSummaryByAllAreaFail, (state, action) => {
+    return {
+      ...state,
+      error: action.error
+    }
+  }),
+
 )
