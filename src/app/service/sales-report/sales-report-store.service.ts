@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { SalesReportState } from '../../store/reducers/sales-report.reducer';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
-import { DailyReport, DailyReportResponse, ProductReport, ProductReportResponse, SalesReportByPrice, SalesReportResponse } from '../../store/models/sales-report.model';
+import { DailyReport, DailyReportResponse, ProductReport, ProductReportResponse, SalesReportByPrice, SalesReportResponse, SalesSummaryByArea } from '../../store/models/sales-report.model';
 import { Observable } from 'rxjs';
 import * as salesReportSelectors from '../../store/selectors/sales-report.selector';
 
@@ -35,6 +35,10 @@ export class SalesReportStoreService {
     this.dispatch(salesReportActions.loadProductReportFail({ error }));
   }
 
+  loadSalesSummaryByAllArea(params: { [key: string]: any }) {
+    this.dispatch(salesReportActions.loadSalesSummaryByAllArea({ params }));
+  }
+
   getSalesReportDate = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportDate);
 
@@ -55,6 +59,9 @@ export class SalesReportStoreService {
     this.select(salesReportSelectors.getProductReportTotalQuantity);
   getProductReport = (): Observable<ProductReport[]> =>
     this.select(salesReportSelectors.getProductReport);
+
+  getSalesSummaryByAllArea = (): Observable<SalesSummaryByArea> =>
+    this.select(salesReportSelectors.getSalesSummaryByAllArea);
 
   getSalesReportError = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportError);

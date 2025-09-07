@@ -10,6 +10,7 @@ import { ProductReportTableComponent } from './product-report-table/product-repo
 import { SalesReportStoreService } from '../../../service/sales-report/sales-report-store.service';
 import { SubSink } from 'subsink';
 import { ProductReportComponent } from "./product-report/product-report.component";
+import { AllAreaReportComponent } from './all-area-report/all-area-report.component';
 
 @Component({
   selector: 'app-sales-report',
@@ -23,7 +24,8 @@ import { ProductReportComponent } from "./product-report/product-report.componen
     NzAffixModule,
     ProductReportTableComponent,
     ProductReportComponent,
-],
+    AllAreaReportComponent,
+  ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
   providers: [],
@@ -37,12 +39,12 @@ export class SalesReportComponent {
   isAmount: boolean = true;
   status: string = 'paid';
   params: {
-    date: string,
-    status: string,
-  }
+    date: string;
+    status: string;
+  };
   constructor(
     private salesReport: SalesReportService,
-    private salesReportStore: SalesReportStoreService,
+    private salesReportStore: SalesReportStoreService
   ) {}
 
   ngOnInit() {
@@ -54,13 +56,22 @@ export class SalesReportComponent {
     this.params = {
       ...this.params,
       status: this.status,
-    }
+    };
     this.getSalesReportDate();
   }
 
+  dispatchActions() {
+    this.loadProductReport();
+    this.loadSalesSummaryByAllArea();
+  }
+
   loadProductReport() {
-    if(this.params?.date)
-    this.salesReportStore.loadProductReport(this.params);
+    if (this.params?.date) this.salesReportStore.loadProductReport(this.params);
+  }
+
+  loadSalesSummaryByAllArea() {
+    if (this.params?.date)
+      this.salesReportStore.loadSalesSummaryByAllArea(this.params);
   }
 
   getSalesReportDate() {
@@ -74,8 +85,8 @@ export class SalesReportComponent {
             this.params = {
               ...this.params,
               date,
-            }
-            this.loadProductReport();
+            };
+            this.dispatchActions();
           } else {
             console.log('reset');
           }
@@ -89,7 +100,7 @@ export class SalesReportComponent {
       ...this.params,
       date: this.formattedDate,
     };
-    this.loadProductReport();
+    this.dispatchActions();
   }
 
   onStatusChange(status: string): void {
@@ -97,8 +108,8 @@ export class SalesReportComponent {
     this.params = {
       ...this.params,
       status,
-    }
-    this.loadProductReport();
+    };
+    this.dispatchActions();
   }
 
   ngOnDestroy() {

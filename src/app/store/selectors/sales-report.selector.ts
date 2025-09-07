@@ -50,6 +50,11 @@ export const getProductReport = createSelector(
   (state: SalesReportState) => state.productReport
 );
 
+export const getSalesSummaryByAllArea = createSelector(
+  getSalesReportState,
+  (state: SalesReportState) => state.salesSummaryByArea
+);
+
 export const getSalesReportError = createSelector(
   getSalesReportState,
   (state: SalesReportState) => state.error
