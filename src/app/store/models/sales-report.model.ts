@@ -53,3 +53,22 @@ export interface YearlyReportResponse {
   total: number;
   totalQuantity: number;
 }
+
+export interface SalesSummaryByArea {
+  month: string;
+  year: number;
+  report: SalesSummaryReport[];
+  grandTotals: SalesSummaryGrandTotal;
+}
+
+export interface SalesSummaryReport {
+  totalQuantity: number;
+  areaCode: string;
+  totalRevenue: number;
+}
+
+export interface SalesSummaryGrandTotal {
+    totalInvoices: number;
+    totalQuantity: number;
+    totalRevenue: number;
+  }

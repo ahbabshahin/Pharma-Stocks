@@ -1,27 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import Chart from 'chart.js/auto';
-import { SubSink } from 'subsink';
-import { BarGraph } from '../../store/models/common.model';
+import { Chart } from 'chart.js';
+import { PieGraph } from '../../store/models/common.model';
 
 @Component({
-  selector: 'app-bar-graph',
   standalone: true,
+  selector: 'app-pie-graph',
+  templateUrl: './pie-graph.component.html',
+  styleUrl: './pie-graph.component.scss',
   imports: [CommonModule],
-  templateUrl: './bar-graph.component.html',
-  styleUrl: './bar-graph.component.scss',
 })
-export class BarGraphComponent {
-  @Input() barGraph: BarGraph;
-  subs = new SubSink();
+export class PieGraphComponent {
+  @Input() pieGraph: PieGraph;
   chart: Chart;
-  constructor() {}
 
   ngOnInit() {
-    this.initialize();
-  }
-
-  initialize() {
     this.initializeChart();
   }
 
@@ -34,32 +27,41 @@ export class BarGraphComponent {
   }
 
   initializeChart() {
-    const ctx = document.getElementById('myChart') as HTMLCanvasElement;
+    const ctx = document.getElementById('pieGraph') as HTMLCanvasElement;
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
+
+    const {
+      datasets: { label, data },
+      labels,
+    } = this.pieGraph;
+
     this.chart = new Chart(ctx, {
-      type: 'bar',
+      type: 'doughnut',
       data: {
-        labels: this.barGraph?.labels,
+        labels,
         datasets: [
           {
-            label: this.barGraph?.datasets?.label,
+            label,
             borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: this.barGraph?.datasets?.data.map(
+            backgroundColor: data.map(
               () =>
                 `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
                   Math.random() * 255
                 )}, ${Math.floor(Math.random() * 255)})`
             ),
-            data: this.barGraph?.datasets?.data,
+            borderWidth: 1,
+            data,
           },
         ],
       },
       options: {
-        indexAxis: 'y',
-        scales: {
-          x: {
-            beginAtZero: true,
+        responsive: true,
+        maintainAspectRatio: false, // ✅ allow resizing inside container
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
           },
         },
       },
@@ -68,6 +70,6 @@ export class BarGraphComponent {
   }
 
   ngOnDestroy() {
-    this.chart.destroy();
+   this.chart.destroy();
   }
 }
