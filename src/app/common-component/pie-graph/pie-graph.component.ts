@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Chart } from 'chart.js';
 import { PieGraph } from '../../store/models/common.model';
+import { SalesReportService } from '../../service/sales-report/sales-report.service';
 
 @Component({
   standalone: true,
@@ -13,6 +14,9 @@ import { PieGraph } from '../../store/models/common.model';
 export class PieGraphComponent {
   @Input() pieGraph: PieGraph;
   chart: Chart;
+
+  canvasId: string = this.salesReportService.randomIdForCnavas();
+  constructor(private salesReportService: SalesReportService) {}
 
   ngOnInit() {
     this.initializeChart();
@@ -27,7 +31,7 @@ export class PieGraphComponent {
   }
 
   initializeChart() {
-    const ctx = document.getElementById('pieGraph') as HTMLCanvasElement;
+    const ctx = document.getElementById(this.canvasId) as HTMLCanvasElement;
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
 

@@ -55,8 +55,8 @@ export const salesReportReducer = createReducer(
       ...state,
       dailyReport: action?.res?.body,
       dailyReportLoader: false,
-      dailyReportTotalRevenue: action?.res?.total,
-      dailyReportTotalQuantity: action?.res?.totalQuantity
+      dailyReportTotalRevenue: action?.res?.total ?? 0,
+      dailyReportTotalQuantity: action?.res?.totalQuantity ?? 0,
     };
   }),
   on(salesReportActions.loadDailyReportFail, (state, action) => {

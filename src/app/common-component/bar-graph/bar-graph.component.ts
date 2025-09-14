@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { SubSink } from 'subsink';
 import { BarGraph } from '../../store/models/common.model';
+import { SalesReportService } from '../../service/sales-report/sales-report.service';
 
 @Component({
   selector: 'app-bar-graph',
@@ -15,7 +16,8 @@ export class BarGraphComponent {
   @Input() barGraph: BarGraph;
   subs = new SubSink();
   chart: Chart;
-  constructor() {}
+  canvasId: string = this.salesReportService.randomIdForCnavas();
+  constructor(private salesReportService: SalesReportService) {}
 
   ngOnInit() {
     this.initialize();
@@ -34,7 +36,7 @@ export class BarGraphComponent {
   }
 
   initializeChart() {
-    const ctx = document.getElementById('myChart') as HTMLCanvasElement;
+    const ctx = document.getElementById(this.canvasId) as HTMLCanvasElement;
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
     this.chart = new Chart(ctx, {
