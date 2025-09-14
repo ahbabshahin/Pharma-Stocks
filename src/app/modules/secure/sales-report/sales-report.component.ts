@@ -11,6 +11,9 @@ import { SalesReportStoreService } from '../../../service/sales-report/sales-rep
 import { SubSink } from 'subsink';
 import { ProductReportComponent } from "./product-report/product-report.component";
 import { AllAreaReportComponent } from './all-area-report/all-area-report.component';
+import { CustomerWiseReportComponent } from './customer-wise-report/customer-wise-report.component';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { SalesReportInterval } from '../../../store/models/sales-report.model';
 
 @Component({
   selector: 'app-sales-report',
@@ -22,9 +25,11 @@ import { AllAreaReportComponent } from './all-area-report/all-area-report.compon
     FormsModule,
     NzDatePickerModule,
     NzAffixModule,
+    NzSelectModule,
     ProductReportTableComponent,
     ProductReportComponent,
     AllAreaReportComponent,
+    CustomerWiseReportComponent,
   ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
@@ -32,6 +37,7 @@ import { AllAreaReportComponent } from './all-area-report/all-area-report.compon
 })
 export class SalesReportComponent {
   subs = new SubSink();
+  Object = Object;
   priceQuantity: boolean = true;
   formattedDate: string = '';
   selectedDate: Date = new Date();
@@ -42,6 +48,8 @@ export class SalesReportComponent {
     date: string;
     status: string;
   };
+  interval: SalesReportInterval = SalesReportInterval.MONTHLY;
+  SalesReportInterval = SalesReportInterval;
   constructor(
     private salesReport: SalesReportService,
     private salesReportStore: SalesReportStoreService
@@ -63,6 +71,7 @@ export class SalesReportComponent {
   dispatchActions() {
     this.loadProductReport();
     this.loadSalesSummaryByAllArea();
+    this.loadCustomerWiseSalesReport();
   }
 
   loadProductReport() {
@@ -72,6 +81,16 @@ export class SalesReportComponent {
   loadSalesSummaryByAllArea() {
     if (this.params?.date)
       this.salesReportStore.loadSalesSummaryByAllArea(this.params);
+  }
+
+  loadCustomerWiseSalesReport() {
+    if (this.params?.date) {
+      let params = {
+        ...this.params,
+        type: this.interval,
+      };
+      this.salesReportStore.loadCustomerWiseSalesReport(params);
+    }
   }
 
   getSalesReportDate() {
@@ -110,6 +129,10 @@ export class SalesReportComponent {
       status,
     };
     this.dispatchActions();
+  }
+
+  onIntervalChange(){
+    this.loadCustomerWiseSalesReport();
   }
 
   ngOnDestroy() {

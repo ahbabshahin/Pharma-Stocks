@@ -55,6 +55,16 @@ export const getSalesSummaryByAllArea = createSelector(
   (state: SalesReportState) => state.salesSummaryByArea
 );
 
+export const getCustomerReportLoader = createSelector(
+  getSalesReportState,
+  (state: SalesReportState) => state.customerReportLoader
+);
+
+export const getCustomerWiseSalesReport = createSelector(
+  getSalesReportState,
+  (state: SalesReportState) => state.customerWiseReport
+);
+
 export const getSalesReportError = createSelector(
   getSalesReportState,
   (state: SalesReportState) => state.error

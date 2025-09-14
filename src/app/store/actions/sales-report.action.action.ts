@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { DailyReportResponse, ProductReportResponse, SalesReportResponse, SalesSummaryByArea } from "../models/sales-report.model";
+import { CustomerWiseSalesReportResponse, DailyReportResponse, ProductReportResponse, SalesReportResponse, SalesSummaryByArea } from "../models/sales-report.model";
 
 export const loadDailyReport = createAction(
   '[Sales Report: Daily Report] load daily report',
@@ -28,14 +28,27 @@ export const loadProductReportFail = createAction(
 );
 
 export const loadSalesSummaryByAllArea = createAction(
-  '[Sales Report: Product Report] Sales Summary By All Area',
+  '[Sales Report: Area wise Report] Sales Summary By All Area',
   props<{ params: { [key: string]: any } }>()
 );
 export const loadSalesSummaryByAllAreaSuccess = createAction(
-  '[Sales Report: Product Report] Sales Summary By All Area success',
+  '[Sales Report: Area wise Report] Sales Summary By All Area success',
   props<{ res: SalesSummaryByArea }>()
 );
 export const loadSalesSummaryByAllAreaFail = createAction(
-  '[Sales Report: Product Report] Sales Summary By All Area fail',
+  '[Sales Report: Area wise Report] Sales Summary By All Area fail',
+  props<{ error: string }>()
+);
+
+export const loadCustomerWiseSalesReport = createAction(
+  '[Sales Report: Customer Wise Report] load Customer Wise Sales Report',
+  props<{ params: { [key: string]: any } }>()
+);
+export const loadCustomerWiseSalesReportSuccess = createAction(
+  '[Sales Report: Customer Wise Report] load Customer Wise Sales Report success',
+  props<{ res: CustomerWiseSalesReportResponse }>()
+);
+export const loadCustomerWiseSalesReportFail = createAction(
+  '[Sales Report: Customer Wise Report] load Customer Wise Sales Report fail',
   props<{ error: string }>()
 );
