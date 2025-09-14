@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Config } from '../../config';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { DailyReportResponse, ProductReportResponse, SalesSummaryByArea, YearlyReportResponse } from '../../store/models/sales-report.model';
+import { CustomerWiseSalesReportResponse, DailyReportResponse, ProductReportResponse, SalesSummaryByArea, YearlyReportResponse } from '../../store/models/sales-report.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +43,8 @@ export class SalesReportApiService {
   }): Observable<ProductReportResponse> {
     return this.http
       .get<ProductReportResponse>(
-        `${this.env.rootURL}/v1/sales-report/product`, {params}
+        `${this.env.rootURL}/v1/sales-report/product`,
+        { params }
       )
       .pipe(map((res: ProductReportResponse) => res));
   }
@@ -53,8 +54,18 @@ export class SalesReportApiService {
   }): Observable<SalesSummaryByArea> {
     return this.http
       .get<SalesSummaryByArea>(
-        `${this.env.rootURL}/v1/sales-report/sales-summary-all-area`, {params}
+        `${this.env.rootURL}/v1/sales-report/sales-summary-all-area`,
+        { params }
       )
       .pipe(map((res: SalesSummaryByArea) => res));
+  }
+
+  getCustomerWiseSalesReport(params: { [key: string]: any }): Observable<CustomerWiseSalesReportResponse> {
+    return this.http
+      .get<CustomerWiseSalesReportResponse>(
+        `${this.env.rootURL}/v1/sales-report/customer-sales`,
+        { params }
+      )
+      .pipe(map((res: CustomerWiseSalesReportResponse) => res));
   }
 }

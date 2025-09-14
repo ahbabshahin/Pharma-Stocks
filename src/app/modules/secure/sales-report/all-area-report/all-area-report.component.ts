@@ -7,7 +7,7 @@ import { SalesReportStoreService } from '../../../../service/sales-report/sales-
 import { SalesSummaryByArea, SalesSummaryGrandTotal, SalesSummaryReport } from '../../../../store/models/sales-report.model';
 import { Subject, takeUntil } from 'rxjs';
 import { NoDataComponent } from '../../../../common-component/no-data/no-data.component';
-type ComponentState = {
+export type ComponentState = {
   salesSummaryAllArea: SalesSummaryByArea;
   allAreaReportPieGraph: PieGraph;
 };

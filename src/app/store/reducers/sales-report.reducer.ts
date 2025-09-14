@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { DailyReport, ProductReport, SalesReportByPrice, SalesSummaryByArea } from '../models/sales-report.model';
+import { CustomerWiseSalesReportResponse, DailyReport, ProductReport, SalesReportByPrice, SalesSummaryByArea } from '../models/sales-report.model';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
 
 export interface SalesReportState {
@@ -13,6 +13,8 @@ export interface SalesReportState {
   productReportTotalRevenue: number;
   productReportTotalQuantity: number;
   salesSummaryByArea: SalesSummaryByArea;
+  customerWiseReport: CustomerWiseSalesReportResponse;
+  customerReportLoader: boolean;
   error: string;
 }
 
@@ -36,6 +38,20 @@ const defaultSales: SalesReportState = {
       totalRevenue: 0
     }
   },
+  customerWiseReport: {
+    body: [],
+    grandTotals: {
+      totalInvoices: 0,
+      totalQuantity: 0,
+      totalRevenue: 0
+    },
+    type: '',
+    period: {
+      start: '',
+      end: ''
+    }
+  },
+  customerReportLoader: false,
   error: '',
 };
 
@@ -46,9 +62,12 @@ export const salesReportReducer = createReducer(
   on(salesReportActions.loadDailyReport, (state, action) => {
     return {
       ...state,
-      date: action.params['date'],
+      date:
+        state?.date !== action.params['date']
+          ? action.params['date']
+          : state?.date,
       dailyReportLoader: true,
-    }
+    };
   }),
   on(salesReportActions.loadDailyReportSuccess, (state, action) => {
     return {
@@ -69,9 +88,12 @@ export const salesReportReducer = createReducer(
   on(salesReportActions.loadProductReport, (state, action) => {
     return {
       ...state,
-      date: action.params['date'],
+      date:
+        state?.date !== action.params['date']
+          ? action.params['date']
+          : state?.date,
       productReportLoader: true,
-    }
+    };
   }),
   on(salesReportActions.loadProductReportSuccess, (state, action) => {
     return {
@@ -93,8 +115,8 @@ export const salesReportReducer = createReducer(
   on(salesReportActions.loadSalesSummaryByAllArea, (state, action) => {
     return {
       ...state,
-      date: action.params['date'],
-      productReportLoader: true,
+      date: state?.date !== action.params['date'] ? action.params['date'] : state?.date,
+      // productReportLoader: true,
     }
   }),
   on(salesReportActions.loadSalesSummaryByAllAreaSuccess, (state, action) => {
@@ -107,6 +129,31 @@ export const salesReportReducer = createReducer(
     return {
       ...state,
       error: action.error
+    }
+  }),
+
+  on(salesReportActions.loadCustomerWiseSalesReport, (state, action) => {
+    return {
+      ...state,
+      date:
+        state?.date !== action.params['date']
+          ? action.params['date']
+          : state?.date,
+      customerReportLoader: true,
+    };
+  }),
+  on(salesReportActions.loadCustomerWiseSalesReportSuccess, (state, action) => {
+    return {
+      ...state,
+      customerWiseReport: action.res,
+      customerReportLoader: false,
+    };
+  }),
+  on(salesReportActions.loadCustomerWiseSalesReportFail, (state, action) => {
+    return {
+      ...state,
+      error: action.error,
+      customerReportLoader: false,
     }
   }),
 

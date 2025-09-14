@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-between">
+  <div *ngIf="grandTotals">
+    <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
+    <p *ngIf="isAmount">৳ {{(grandTotals?.totalRevenue) | number : '1.2-2'}}</p>
+    <p *ngIf="!isAmount">{{(grandTotals?.totalQuantity)}}</p>
+  </div>
+
+</div>
+<app-global-loader *ngIf="loader"></app-global-loader>
+<!-- Pie Graph with Selected Date -->
+<ng-container *ngIf="!loader">
+  @if(grandTotals?.totalRevenue || grandTotals?.totalQuantity){
+  <app-bar-graph [barGraph]="componentState?.customerWiseReportBarGraph"></app-bar-graph>
+  }@else {
+  <app-global-no-data bodyText="No data found"></app-global-no-data>
+  }
+</ng-container>
