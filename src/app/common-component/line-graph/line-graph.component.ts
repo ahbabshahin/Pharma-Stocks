@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { LineGraph } from '../../store/models/common.model';
 import { Chart } from 'chart.js';
+import { SalesReportService } from '../../service/sales-report/sales-report.service';
 
 @Component({
   selector: 'app-line-graph',
@@ -13,7 +14,8 @@ import { Chart } from 'chart.js';
 export class LineGraphComponent {
   @Input() lineGraph: LineGraph;
   chart: Chart | null = null;
-  constructor() {}
+  canvasId: string = this.salesReportService.randomIdForCnavas();
+  constructor(private salesReportService: SalesReportService) {}
 
   ngOnInit() {
     this.initialize();
@@ -39,7 +41,7 @@ export class LineGraphComponent {
   initializeChart() {
     if (!this.lineGraph) return;
 
-    const ctx = document.getElementById('myChart') as HTMLCanvasElement;
+    const ctx = document.getElementById(this.canvasId) as HTMLCanvasElement;
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
     if(this.lineGraph){
@@ -53,8 +55,9 @@ export class LineGraphComponent {
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderWidth: 2,
-            fill: true,
-            data: this.lineGraph?.datasets?.data, // Y-axis (Revenue)
+            fill: false,
+            data: this.lineGraph?.datasets?.data, // Y-axis (Revenue),
+            tension: 0.2
           },
         ],
       },

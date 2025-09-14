@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { SalesReportState } from '../../store/reducers/sales-report.reducer';
 import * as salesReportActions from '../../store/actions/sales-report.action.action';
-import { DailyReport, DailyReportResponse, ProductReport, ProductReportResponse, SalesReportByPrice, SalesReportResponse, SalesSummaryByArea } from '../../store/models/sales-report.model';
+import { DailyReport, DailyReportResponse, ProductReport, ProductReportResponse, SalesReportByPrice, SalesReportResponse, SalesSummaryByArea, CustomerWiseSalesReportResponse } from '../../store/models/sales-report.model';
 import { Observable } from 'rxjs';
 import * as salesReportSelectors from '../../store/selectors/sales-report.selector';
 
@@ -39,6 +39,10 @@ export class SalesReportStoreService {
     this.dispatch(salesReportActions.loadSalesSummaryByAllArea({ params }));
   }
 
+  loadCustomerWiseSalesReport(params: { [key: string]: any }) {
+    this.dispatch(salesReportActions.loadCustomerWiseSalesReport({ params }));
+  }
+
   getSalesReportDate = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportDate);
 
@@ -62,6 +66,12 @@ export class SalesReportStoreService {
 
   getSalesSummaryByAllArea = (): Observable<SalesSummaryByArea> =>
     this.select(salesReportSelectors.getSalesSummaryByAllArea);
+
+  getCustomerReportLoader = (): Observable<boolean> =>
+    this.select(salesReportSelectors.getCustomerReportLoader);
+
+  getCustomerWiseSalesReport = (): Observable<CustomerWiseSalesReportResponse> =>
+    this.select(salesReportSelectors.getCustomerWiseSalesReport);
 
   getSalesReportError = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportError);

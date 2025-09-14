@@ -2,18 +2,34 @@
   <div class="fixed-header">
     <div class="d-flex justify-content-between align-items-center">
       <h3>Sales Report</h3>
-      <div class="date-selection">
-        <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy"
-          nzPlaceHolder="Select Year & Month">
-        </nz-date-picker>
+      <div class="mt-2 d-flex justify-content-between my-2 gap-2">
+        <nz-radio-group [(ngModel)]="status" (ngModelChange)="onStatusChange($event)">
+          <label nz-radio-button nzValue="paid">Paid</label>
+          <label nz-radio-button nzValue="due">Due</label>
+        </nz-radio-group>
+        <nz-radio-group [(ngModel)]="isAmount">
+          <label nz-radio-button [nzValue]="true">Amount</label>
+          <label nz-radio-button [nzValue]="false">Quantity</label>
+        </nz-radio-group>
+      </div>
+      <div class="d-flex jc-between gap-2">
+        <nz-select nzPlaceHolder="Please select an interval" [(ngModel)]="interval"
+          (ngModelChange)="onIntervalChange()">
+          <nz-option *ngFor="let term of Object?.values(SalesReportInterval)" [nzLabel]="term | titlecase"
+            [nzValue]="term"></nz-option>
+        </nz-select>
+        <div class="date-selection">
+          <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month"
+            nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
+          </nz-date-picker>
+        </div>
       </div>
     </div>
   </div>
 </nz-affix>
 
 <div class="report-container">
-
-  <div class="mt-2 d-flex justify-content-between my-2">
+  <!-- <div class="mt-2 d-flex justify-content-between my-2">
     <nz-radio-group [(ngModel)]="status" (ngModelChange)="onStatusChange($event)">
       <label nz-radio-button nzValue="paid">Paid</label>
       <label nz-radio-button nzValue="due">Due</label>
@@ -22,11 +38,12 @@
       <label nz-radio-button [nzValue]="true">Amount</label>
       <label nz-radio-button [nzValue]="false">Quantity</label>
     </nz-radio-group>
-  </div>
+  </div> -->
 
-  <app-all-area-report [status]="status" [isAmount]="isAmount">
-    </app-all-area-report>
-  <app-product-report [status]="status" [isAmount]="isAmount"></app-product-report>
+  <app-all-area-report class="mb-3" [status]="status" [isAmount]="isAmount">
+  </app-all-area-report>
+  <app-customer-wise-report class="mb-3" [status]="status" [isAmount]="isAmount"></app-customer-wise-report>
+  <app-product-report class="my-2" [status]="status" [isAmount]="isAmount"></app-product-report>
 
 </div>
 

@@ -29,7 +29,9 @@ export class SalesReportService {
           return res;
         },
         catchError(() => {
-          this.commonService.showErrorToast('Sales report by price load failed')
+          this.commonService.showErrorToast(
+            'Sales report by price load failed'
+          );
           return of();
         })
       )
@@ -52,7 +54,7 @@ export class SalesReportService {
     );
   }
 
-  getDailySalesReport(params: {[key: string]: any}){
+  getDailySalesReport(params: { [key: string]: any }) {
     return this.salesReportApi.getDailySalesReport(params).pipe(
       map(
         (res: DailyReportResponse) => {
@@ -68,7 +70,7 @@ export class SalesReportService {
     );
   }
 
-  getYearlySalesReport(year: number){
+  getYearlySalesReport(year: number) {
     return this.salesReportApi.getYearlySalesReport(year).pipe(
       map(
         (res: YearlyReportResponse) => {
@@ -84,4 +86,14 @@ export class SalesReportService {
     );
   }
 
+  randomIdForCnavas() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const digits = '0123456789';
+    const pick = (set: string | any[], n: number) =>
+      Array.from(
+        { length: n },
+        () => set[Math.floor(Math.random() * set.length)]
+      ).join('');
+    return `${pick(letters, 4)}-${pick(digits, 4)}-${pick(letters, 4)}`;
+  }
 }

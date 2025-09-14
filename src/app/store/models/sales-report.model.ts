@@ -71,4 +71,30 @@ export interface SalesSummaryGrandTotal {
     totalInvoices: number;
     totalQuantity: number;
     totalRevenue: number;
-  }
+}
+
+export interface CustomerWiseSalesReportResponse {
+  body: CustomerWiseSalesReport[];
+  grandTotals: SalesSummaryGrandTotal;
+  type: string;
+  period: SalesSummaryPeriod;
+}
+
+export interface SalesSummaryPeriod{
+    start: string;
+    end: string;
+  };
+export interface CustomerWiseSalesReport {
+  totalInvoices: number;
+  totalQuantity: number;
+  totalRevenue: number;
+  customerId: string;
+  customerName: string;
+  areaCode: string;
+}
+
+export enum SalesReportInterval {
+  MONTHLY = 'monthly',
+  QUARTERLY = 'quarterly',
+  // MONTHLY = 'monthly',
+}
