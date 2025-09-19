@@ -83,7 +83,7 @@ export class CustomerWiseReportComponent {
         labels: report.map(
           (item: CustomerWiseSalesReport) => item?.customerName
         ),
-        indexAxis: 'y',
+        indexAxis: 'x',
         datasets: {
           label: `Customer wise Sales`,
           data: report.map((item) =>

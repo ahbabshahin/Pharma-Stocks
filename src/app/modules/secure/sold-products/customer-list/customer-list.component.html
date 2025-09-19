@@ -1,0 +1,34 @@
+@if(componentState?.loader | async){
+<app-global-loader></app-global-loader>
+}
+@else{
+@if(componentState?.total | async){
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Area code</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">{{params?.status === paymentStatus.PAID ? 'Revenue': 'Unpaid amount'}}</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(customer of componentState?.customerSummaryList; track customer.customerId; let i = $index;){
+    <tr>
+      <th scope="row">{{i + 1}}</th>
+      <td>{{customer?.customerName | titlecase}}</td>
+      <td>{{customer?.areaCode}}</td>
+      <td>{{customer?.totalQuantity}}</td>
+      <td> ৳ {{customer?.totalRevenue | number : '1.2-2'}}</td>
+      <td></td>
+    </tr>
+    }
+  </tbody>
+</table>
+}@else {
+<app-global-no-data></app-global-no-data>
+}
+
+}
