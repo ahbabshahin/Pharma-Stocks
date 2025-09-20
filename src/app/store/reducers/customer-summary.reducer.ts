@@ -3,11 +3,15 @@ import { createReducer, on } from '@ngrx/store';
 import * as CustomerActions from '../actions/customer-summary.actions';
 import { CustomerSummary } from '../../store/models/sold-products.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { PaymentStatus, SalesReportPeriod } from '../models/common.model';
 
 export interface CustomerSummaryState extends EntityState<CustomerSummary>{
   total: number;
   loader: boolean;
   loaded: boolean;
+  date: string;
+  status: PaymentStatus;
+  period: SalesReportPeriod;
   error: any;
 }
 
@@ -17,6 +21,9 @@ export const defaultCustomerSummary: CustomerSummaryState = {
   total: 0,
   loader: false,
   loaded: false,
+  date: '',
+  status: PaymentStatus.PAID,
+  period: SalesReportPeriod.MONTHLY,
   error: null,
 };
 

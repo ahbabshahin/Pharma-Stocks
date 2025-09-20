@@ -29,6 +29,7 @@ export interface PieGraph {
 }
 
 export enum PaymentStatus {
+  ALL = 'all',
   PAID = 'paid',
   DUE = 'due',
 }
