@@ -15,10 +15,10 @@ export class CustomerSummaryEffects {
   loadCustomerSummaryList$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CustomerActions.loadCustomerSummaryList),
-      mergeMap(({ params }) =>
+      mergeMap(({ params, isMore }) =>
         this.salesReportApi.getCustomerSummaryList(params).pipe(
           map((response) =>
-            CustomerActions.loadCustomerSummaryListSuccess({ response })
+            CustomerActions.loadCustomerSummaryListSuccess({ response, isMore })
           ),
           catchError((error) =>
             of(CustomerActions.loadCustomerSummaryListFailure({ error }))

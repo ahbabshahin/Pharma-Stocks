@@ -1,34 +1,52 @@
-@if(componentState?.loader | async){
+@if(componentState?.loader$ | async){
 <app-global-loader></app-global-loader>
 }
 @else{
-@if(componentState?.total | async){
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Area code</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">{{params?.status === paymentStatus.PAID ? 'Revenue': 'Unpaid amount'}}</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for(customer of componentState?.customerSummaryList; track customer.customerId; let i = $index;){
-    <tr>
-      <th scope="row">{{i + 1}}</th>
-      <td>{{customer?.customerName | titlecase}}</td>
-      <td>{{customer?.areaCode}}</td>
-      <td>{{customer?.totalQuantity}}</td>
-      <td> ৳ {{customer?.totalRevenue | number : '1.2-2'}}</td>
-      <td>
-        <span nz-icon nzType="eye" nzTheme="outline"></span>
-      </td>
-    </tr>
+@if(componentState?.total){
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Area code</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">{{params?.status === paymentStatus.PAID ? 'Revenue': 'Unpaid amount'}}</th>
+        <!-- <th scope="col">Actions</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      @for(customer of componentState?.customerSummaryList; track customer.customerId; let i = $index;){
+      <tr>
+        <th scope="row">{{i + 1}}</th>
+        <td>{{customer?.customerName | titlecase}}</td>
+        <td>{{customer?.areaCode}}</td>
+        <td>{{customer?.totalQuantity}}</td>
+        <td> ৳ {{customer?.totalRevenue | number : '1.2-2'}}</td>
+        <!-- <td>
+          <span nz-icon nzType="eye" nzTheme="outline"></span>
+        </td> -->
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+  <ng-container *ngIf="componentState as state">
+    <p *ngIf="state?.customerSummaryList?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
+      Showing product(s) {{ state?.customerSummaryList.length }} out of {{ state?.total }}
+    </p>
+    @if(state?.subloader$ | async){
+    <app-global-loader></app-global-loader>
     }
-  </tbody>
-</table>
+    @if(state?.total > params.limit && state?.customerSummaryList.length < state?.total){
+    <div
+      class="d-flex justify-content-center align-items-center my-2 mx-2">
+      <button [disabled]="(state?.subloader$ | async)" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
+        Load more
+      </button>
+    </div>}
+  </ng-container>
 }@else {
 <app-global-no-data></app-global-no-data>
 }

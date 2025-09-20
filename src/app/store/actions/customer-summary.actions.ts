@@ -3,12 +3,12 @@ import { CustomerSummaryResponse } from '../../store/models/sold-products.model'
 
 export const loadCustomerSummaryList = createAction(
   '[Customer] Load Customer Summary List',
-  props<{ params: { [key: string]: any } }>()
+  props<{ params: { [key: string]: any }, isMore: boolean }>()
 );
 
 export const loadCustomerSummaryListSuccess = createAction(
   '[Customer] Load Customer Summary List Success',
-  props<{ response: CustomerSummaryResponse }>()
+  props<{ response: CustomerSummaryResponse, isMore: boolean }>()
 );
 
 export const loadCustomerSummaryListFailure = createAction(

@@ -8,6 +8,7 @@ import { PaymentStatus, SalesReportPeriod } from '../models/common.model';
 export interface CustomerSummaryState extends EntityState<CustomerSummary>{
   total: number;
   loader: boolean;
+  subloader: boolean;
   loaded: boolean;
   date: string;
   status: PaymentStatus;
@@ -19,7 +20,8 @@ export const defaultCustomerSummary: CustomerSummaryState = {
   ids: [],
   entities: {},
   total: 0,
-  loader: false,
+  loader: true,
+  subloader: false,
   loaded: false,
   date: '',
   status: PaymentStatus.PAID,
@@ -33,19 +35,27 @@ export const customerSummaryAdapter: EntityAdapter<CustomerSummary> = createEnti
 
 const initialState:CustomerSummaryState = customerSummaryAdapter.getInitialState(defaultCustomerSummary);
 
+const { selectAll } = customerSummaryAdapter.getSelectors();
+
 export const customerSummaryReducer = createReducer(
   initialState,
 
-  on(CustomerActions.loadCustomerSummaryList, (state) => ({
+  on(CustomerActions.loadCustomerSummaryList, (state, action) => ({
     ...state,
-    loader: true,
+    loader: action?.isMore ? false: true,
+    subloader: action.isMore,
     error: null,
   })),
 
-  on(CustomerActions.loadCustomerSummaryListSuccess, (state, { response }) => {
-    return customerSummaryAdapter.setAll(response?.customers, {
+  on(CustomerActions.loadCustomerSummaryListSuccess, (state, { response, isMore }) => {
+    let res = response?.customers;
+    if(isMore){
+      res = [...selectAll(state), ...response?.customers];
+    }
+    return customerSummaryAdapter.setAll(res, {
       ...state,
       loader: false,
+      subloader: false,
       loaded: true,
       total: response?.total,
       error: '',

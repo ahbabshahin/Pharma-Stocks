@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CustomerSummary } from '../../../../store/models/sold-products.model';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { CustomerSummaryStoreService } from '../../../../service/customer-summary/customer-summary-store.service';
-import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
 import {
   PaymentStatus,
   SalesReportPeriod,
@@ -12,11 +11,14 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { LoaderComponent } from '../../../../common-component/loader/loader.component';
 import { NoDataComponent } from '../../../../common-component/no-data/no-data.component';
+import { FilterService } from '../../../../service/filter/filter.service';
 
 type ComponentState = {
   customerSummaryList: CustomerSummary[];
-  total: Observable<number>;
-  loader: Observable<boolean>;
+  total$: Observable<number>;
+  total: number;
+  loader$: Observable<boolean>;
+  subloader$: Observable<boolean>;
 };
 @Component({
   standalone: true,
@@ -42,10 +44,10 @@ export class CustomerListComponent {
     date: string;
   };
   paymentStatus = PaymentStatus;
-
+  isMore: boolean = false;
   constructor(
     private customerSummaryStore: CustomerSummaryStoreService,
-    private salesReportService: SalesReportService
+    private filterService: FilterService
   ) {}
 
   ngOnInit() {
@@ -54,30 +56,61 @@ export class CustomerListComponent {
 
   initialize() {
     this.params = {
+      ...this.params,
       page: 1,
       limit: 10,
-      status: PaymentStatus.PAID,
-      period: SalesReportPeriod.MONTHLY,
-      date: this.salesReportService.formatSelectedDate(new Date()),
+      // status: PaymentStatus.PAID,
+      // period: SalesReportPeriod.MONTHLY,
+      // date: this.filterService.formatSelectedDate(new Date()),
     };
     this.componentState = {
       ...this.componentState,
       customerSummaryList: [],
-      total: of(0),
-      loader: of(true),
+      total: 0,
+      loader$: of(true),
+      subloader$: of(false),
     };
+    this.getFilterParams();
     this.getLoader();
-    this.isCustomerSummaryLoaded();
+    // this.isCustomerSummaryLoaded();
 
     this.getCustomerSummaryList();
   }
 
+  // start get filter params
+  getFilterParams() {
+    combineLatest([
+      this.filterService.getFilterDate(),
+      this.filterService.getFilterStatus(),
+      this.filterService.getFilterPeriod(),
+    ])
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: ([date, status, period]) => {
+          this.params = {
+            ...this.params,
+            page: 1,
+            date,
+            status,
+            period,
+          };
+          this.loadCustomerSummaryList();
+        },
+        error: (err) => {
+          console.log('Filter error: ', err);
+        },
+      });
+  }
+  // end get filter params
+
   // start get loader
   getLoader() {
-    const { getCustomerSummaryLoader } = this.customerSummaryStore;
+    const { getCustomerSummaryLoader, getCustomerSummarySubLoader } =
+      this.customerSummaryStore;
     this.componentState = {
       ...this.componentState,
-      loader: getCustomerSummaryLoader(),
+      loader$: getCustomerSummaryLoader(),
+      subloader$: getCustomerSummarySubLoader(),
     };
   }
   // end get loader
@@ -101,8 +134,8 @@ export class CustomerListComponent {
   }
 
   loadCustomerSummaryList() {
-    console.log('params ', this.params);
-    this.customerSummaryStore.loadCustomerSummaryList(this.params);
+    if (this.params?.date && this.params?.status && this.params?.period)
+      this.customerSummaryStore.loadCustomerSummaryList(this.params, this.isMore);
   }
 
   getCustomerSummaryList() {
@@ -115,6 +148,7 @@ export class CustomerListComponent {
             ...this.componentState,
             customerSummaryList: res,
           };
+          if(this.isMore) this.isMore = false;
         },
         error: (err) => {
           console.log('err: ', err);
@@ -126,12 +160,36 @@ export class CustomerListComponent {
   getTotalCustomerSummary() {
     const { getTotalCustomerSummary } = this.customerSummaryStore;
 
-    this.componentState = {
-      ...this.componentState,
-      total: getTotalCustomerSummary(),
-    };
+    getTotalCustomerSummary().pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (total: number) =>{
+        this.componentState = {
+          ...this.componentState,
+          total
+        }
+      },error: (err) => {
+        console.log('err: ', err);
+      }
+    });
   }
   // end get customer summary list
+
+  // start load more customer summary
+
+  loadMore() {
+    if (
+      this.componentState?.customerSummaryList?.length <
+      this.componentState?.total
+    ) {
+      this.params = {
+        ...this.params,
+        page: this.params.page + 1,
+      };
+      // this.stockStore.setStockSubLoader(true);
+      this.isMore = true;
+      this.loadCustomerSummaryList();
+    }
+  }
+  // end load more customer summary
 
   ngOnDestroy() {
     this.unsubscribe$.next();

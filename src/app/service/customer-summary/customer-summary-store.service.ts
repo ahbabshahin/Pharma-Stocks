@@ -13,12 +13,15 @@ export class CustomerSummaryStoreService {
   dispatch = (action: Action) => this.store.dispatch(action);
   select = (selector: any) => this.store.select(selector);
 
-  loadCustomerSummaryList(params: { [key: string]: any }) {
-    this.dispatch(customerSummaryActions.loadCustomerSummaryList({ params }));
+  loadCustomerSummaryList(params: { [key: string]: any }, isMore: boolean) {
+    this.dispatch(customerSummaryActions.loadCustomerSummaryList({ params, isMore }));
   }
 
   getCustomerSummaryLoader = (): Observable<boolean> =>
     this.select(customerSummarySelectors.getCustomerSummaryLoader);
+
+  getCustomerSummarySubLoader = (): Observable<boolean> =>
+    this.select(customerSummarySelectors.getCustomerSummarySubLoader);
 
   getCustomerSummaryLoaded = (): Observable<boolean> =>
     this.select(customerSummarySelectors.getCustomerSummaryLoaded);

@@ -29,7 +29,7 @@ export interface PieGraph {
 }
 
 export enum PaymentStatus {
-  ALL = 'all',
+  // ALL = 'all',
   PAID = 'paid',
   DUE = 'due',
 }
@@ -37,5 +37,5 @@ export enum PaymentStatus {
 export enum SalesReportPeriod {
   MONTHLY = 'monthly',
   QUARTERLY = 'quarterly',
-  YEARLY = 'yearly',
+  // YEARLY = 'yearly',
 }

@@ -19,6 +19,11 @@ export const getCustomerSummaryLoader = createSelector(
   (state) => state.loader
 );
 
+export const getCustomerSummarySubLoader = createSelector(
+  selectCustomerState,
+  (state) => state.subloader
+);
+
 export const getCustomerSummaryLoaded = createSelector(
   selectCustomerState,
   (state) => state.loaded
