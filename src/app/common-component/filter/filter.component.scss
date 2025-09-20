@@ -1,53 +1,43 @@
 .fixed-header {
-  background: white;
+  background: #fff;
   padding: 10px 15px;
   border-bottom: 1px solid #ddd;
   z-index: 1000;
   width: 100%;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .header-container {
   display: flex;
   flex-wrap: wrap;
   /* allow wrapping */
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 15px;
 }
 
 .header-title {
-  flex: 1 1 100%;
-  /* full width on small screens */
   margin: 0;
+  flex: 1 1 100%;
+  /* take full width on smaller screens */
 }
 
 .header-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   flex: 1 1 auto;
   justify-content: flex-end;
 }
 
-.radio-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
+.radio-group,
 .select-group {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.report-container {
-  margin-top: 80px;
-  /* space for fixed header */
-}
-
-/* 📱 Responsive tweaks */
+/* Responsive Tweaks */
 @media (max-width: 992px) {
   .header-controls {
     flex-direction: column;
@@ -55,8 +45,8 @@
     width: 100%;
   }
 
-  .select-group,
-  .radio-group {
+  .radio-group,
+  .select-group {
     width: 100%;
     justify-content: space-between;
   }
@@ -68,11 +58,8 @@
 }
 
 @media (max-width: 576px) {
-  .radio-group {
-    flex-direction: column;
-    width: 100%;
-  }
 
+  .radio-group,
   .select-group {
     flex-direction: column;
     width: 100%;

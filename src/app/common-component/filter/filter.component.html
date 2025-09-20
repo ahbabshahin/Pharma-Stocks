@@ -1,0 +1,38 @@
+<nz-affix [nzOffsetTop]="navHeight">
+  <div class="fixed-header">
+    <div class="header-container">
+      @if(title !== ''){
+      <h3 class="header-title">{{title}}</h3>
+      }
+      <div class="header-controls">
+        <div class="radio-group">
+          <!-- <nz-radio-group [(ngModel)]="status" (ngModelChange)="onStatusChange()">
+            <label nz-radio-button nzValue="paid">Paid</label>
+            <label nz-radio-button nzValue="due">Due</label>
+          </nz-radio-group> -->
+          <nz-select nzPlaceHolder="Select payment status" [(ngModel)]="status" (ngModelChange)="onStatusChange()">
+            <nz-option *ngFor="let term of Object?.values(PaymentStatus)" [nzLabel]="term | titlecase"
+              [nzValue]="term"></nz-option>
+          </nz-select>
+          @if(isAmountNeeded){
+           <nz-radio-group [(ngModel)]="isAmount">
+             <label nz-radio-button [nzValue]="true">Amount</label>
+             <label nz-radio-button [nzValue]="false">Quantity</label>
+           </nz-radio-group>
+          }
+        </div>
+
+        <div class="select-group">
+          <nz-select nzPlaceHolder="Select interval" [(ngModel)]="period" (ngModelChange)="onPeriodChange()">
+            <nz-option *ngFor="let term of Object?.values(SalesReportPeriod)" [nzLabel]="term | titlecase"
+              [nzValue]="term"></nz-option>
+          </nz-select>
+
+          <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month"
+            nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
+          </nz-date-picker>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-affix>

@@ -54,7 +54,17 @@ const routes: Routes = [
       {
         path: 'sales-report',
         loadChildren: () =>
-          import('./sales-report/sales-report.module').then((m) => m.SalesReportModule),
+          import('./sales-report/sales-report.module').then(
+            (m) => m.SalesReportModule
+          ),
+        canActivate: [AuthGuard, AdminGuard],
+      },
+      {
+        path: 'sold-products',
+        loadChildren: () =>
+          import('./sold-products/sold-products.module').then(
+            (m) => m.SoldProductsModule
+          ),
         canActivate: [AuthGuard, AdminGuard],
       },
 

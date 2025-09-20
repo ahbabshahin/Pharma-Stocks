@@ -103,7 +103,7 @@ export class ProductReportComponent {
         labels: this.componentState?.productReport.map(
           (item: ProductReport) => item?.product
         ),
-        indexAxis: 'y',
+        indexAxis: 'x',
         datasets: {
           label: `Product Report by ${this.isAmount ? 'Price' : 'Quantity'}`,
           data: this.componentState?.productReport.map((item) =>
