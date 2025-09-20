@@ -27,3 +27,15 @@ export interface PieGraph {
   labels: string[];
   datasets: DataSets;
 }
+
+export enum PaymentStatus {
+  // ALL = 'all',
+  PAID = 'paid',
+  DUE = 'due',
+}
+
+export enum SalesReportPeriod {
+  MONTHLY = 'monthly',
+  QUARTERLY = 'quarterly',
+  // YEARLY = 'yearly',
+}

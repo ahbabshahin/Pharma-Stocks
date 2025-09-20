@@ -96,5 +96,5 @@ export interface CustomerWiseSalesReport {
 export enum SalesReportInterval {
   MONTHLY = 'monthly',
   QUARTERLY = 'quarterly',
-  // MONTHLY = 'monthly',
+  YEARLY = 'yearly',
 }
