@@ -13,7 +13,8 @@ import { BarGraph } from '../../../../store/models/common.model';
 import { NoDataComponent } from '../../../../common-component/no-data/no-data.component';
 
 type ComponentState = {
-  customerWiseSalesReport: CustomerWiseSalesReportResponse;
+  // customerWiseSalesReport: CustomerWiseSalesReportResponse;
+  customerWiseSalesReport: CustomerWiseSalesReport[];
   customerWiseReportBarGraph: BarGraph;
 };
 
@@ -43,6 +44,7 @@ export class CustomerWiseReportComponent {
       ...this.componentState,
     };
     this.getCustomerWiseSalesReport();
+    this.getGrandTotals();
   }
 
   ngOnChanges() {
@@ -58,13 +60,13 @@ export class CustomerWiseReportComponent {
     getCustomerWiseSalesReport()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (res: CustomerWiseSalesReportResponse) => {
+        next: (res: CustomerWiseSalesReport[]) => {
           this.componentState = {
             ...this.componentState,
             // salesSummaryAllArea: res,
             customerWiseSalesReport: res,
           };
-          this.grandTotals = res?.grandTotals;
+          // this.grandTotals = res?.grandTotals;
           this.processCustomerWiseSalesReport();
         },
         error: (err) => {
@@ -73,9 +75,25 @@ export class CustomerWiseReportComponent {
       });
   }
 
+  getGrandTotals(){
+    const { getSalesReportGrandTotals } = this.salesReportStore;
+
+    getSalesReportGrandTotals()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (totals: SalesSummaryGrandTotal) => {
+          this.grandTotals = totals;
+        },
+        error: (err) => {
+          console.log('err: ', err);
+        },
+      });
+
+  }
+
   processCustomerWiseSalesReport() {
     const {
-      customerWiseSalesReport: { body: report },
+      customerWiseSalesReport: report ,
     } = this.componentState;
     this.componentState = {
       ...this.componentState,

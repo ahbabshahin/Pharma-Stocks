@@ -1,8 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { SalesReportState } from '../../store/reducers/sales-report.reducer';
-import * as salesReportActions from '../../store/actions/sales-report.action.action';
-import { DailyReport, DailyReportResponse, ProductReport, ProductReportResponse, SalesReportByPrice, SalesReportResponse, SalesSummaryByArea, CustomerWiseSalesReportResponse } from '../../store/models/sales-report.model';
+import * as salesReportActions from '../../store/actions/sales-report.action';
+import {
+  DailyReport,
+  DailyReportResponse,
+  ProductReport,
+  ProductReportResponse,
+  SalesSummaryByArea,
+  CustomerWiseSalesReportResponse,
+  CustomerWiseSalesReport,
+  SalesSummaryGrandTotal,
+  SalesSummaryReport,
+} from '../../store/models/sales-report.model';
 import { Observable } from 'rxjs';
 import * as salesReportSelectors from '../../store/selectors/sales-report.selector';
 
@@ -43,6 +53,10 @@ export class SalesReportStoreService {
     this.dispatch(salesReportActions.loadCustomerWiseSalesReport({ params }));
   }
 
+  loadSalesReport(params: { [key: string]: any }) {
+    this.dispatch(salesReportActions.loadSalesReport({ params }));
+  }
+
   getSalesReportDate = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportDate);
 
@@ -64,14 +78,17 @@ export class SalesReportStoreService {
   getProductReport = (): Observable<ProductReport[]> =>
     this.select(salesReportSelectors.getProductReport);
 
-  getSalesSummaryByAllArea = (): Observable<SalesSummaryByArea> =>
+  getSalesSummaryByAllArea = (): Observable<SalesSummaryReport[]> =>
     this.select(salesReportSelectors.getSalesSummaryByAllArea);
 
   getCustomerReportLoader = (): Observable<boolean> =>
     this.select(salesReportSelectors.getCustomerReportLoader);
 
-  getCustomerWiseSalesReport = (): Observable<CustomerWiseSalesReportResponse> =>
+  getCustomerWiseSalesReport = (): Observable<CustomerWiseSalesReport[]> =>
     this.select(salesReportSelectors.getCustomerWiseSalesReport);
+
+  getSalesReportGrandTotals = (): Observable<SalesSummaryGrandTotal> =>
+    this.select(salesReportSelectors.getSalesReportGrandTotals);
 
   getSalesReportError = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportError);

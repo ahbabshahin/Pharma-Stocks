@@ -65,6 +65,11 @@ export const getCustomerWiseSalesReport = createSelector(
   (state: SalesReportState) => state.customerWiseReport
 );
 
+export const getSalesReportGrandTotals = createSelector(
+  getSalesReportState,
+  (state: SalesReportState) => state.grandTotals
+);
+
 export const getSalesReportError = createSelector(
   getSalesReportState,
   (state: SalesReportState) => state.error

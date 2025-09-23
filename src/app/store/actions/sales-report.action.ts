@@ -1,5 +1,11 @@
-import { createAction, props } from "@ngrx/store";
-import { CustomerWiseSalesReportResponse, DailyReportResponse, ProductReportResponse, SalesReportResponse, SalesSummaryByArea } from "../models/sales-report.model";
+import { createAction, props } from '@ngrx/store';
+import {
+  CustomerWiseSalesReportResponse,
+  DailyReportResponse,
+  ProductReportResponse,
+  SalesSummaryByArea,
+  SalesSummaryResponse,
+} from '../models/sales-report.model';
 
 export const loadDailyReport = createAction(
   '[Sales Report: Daily Report] load daily report',
@@ -50,5 +56,18 @@ export const loadCustomerWiseSalesReportSuccess = createAction(
 );
 export const loadCustomerWiseSalesReportFail = createAction(
   '[Sales Report: Customer Wise Report] load Customer Wise Sales Report fail',
+  props<{ error: string }>()
+);
+
+export const loadSalesReport = createAction(
+  '[Sales Report: Merged] load sales report',
+  props<{ params: { [key: string]: any } }>()
+);
+export const loadSalesReportSuccess = createAction(
+  '[Sales Report: Merged] load sales report success',
+  props<{ res: SalesSummaryResponse }>()
+);
+export const loadSalesReportFail = createAction(
+  '[Sales Report: Merged] load sales report fail',
   props<{ error: string }>()
 );
