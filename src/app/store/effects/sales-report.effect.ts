@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SalesReportApiService } from '../../service/sales-report/sales-report-api.service';
 import { SalesReportStoreService } from '../../service/sales-report/sales-report-store.service';
-import * as salesReportActions from '../../store/actions/sales-report.action.action';
-import { catchError, exhaustMap, map, of, switchMap } from 'rxjs';
-import { CustomerWiseSalesReportResponse, DailyReportResponse, ProductReportResponse, SalesReportResponse, SalesSummaryByArea } from '../models/sales-report.model';
+import * as salesReportActions from '../actions/sales-report.action';
+import { catchError, map, of, switchMap } from 'rxjs';
+import {
+  CustomerWiseSalesReportResponse,
+  DailyReportResponse,
+  ProductReportResponse,
+  SalesSummaryByArea,
+  SalesSummaryResponse,
+} from '../models/sales-report.model';
 import { CommonService } from '../../service/common/common.service';
 
 @Injectable()
@@ -91,6 +97,31 @@ export class SalesReportEffects {
               this.commonService.showErrorToast('Customer wise sales report load failed');
               return of(
                 salesReportActions.loadCustomerWiseSalesReportFail({
+                  error: err,
+                })
+              );
+            })
+          );
+      })
+    )
+  );
+
+  loadSalesReport$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(salesReportActions.loadSalesReport),
+      switchMap((action) => {
+        return this.salesReportApi
+          .getSalesReport(action.params)
+          .pipe(
+            map((res: SalesSummaryResponse) => {
+              return salesReportActions.loadSalesReportSuccess({
+                res,
+              });
+            }),
+            catchError((err) => {
+              this.commonService.showErrorToast('Sales report load failed');
+              return of(
+                salesReportActions.loadSalesReportFail({
                   error: err,
                 })
               );

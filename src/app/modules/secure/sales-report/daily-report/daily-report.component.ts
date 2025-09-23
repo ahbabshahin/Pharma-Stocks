@@ -189,7 +189,7 @@ export class DailyReportComponent {
 
   getSalesReportDate() {
     this.subs.sink = this.salesReportStore
-      .getSalesReportDate()
+      .getSalesReportDate().pipe(takeUntil(this.unsubscribe$))
       .subscribe((date: string) => {
         if (date !== '') {
           if (date !== this.formattedDate) {
