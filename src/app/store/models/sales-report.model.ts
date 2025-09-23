@@ -98,3 +98,17 @@ export enum SalesReportInterval {
   QUARTERLY = 'quarterly',
   YEARLY = 'yearly',
 }
+
+export interface SalesSummaryResponse {
+  period: SalesSummaryPeriod;
+  grandTotals: SalesSummaryGrandTotal;
+  product: {
+    report: ProductReport[]
+  };
+  area: {
+    report: SalesSummaryReport[]
+  };
+  customer: {
+    report: CustomerWiseSalesReport[]
+  }
+}

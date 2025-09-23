@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import { CustomerWiseSalesReportResponse, DailyReport, ProductReport, SalesReportByPrice, SalesSummaryByArea } from '../models/sales-report.model';
-import * as salesReportActions from '../../store/actions/sales-report.action.action';
+import { CustomerWiseSalesReport, CustomerWiseSalesReportResponse, DailyReport, ProductReport, SalesReportByPrice, SalesSummaryByArea, SalesSummaryGrandTotal, SalesSummaryReport } from '../models/sales-report.model';
+import * as salesReportActions from '../actions/sales-report.action';
 
 export interface SalesReportState {
   date: string;
@@ -12,9 +12,11 @@ export interface SalesReportState {
   productReport: ProductReport[];
   productReportTotalRevenue: number;
   productReportTotalQuantity: number;
-  salesSummaryByArea: SalesSummaryByArea;
-  customerWiseReport: CustomerWiseSalesReportResponse;
+  salesSummaryByArea: SalesSummaryReport[];
+  customerWiseReport: CustomerWiseSalesReport[];
+  grandTotals: SalesSummaryGrandTotal;
   customerReportLoader: boolean;
+  salesReportLoader: boolean;
   error: string;
 }
 
@@ -28,30 +30,15 @@ const defaultSales: SalesReportState = {
   productReport: [],
   productReportTotalRevenue: 0,
   productReportTotalQuantity: 0,
-  salesSummaryByArea: {
-    month: '',
-    year: 0,
-    report: [],
-    grandTotals: {
-      totalInvoices: 0,
-      totalQuantity: 0,
-      totalRevenue: 0
-    }
-  },
-  customerWiseReport: {
-    body: [],
-    grandTotals: {
-      totalInvoices: 0,
-      totalQuantity: 0,
-      totalRevenue: 0
-    },
-    type: '',
-    period: {
-      start: '',
-      end: ''
-    }
+  salesSummaryByArea: [],
+  customerWiseReport: [],
+  grandTotals: {
+    totalInvoices: 0,
+    totalQuantity: 0,
+    totalRevenue: 0
   },
   customerReportLoader: false,
+  salesReportLoader: false,
   error: '',
 };
 
@@ -112,48 +99,76 @@ export const salesReportReducer = createReducer(
     }
   }),
 
-  on(salesReportActions.loadSalesSummaryByAllArea, (state, action) => {
-    return {
-      ...state,
-      date: state?.date !== action.params['date'] ? action.params['date'] : state?.date,
-      // productReportLoader: true,
-    }
-  }),
-  on(salesReportActions.loadSalesSummaryByAllAreaSuccess, (state, action) => {
-    return {
-      ...state,
-      salesSummaryByArea: action.res
-    };
-  }),
-  on(salesReportActions.loadSalesSummaryByAllAreaFail, (state, action) => {
-    return {
-      ...state,
-      error: action.error
-    }
-  }),
+  // on(salesReportActions.loadSalesSummaryByAllArea, (state, action) => {
+  //   return {
+  //     ...state,
+  //     date: state?.date !== action.params['date'] ? action.params['date'] : state?.date,
+  //     productReportLoader: true,
+  //   }
+  // }),
+  // on(salesReportActions.loadSalesSummaryByAllAreaSuccess, (state, action) => {
+  //   return {
+  //     ...state,
+  //     salesSummaryByArea: action.res
+  //   };
+  // }),
+  // on(salesReportActions.loadSalesSummaryByAllAreaFail, (state, action) => {
+  //   return {
+  //     ...state,
+  //     error: action.error
+  //   }
+  // }),
 
-  on(salesReportActions.loadCustomerWiseSalesReport, (state, action) => {
+  // on(salesReportActions.loadCustomerWiseSalesReport, (state, action) => {
+  //   return {
+  //     ...state,
+  //     date:
+  //       state?.date !== action.params['date']
+  //         ? action.params['date']
+  //         : state?.date,
+  //     customerReportLoader: true,
+  //   };
+  // }),
+  // on(salesReportActions.loadCustomerWiseSalesReportSuccess, (state, action) => {
+  //   return {
+  //     ...state,
+  //     customerWiseReport: action.res,
+  //     customerReportLoader: false,
+  //   };
+  // }),
+  // on(salesReportActions.loadCustomerWiseSalesReportFail, (state, action) => {
+  //   return {
+  //     ...state,
+  //     error: action.error,
+  //     customerReportLoader: false,
+  //   }
+  // }),
+
+  on(salesReportActions.loadSalesReport, (state, action) => {
     return {
       ...state,
       date:
         state?.date !== action.params['date']
           ? action.params['date']
           : state?.date,
-      customerReportLoader: true,
+      salesReportLoader: true,
     };
   }),
-  on(salesReportActions.loadCustomerWiseSalesReportSuccess, (state, action) => {
+  on(salesReportActions.loadSalesReportSuccess, (state, action) => {
     return {
       ...state,
-      customerWiseReport: action.res,
-      customerReportLoader: false,
+      productReport: action?.res?.product?.report,
+      salesSummaryByArea: action?.res?.area?.report,
+      customerWiseReport: action.res?.customer?.report,
+      grandTotals: action?.res?.grandTotals,
+      salesReportLoader: false,
     };
   }),
-  on(salesReportActions.loadCustomerWiseSalesReportFail, (state, action) => {
+  on(salesReportActions.loadSalesReportFail, (state, action) => {
     return {
       ...state,
       error: action.error,
-      customerReportLoader: false,
+      salesReportLoader: false,
     }
   }),
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Config } from '../../config';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { CustomerWiseSalesReportResponse, DailyReportResponse, ProductReportResponse, SalesSummaryByArea, YearlyReportResponse } from '../../store/models/sales-report.model';
+import { CustomerWiseSalesReportResponse, DailyReportResponse, ProductReportResponse, SalesSummaryByArea, SalesSummaryResponse, YearlyReportResponse } from '../../store/models/sales-report.model';
 import { CustomerSummaryResponse } from '../../store/models/sold-products.model';
 
 @Injectable({
@@ -81,5 +81,15 @@ export class SalesReportApiService {
         { params }
       )
       .pipe(map((res: CustomerSummaryResponse) => res));
+  }
+
+  getSalesReport(params: {
+    [key: string]: any;
+  }): Observable<SalesSummaryResponse> {
+    return this.http
+      .get<SalesSummaryResponse>(`${this.env.rootURL}/v1/sales-report`, {
+        params,
+      })
+      .pipe(map((res: SalesSummaryResponse) => res));
   }
 }

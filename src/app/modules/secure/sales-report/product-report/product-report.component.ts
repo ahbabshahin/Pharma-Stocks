@@ -5,7 +5,7 @@ import { Observable, of, Subject, takeUntil } from 'rxjs';
 import { BarGraphComponent } from '../../../../common-component/bar-graph/bar-graph.component';
 import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
 import { SalesReportStoreService } from '../../../../service/sales-report/sales-report-store.service';
-import { ProductReport } from '../../../../store/models/sales-report.model';
+import { ProductReport, SalesSummaryGrandTotal } from '../../../../store/models/sales-report.model';
 import { BarGraph } from '../../../../store/models/common.model';
 
 type ComponentState = {
@@ -31,6 +31,7 @@ export class ProductReportComponent {
   @Input() isAmount: boolean = true;
   @Input() status: string;
   type: boolean = true;
+  grandTotals: SalesSummaryGrandTotal;
 
   constructor(
     private salesReport: SalesReportService,
@@ -50,6 +51,7 @@ export class ProductReportComponent {
     };
     // this.formatSelectedDate();
     this.getProductReport();
+    this.getGrandTotals();
   }
 
   formatSelectedDate(): void {
@@ -58,7 +60,7 @@ export class ProductReportComponent {
   }
 
   ngOnChanges() {
-    if(this.isAmount !== this.type){
+    if (this.isAmount !== this.type) {
       this.type = this.isAmount;
       this.processDailySalesReport();
     }
@@ -76,7 +78,7 @@ export class ProductReportComponent {
             productReport: res,
           };
           this.loader = false;
-          this.getTotalProduct();
+          // this.getTotalProduct();
 
           this.processDailySalesReport();
         },
@@ -94,6 +96,21 @@ export class ProductReportComponent {
       totalRevenue$: getProductReportTotalRevenue(),
       totalQuantity$: getProductReportTotalQuantity(),
     };
+  }
+
+  getGrandTotals() {
+    const { getSalesReportGrandTotals } = this.salesReportStore;
+
+    getSalesReportGrandTotals()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (totals: SalesSummaryGrandTotal) => {
+          this.grandTotals = totals;
+        },
+        error: (err) => {
+          console.log('err: ', err);
+        },
+      });
   }
 
   processDailySalesReport() {

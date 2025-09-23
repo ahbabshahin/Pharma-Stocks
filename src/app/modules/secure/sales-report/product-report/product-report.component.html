@@ -1,9 +1,9 @@
 <!-- Date Picker for Year & Month Selection -->
 <div class="d-flex justify-content-between">
-  <div *ngIf="componentState as state">
+  <div *ngIf="grandTotals">
     <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
-    <p *ngIf="isAmount">৳ {{(state?.totalRevenue$ | async) | number : '1.2-2'}}</p>
-    <p *ngIf="!isAmount">{{(state?.totalQuantity$ | async)}}</p>
+    <p *ngIf="isAmount">৳ {{(grandTotals?.totalRevenue) | number : '1.2-2'}}</p>
+    <p *ngIf="!isAmount">{{(grandTotals?.totalQuantity)}}</p>
   </div>
 
 </div>
