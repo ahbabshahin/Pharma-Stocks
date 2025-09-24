@@ -7,7 +7,7 @@ export interface CustomerSummary {
 }
 
 export interface CustomerSummaryResponse {
-  customers: CustomerSummary[];
+  body: CustomerSummary[];
   total: number;
   period: SummaryPeriod;
   periodType: string;

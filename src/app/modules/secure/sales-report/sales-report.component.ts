@@ -106,11 +106,7 @@ export class SalesReportComponent {
 
   loadSalesReport() {
     if (this.params?.date) {
-      let params = {
-        ...this.params,
-        period: this.interval,
-      };
-      this.salesReportStore.loadSalesReport(params);
+      this.salesReportStore.loadSalesReport(this.params);
     }
   }
 

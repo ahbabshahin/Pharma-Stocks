@@ -48,9 +48,9 @@ export const customerSummaryReducer = createReducer(
   })),
 
   on(CustomerActions.loadCustomerSummaryListSuccess, (state, { response, isMore }) => {
-    let res = response?.customers;
+    let res = response?.body;
     if(isMore){
-      res = [...selectAll(state), ...response?.customers];
+      res = [...selectAll(state), ...response?.body];
     }
     return customerSummaryAdapter.setAll(res, {
       ...state,
