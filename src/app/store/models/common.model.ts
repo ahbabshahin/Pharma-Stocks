@@ -37,5 +37,5 @@ export enum PaymentStatus {
 export enum SalesReportPeriod {
   MONTHLY = 'monthly',
   QUARTERLY = 'quarterly',
-  // YEARLY = 'yearly',
+  YEARLY = 'yearly',
 }
