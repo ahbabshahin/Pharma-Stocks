@@ -36,6 +36,9 @@
             <p class="mt-2" *ngIf="list?.areaCode">
               <strong>Area code:</strong> {{ list?.areaCode }}
             </p>
+            <p class="mt-2" *ngIf="list?.customMessage">
+              <strong>Custom Message:</strong> {{ list?.customMessage }}
+            </p>
           </nz-card>
         </div>
         <ng-template #edit>

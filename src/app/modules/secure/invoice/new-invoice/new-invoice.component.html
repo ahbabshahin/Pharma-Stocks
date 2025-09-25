@@ -71,25 +71,33 @@
             </span>
           </address>
         </div>
-        <div class="info-group invoice-meta">
-          <span>
-            Invoice #: <span>{{ form?.get("sn")?.value || "N/A" }}</span>
-          </span><br />
-          <span>
-            Date: <span>{{ date | date : "dd-MM-yyyy" }}</span>
-          </span><br />
-          <span *ngIf="!invoice">Status: <span>{{form?.get('status')?.value | titlecase}}</span></span>
-          <div class="status-select-wrapper" *ngIf="invoice">
+      <div class="info-group invoice-meta">
+        <span>
+          Invoice #: <span>{{ form?.get("sn")?.value || "N/A" }}</span>
+        </span><br />
+        <span>
+          Date: <span>{{ date | date : "dd-MM-yyyy" }}</span>
+        </span><br />
+        <span *ngIf="!invoice">
+          Status: <span>{{ form?.get('status')?.value | titlecase }}</span>
+        </span>
+        <div class="status-select-wrapper" *ngIf="invoice">
           <span>
             Status:
-            <nz-select  formControlName="status" aria-label="Invoice Status">
+            <nz-select formControlName="status" aria-label="Invoice Status">
               <nz-option nzValue="due" nzLabel="Due"></nz-option>
               <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
             </nz-select>
-
           </span>
         </div>
-        </div>
+
+        <!-- 🔹 New Info Section -->
+        @if((role === 'admin' || role === 'office') && customer?.customMessage){
+          <div class="meta-info" (click)="info()">
+          <span nz-icon nzType="info-circle" nzTheme="outline" class="info-icon"></span>
+          <span class="meta-text">Additional Info</span>
+        </div>}
+      </div>
       </section>
 
       <!-- Product List -->

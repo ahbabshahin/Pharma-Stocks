@@ -11,7 +11,7 @@ import { NzDrawerRef } from 'ng-zorro-antd/drawer';
   styleUrl: './new-customer.component.scss',
 })
 export class NewCustomerComponent {
-  customer!: Customer;
+  customer: Customer;
   form!: FormGroup;
 
   constructor(
@@ -33,11 +33,12 @@ export class NewCustomerComponent {
   initializeForm(){
     this.form = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      contacts: ['',],
+      contacts: [''],
       email: [''],
       address: ['', [Validators.required, Validators.minLength(3)]],
       areaCode: ['', [Validators.minLength(3)]],
       sn: [this.customerStore.generateSerialNumber()],
+      customMessage: [''],
     });
   }
 

@@ -12,6 +12,8 @@ import { Customer } from '../../../../store/models/customer.model';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
 import { BusinessService } from '../../../../service/business/business.service';
+import { AuthService } from '../../../../service/auth/auth.service';
+import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 
 @Component({
   selector: 'app-new-invoice',
@@ -32,7 +34,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   invoiceForm!: FormGroup;
   customer!: Customer;
   stock!: Stock;
-
+  role: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private invoiceStore: InvoiceStoreService,
@@ -41,7 +43,8 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     private customerStore: CustomerStoreService,
     private stockApi: StockApiService,
     private drawerRef: NzDrawerRef,
-    private businessService: BusinessService
+    private businessService: BusinessService,
+    private authStore: AuthStoreService,
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +52,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    this.getUserRole();
     this.getBusiness();
     this.getCustomers();
     this.getTotalInvoice();
@@ -62,8 +66,15 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     if (business) this.business = business;
   }
 
-  initializeForm() {
+  getUserRole(){
+    this.authStore.getUserRole().subscribe({
+      next: (role: string) => {
+        if (role) this.role = role;
+      },
+    });
+  }
 
+  initializeForm() {
     this.form = this.formBuilder.group({
       sn: [`SN-${this.total + 1}`],
       customer: ['', [Validators.required]],
@@ -242,6 +253,10 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     } else {
       this.commonService.showWarningModal('Form is invalid');
     }
+  }
+
+  info(){
+    this.commonService.showInfoModal(this.customer?.customMessage as string);
   }
 
   ngOnDestroy() {

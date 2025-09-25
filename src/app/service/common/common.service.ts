@@ -55,6 +55,15 @@ export class CommonService {
     });
   }
 
+  showInfoModal(title: string, message?: string){
+    this.modalService.info({
+      nzTitle: title,
+      nzContent: message || '',
+      // nzOnOk: () => console.log('Info OK')
+    });
+
+  }
+
   private showToast(
     type: string,
     msg: string,
