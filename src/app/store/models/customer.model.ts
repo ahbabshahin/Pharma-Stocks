@@ -8,4 +8,5 @@ export interface Customer {
   invoices?: string[];
   sn: string;
   areaCode: string;
+  customMessage?: string;
 }
