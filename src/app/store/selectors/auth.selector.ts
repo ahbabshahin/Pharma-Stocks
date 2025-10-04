@@ -11,7 +11,7 @@ export const getAccessToken = createSelector(
 
 export const getUserRole = createSelector(
   getAuthState,
-  (state: AuthState) => state.userRole
+  (state: AuthState) => state?.userRole
 )
 
 export const getUser = createSelector(

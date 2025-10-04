@@ -26,6 +26,7 @@ import { AuthEffects } from './store/effects/auth.effect';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SalesReportEffects } from './store/effects/sales-report.effect';
+import { NotificationEffects } from './store/effects/notification.effect';
 registerLocaleData(en);
 
 export function loadConfig(config: Config): () => Promise<void> {
@@ -42,7 +43,7 @@ export function loadConfig(config: Config): () => Promise<void> {
     RouterOutlet,
     HttpClientModule,
     StoreModule.forRoot(appReducer, { metaReducers }),
-    EffectsModule.forRoot([AuthEffects, SalesReportEffects]),
+    EffectsModule.forRoot([AuthEffects, SalesReportEffects, NotificationEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     IconsProviderModule,
     FormsModule,

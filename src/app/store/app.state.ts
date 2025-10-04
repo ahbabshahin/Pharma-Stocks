@@ -8,6 +8,7 @@ import * as authActions from './actions/auth.action';
 import { salesReportReducer } from "./reducers/sales-report.reducer";
 import { customerSummaryReducer } from "./reducers/customer-summary.reducer";
 import { filterReducer } from "./reducers/filter.reducer";
+import { notificationReducer } from "./reducers/notification.reducer";
 
 export class AppState{}
 export const authStateName = 'auth';
@@ -18,6 +19,7 @@ export const userStateName = 'user';
 export const salesReportStateName = 'salesReport';
 export const customerSummaryStateName = 'customerSummary';
 export const filterStateName = 'filter';
+export const notificationStateName = 'notifications';
 
 export const appReducer = {
   [authStateName]: authReducer,
@@ -27,6 +29,7 @@ export const appReducer = {
   [salesReportStateName]: salesReportReducer,
   [customerSummaryStateName]: customerSummaryReducer,
   [filterStateName]: filterReducer,
+  [notificationStateName]: notificationReducer,
 };
 
 export const LOGOUT = '[Auth] Logout';
