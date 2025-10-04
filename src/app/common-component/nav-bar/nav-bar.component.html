@@ -8,9 +8,7 @@
     <!-- Bell always visible -->
    <div (click)="notifications()" class="bell-wrapper d-lg-none ms-auto">
      <nz-badge [nzCount]="total$ | async" nzShowZero class="bell-badge">
-       <!-- <ng-template #content> -->
          <span class="text-light bell-icon" nz-icon nzType="bell" nzTheme="outline"></span>
-       <!-- </ng-template> -->
      </nz-badge>
    </div>
 
@@ -33,8 +31,11 @@
 
       <!-- Right side (desktop only) -->
       <div class="navbar-actions d-none d-lg-flex align-items-center">
-        <div class="bell-wrapper mx-2">
-          <span class="text-light" nz-icon nzType="bell" nzTheme="outline"></span>
+        <div (click)="notifications()" class="bell-wrapper mx-2">
+           <nz-badge [nzCount]="total$ | async" nzShowZero class="bell-badge">
+
+             <span class="text-light bell-icon" nz-icon nzType="bell" nzTheme="outline"></span>
+           </nz-badge>
         </div>
         <button (click)="sidebar()" class="rounded" nz-button nzType="primary" type="button">
           Menu
