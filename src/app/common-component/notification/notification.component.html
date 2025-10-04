@@ -1,0 +1,16 @@
+@if((notifications$ | async)?.length){<div>
+  <div class="d-flex justify-content-end mb-2">
+    <button class="btn btn-info" (click)="refresh()">Refresh</button>
+  </div>
+      <nz-list>
+        @for (item of notifications$ | async; track item._id) {
+        <nz-list-item>
+          <!-- <span nz-typography><mark>[ITEM]</mark></span> -->
+          {{ item?.message }}
+        </nz-list-item>
+        }
+      </nz-list>
+</div>
+}@else {
+  <app-global-no-data bodyText="No notifications found"></app-global-no-data>
+}

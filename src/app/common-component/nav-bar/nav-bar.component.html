@@ -4,11 +4,23 @@
       <img src="assets/img/logo.png" class="logo" alt="Logo" />
       Nutri Heal
     </a>
+
+    <!-- Bell always visible -->
+   <div (click)="notifications()" class="bell-wrapper d-lg-none ms-auto">
+     <nz-badge [nzCount]="total$ | async" nzShowZero class="bell-badge">
+       <!-- <ng-template #content> -->
+         <span class="text-light bell-icon" nz-icon nzType="bell" nzTheme="outline"></span>
+       <!-- </ng-template> -->
+     </nz-badge>
+   </div>
+
+
     <button (click)="sidebar()" class="navbar-toggler" type="button" data-bs-toggle="collapse"
       data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -18,7 +30,12 @@
           <a class="nav-link" routerLink="/stocks">Stocks</a>
         </li>
       </ul>
-      <div class="d-flex">
+
+      <!-- Right side (desktop only) -->
+      <div class="navbar-actions d-none d-lg-flex align-items-center">
+        <div class="bell-wrapper mx-2">
+          <span class="text-light" nz-icon nzType="bell" nzTheme="outline"></span>
+        </div>
         <button (click)="sidebar()" class="rounded" nz-button nzType="primary" type="button">
           Menu
         </button>
@@ -26,3 +43,11 @@
     </div>
   </div>
 </nav>
+
+<ng-template #notificationFooter>
+  <div class="d-flex justify-content-center">
+    <button [disabled]="!(total$ | async)" nz-button nzType="primary" (click)="markAllAsRead()">
+      Mark all as read
+    </button>
+  </div>
+</ng-template>
