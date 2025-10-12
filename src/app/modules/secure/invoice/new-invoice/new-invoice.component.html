@@ -44,7 +44,8 @@
                 [nzValue]="customer"
               >
                 <!-- <span nz-icon nzType="windows"></span> -->
-                {{ customer?.name | titlecase }} ({{ customer?.contacts }})
+                {{ customer?.name | titlecase }}
+                <!-- ({{ customer?.contacts }}) -->
               </nz-option>
             </nz-select>
 
@@ -107,7 +108,10 @@
             <tr>
               <th>Product Name</th>
               <th>Quantity</th>
-              <th>Price</th>
+              <th>MRP</th>
+              <th>TP</th>
+              <th>VAT</th>
+              <th>Bonus Qty</th>
               <th>Total</th>
               <th>Action</th>
             </tr>
@@ -207,26 +211,44 @@
                     >
                       Minimum quantity is 1
                     </p>
+                    <p
+                      *ngIf="
+                        productsFormArray
+                          ?.at(i)
+                          ?.get('quantity')
+                          ?.hasError('max') &&
+                        (productsFormArray?.at(i)?.get('quantity')?.dirty ||
+                          productsFormArray?.at(i)?.get('quantity')?.touched)
+                      "
+                      class="s_error"
+                    >
+                      Stock out
+                    </p>
                   </ng-container>
                 </td>
                 <td>
-                  <!-- <input
-                    nz-input
-                    [disabled]="true"
-                    [nzBorderless]="true"
-                    formControlName="price"
-                    type="number"
-                    placeholder="Price"
-                    min="0"
-                    step="0.01"
-                    aria-label="Price"
-                  /> -->
                   {{
                     productsFormArray?.at(i)?.get("price")?.value
                       | number : "1.2-2"
                   }}
                 </td>
-                <td>৳ {{ calculateProductTotal(product) }}</td>
+                <td>
+                  {{
+                    productsFormArray?.at(i)?.get("tp")?.value
+                      | number : "1.2-2"
+                  }}
+                </td>
+                <td>
+                  {{
+                    productsFormArray?.at(i)?.get("vat")?.value
+                      | number : "1.2-2"
+                  }}
+                </td>
+                <td>
+                  <input nz-input [nzBorderless]="true" formControlName="bonus" type="number" placeholder="Qty"
+                          min="0" aria-label="Bonus Qty" />
+                </td>
+                <td>৳ {{ calculateProductTotal(product, i) }}</td>
                 <td>
                   <button
                     *ngIf="i !== 0"

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
-import { Invoice } from '../../../../store/models/invoice.model';
+import { Invoice, Product } from '../../../../store/models/invoice.model';
 import { Business } from '../../../../store/models/business.model';
 import { CommonService } from '../../../../service/common/common.service';
 import { Stock } from '../../../../store/models/stocks.model';
@@ -44,7 +44,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     private stockApi: StockApiService,
     private drawerRef: NzDrawerRef,
     private businessService: BusinessService,
-    private authStore: AuthStoreService,
+    private authStore: AuthStoreService
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +66,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     if (business) this.business = business;
   }
 
-  getUserRole(){
+  getUserRole() {
     this.authStore.getUserRole().subscribe({
       next: (role: string) => {
         if (role) this.role = role;
@@ -113,6 +113,9 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [0, [Validators.required, Validators.min(0)]],
+      tp: [0],
+      vat: [0],
+      bonus: [0],
     });
     this.productsFormArray.push(productGroup);
   }
@@ -124,9 +127,15 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         name: product?.name,
         quantity: product?.quantity,
         price: product?.price,
+        tp: product?.tp || 0,
+        vat: product?.vat || 0,
+        bonus: product?.bonus || 0,
       });
       this.productsFormArray.push(productGroup);
-      this.calculateProductTotal(productGroup);
+      this.calculateProductTotal(
+        productGroup,
+        this.productsFormArray?.length - 1
+      );
     });
   }
 
@@ -134,7 +143,24 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     this.productsFormArray.removeAt(index);
   }
 
-  calculateProductTotal(product: any): number {
+  calculateProductTotal(product: any, indx: number): number {
+    let productGroup: FormGroup = this.productsFormArray?.at(indx) as FormGroup;
+
+    const quantity = product.get('quantity')?.value || 0;
+    const price = product.get('price')?.value || 0;
+    const subtotal = quantity * price;
+    const discount = (subtotal * this.form.get('discount')?.value) / 100;
+    const total = subtotal - discount;
+
+    productGroup.patchValue({
+      ...productGroup.value,
+      tp: this.vatCalculation(total, 83),
+      vat: this.vatCalculation(total, 17),
+    });
+    return total;
+  }
+
+  calculateProductSubTotal(product: any): number {
     const quantity = product.get('quantity')?.value || 0;
     const price = product.get('price')?.value || 0;
     return quantity * price;
@@ -144,26 +170,28 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     let discount =
       (this.subTotalAmount * this.form.get('discount')?.value) / 100;
     return this.subTotalAmount - discount;
+    // return this.subTotalAmount;
   }
   get subTotalAmount(): number {
-    return this.productsFormArray.controls.reduce((total, product) => {
-      return total + this.calculateProductTotal(product);
-    }, 0);
+    return this.productsFormArray.controls.reduce(
+      (total, product, indx: number) => {
+        this.calculateProductTotal(product, indx);
+        return total + this.calculateProductSubTotal(product);
+      },
+      0
+    );
   }
 
   getCustomers() {
-
     this.subs.sink = this.customerStore.getCustomers().subscribe({
       next: (res: Customer[]) => {
         this.customers = res;
       },
-      error: () => {
-
-      },
+      error: () => {},
     });
   }
 
-  getTotalInvoice(){
+  getTotalInvoice() {
     this.subs.sink = this.invoiceStore.getTotalInvoice().subscribe({
       next: (total: number) => {
         if (total !== undefined) {
@@ -196,20 +224,20 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   searchProduct(e: any) {
     let searchTerm = e?.target?.value.trim();
     // if (searchTerm !== '') {
-      let params = {
-        query: searchTerm,
-      };
-      this.subs.sink = this.stockApi
-        .searchStock(params)
-        .subscribe((res: any) => {
-          this.products = res?.body;
-        });
+    let params = {
+      query: searchTerm,
+    };
+    this.subs.sink = this.stockApi.searchStock(params).subscribe((res: any) => {
+      this.products = res?.body;
+    });
     // }
   }
 
+  vatCalculation(price: number, percentage: number): number {
+    return (price * percentage) / 100;
+  }
+
   onProductSelect(selectedProduct: Stock, index: number): void {
-
-
     this.stock = selectedProduct;
     const productGroup = this.productsFormArray.at(index);
     if (productGroup) {
@@ -219,16 +247,15 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         price: selectedProduct?.price,
         quantity: 1, // Default to 1 when a product is selected
       });
-      console.log(
-        'this.productsFormArray.at(index): ',
-        this.productsFormArray.at(index)
-      );
+      this.calculateProductTotal(productGroup, index);
+      productGroup
+        .get('quantity')
+        ?.addValidators([Validators.max(this.stock?.quantity)]);
     }
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-
       const formRes = this.form.value;
       let payload: Invoice = {
         sn: `SN-${this.total + 1}`,
@@ -244,7 +271,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
         payload = {
           ...payload,
           _id: this.invoice._id,
-        }
+        };
         this.invoiceStore.updateInvoice(payload);
       } else {
         this.invoiceStore.addInvoice(payload);
@@ -255,7 +282,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  info(){
+  info() {
     this.commonService.showInfoModal(this.customer?.customMessage as string);
   }
 
