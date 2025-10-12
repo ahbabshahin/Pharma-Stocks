@@ -30,6 +30,7 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { FindPipe } from '../pipe/find.pipe';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { DatePipe } from '@angular/common';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 export const components = [
   FormsModule,
@@ -66,4 +67,5 @@ export const components = [
   FindPipe,
   DatePipe,
   NzTagModule,
+  NzDividerModule,
 ];

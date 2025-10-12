@@ -69,7 +69,9 @@ export class ViewInvoiceComponent {
   calculateProductTotal(product: any): number {
     const quantity = product?.quantity || 0;
     const price = product?.price || 0;
-    return quantity * price;
+    const tp = product?.tp || 0;
+    const vat = product?.vat || 0;
+    return quantity * (tp + vat);
   }
 
   get subTotalAmount(): number {
@@ -167,12 +169,14 @@ export class ViewInvoiceComponent {
       // Generate Table of Products
       autoTable(doc, {
         startY: 90,
-        head: [['Product Name', 'Quantity', 'Price (/=)', 'Total (/=)']],
+        head: [['Product Name', 'Quantity', 'TP (/=)', 'VAT (/=)', 'Bonus Qty' ,'Total (/=)']],
         body: this.invoice?.products.map(product => [
           product.name,
           product.quantity,
-          product.price.toFixed(2),
-          (product.quantity * product.price).toFixed(2),
+          product?.tp.toFixed(2),
+          product?.vat.toFixed(2),
+          product?.bonus,
+          (product.quantity * (product?.tp + product?.vat)).toFixed(2),
         ]),
         theme: 'plain',
         margin: { top: 10 },
@@ -180,9 +184,9 @@ export class ViewInvoiceComponent {
 
       // Calculate & Display Total
       const finalY = (doc as any).lastAutoTable.finalY + 10;
-      doc.text(`Subtotal: ${this.subTotalAmount.toFixed(2)}/=`, 140, finalY + 10);
-      doc.text(`Discount: ${this.invoice.discount || 0}%`, 140, finalY + 20);
-      doc.text(`Total Amount: ${this.invoice?.totalAmount.toFixed(2)}/=`, 140, finalY + 30);
+      // doc.text(`Subtotal: ${this.subTotalAmount.toFixed(2)}/=`, 140, finalY + 10);
+      // doc.text(`Discount: ${this.invoice.discount || 0}%`, 140, finalY + 20);
+      doc.text(`Total Amount: ${this.invoice?.totalAmount.toFixed(2)}/=`, 140, finalY + 10);
 
       // Signature Section with equal spacing and line lengths
       const signatureY = finalY + 50;

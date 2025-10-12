@@ -300,7 +300,7 @@
       </footer> -->
       <footer class="invoice-footer">
         <div class="summary">
-          <p>Sub Amount: ৳ {{ subTotalAmount | number : "1.2-2" }}</p>
+          <!-- <p>Sub Amount: ৳ {{ subTotalAmount | number : "1.2-2" }}</p> -->
           <div class="discount">
             <label for="discount">Discount:</label>
             <input
@@ -316,7 +316,7 @@
             />
             %
           </div>
-          <hr />
+          <nz-divider></nz-divider>
           <p>Total Amount: ৳ {{ totalAmount | number : "1.2-2" }}</p>
         </div>
       </footer>
