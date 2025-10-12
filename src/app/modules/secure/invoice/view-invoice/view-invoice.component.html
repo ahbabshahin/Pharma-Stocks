@@ -63,6 +63,9 @@
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price (৳)</th>
+                    <th>TP (৳)</th>
+                    <th>VAT (৳)</th>
+                    <th>Bonus Qty</th>
                     <th>Total (৳)</th>
                 </tr>
             </thead>
@@ -71,6 +74,9 @@
                     <td>{{ product.name | titlecase }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.price | number: "1.2-2" }}</td>
+                    <td>{{ (product?.tp) | number: "1.2-2" }}</td>
+                    <td>{{ (product?.vat || 0) | number: "1.2-2" }}</td>
+                    <td>{{ (product?.bonus || 0) }}</td>
                     <td>{{ calculateProductTotal(product) }}</td>
                 </tr>
             </tbody>
