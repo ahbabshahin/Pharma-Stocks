@@ -25,17 +25,40 @@
             margin-right: 16px;
         }
     }
-    .product-list table {
+    // .product-list table {
+    //     width: 100%;
+    //     overflow-x: auto;
+    //     border-collapse: collapse;
+    //     th,
+    //     td {
+    //         padding: 8px;
+    //         border: 1px solid #e0e0e0;
+    //     }
+    //     th {
+    //         background: #f5f5f5;
+    //     }
+    // }
+    .product-list {
+      width: 100%;
+      overflow-x: auto;
+
+      table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 700px;
+
         th,
         td {
-            padding: 8px;
-            border: 1px solid #e0e0e0;
+          padding: 8px;
+          border: 1px solid #e0e0e0;
+          text-align: left;
+          white-space: nowrap;
         }
+
         th {
-            background: #f5f5f5;
+          background: #f5f5f5;
         }
+      }
     }
     .invoice-footer {
         margin-top: 16px;
@@ -153,6 +176,31 @@ nz-select {
     min-width: 200px !important;
 }
 
+/* --- Responsive Fix for nz-select Dropdown --- */
+@media screen and (max-width: 768px) {
+  ::ng-deep .cdk-overlay-pane {
+    left: 0 !important;
+    right: 0 !important;
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  ::ng-deep .ant-select-dropdown {
+    width: 100% !important;
+    max-width: 95vw !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  ::ng-deep .ant-select-item {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+  }
+}
 // .invoice-meta {
 //   display: flex;
 //   flex-direction: column;
@@ -197,8 +245,39 @@ nz-select {
   }
 }
 
+// @media screen and (max-width: 768px) {
+//   // .invoice-meta {
+//     .meta-info {
+//       font-size: 13px;
+
+//       .info-icon {
+//         font-size: 14px;
+//       }
+//     }
+//   // }
+// }
+
 @media screen and (max-width: 768px) {
-  // .invoice-meta {
+  .invoice-container {
+    padding: 12px;
+
+    .invoice-header .logo img {
+      max-width: 80px;
+    }
+
+    .product-list {
+      table {
+        min-width: 600px;
+        font-size: 13px;
+      }
+    }
+
+    .invoice-info {
+      .info-group {
+        font-size: 13px;
+      }
+    }
+
     .meta-info {
       font-size: 13px;
 
@@ -206,5 +285,287 @@ nz-select {
         font-size: 14px;
       }
     }
-  // }
+
+    .invoice-footer .summary {
+      font-size: 13px;
+
+      .discount input {
+        width: 45px;
+      }
+    }
+  }
 }
+
+@media screen and (max-width: 576px) {
+  .invoice-container {
+    padding: 10px;
+
+    .product-list table {
+      min-width: 500px;
+      font-size: 12px;
+    }
+
+    .invoice-header h1 {
+      font-size: 18px;
+    }
+
+    .invoice-info,
+    .invoice-footer {
+      font-size: 13px;
+    }
+  }
+}
+
+
+// new scss
+
+// .invoice-container {
+//   max-width: 800px;
+//   margin: auto;
+//   padding: 20px;
+//   border: 1px solid #e0e0e0;
+//   border-radius: 8px;
+//   background: #fff;
+//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+//   .invoice-header {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     padding-bottom: 16px;
+//     border-bottom: 1px solid #e0e0e0;
+
+//     .logo img {
+//       max-width: 100px;
+//       height: auto;
+//     }
+
+//     .company-details {
+//       text-align: right;
+//     }
+//   }
+
+//   .invoice-info {
+//     margin: 16px 0;
+//     display: flex;
+//     justify-content: space-between;
+
+//     .info-group {
+//       flex: 1;
+//       margin-right: 16px;
+
+//       &:last-child {
+//         margin-right: 0;
+//       }
+//     }
+//   }
+
+//   .product-list {
+//     width: 100%;
+//     overflow-x: auto;
+
+//     table {
+//       width: 100%;
+//       border-collapse: collapse;
+//       min-width: 700px;
+
+//       th,
+//       td {
+//         padding: 8px;
+//         border: 1px solid #e0e0e0;
+//         text-align: left;
+//         white-space: nowrap;
+//       }
+
+//       th {
+//         background: #f5f5f5;
+//       }
+//     }
+//   }
+
+//   .invoice-footer {
+//     margin-top: 16px;
+//     display: flex;
+//     justify-content: flex-end;
+//     align-items: center;
+
+//     .summary {
+//       display: flex;
+//       flex-direction: column;
+//       align-items: flex-end;
+//       gap: 8px;
+
+//       .discount {
+//         display: flex;
+//         align-items: flex-end;
+
+//         label {
+//           margin-right: 8px;
+//         }
+
+//         input {
+//           width: 50px;
+//           text-align: right;
+//         }
+//       }
+
+//       p {
+//         margin: 0;
+//       }
+//     }
+//   }
+
+//   .action-buttons {
+//     margin-top: 16px;
+//     display: flex;
+//     justify-content: flex-end;
+//   }
+
+//   .s_error {
+//     padding: 0.2rem;
+//     border-radius: 5px;
+//     color: #ff4b55;
+//     font-size: 12px;
+//     margin: 0.5rem 0;
+//   }
+
+//   nz-select {
+//     width: 100%;
+//   }
+
+//   .autocomplete-wrapper {
+//     max-height: 300px;
+//     overflow-y: auto;
+//     position: absolute;
+//     background: white;
+//     width: 100%;
+//     z-index: 1000;
+//     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+//   }
+
+//   .product-list td input[nz-input] {
+//     border: none !important;
+//     outline: none !important;
+//     box-shadow: none !important;
+//     background: transparent !important;
+//   }
+
+//   .meta-info {
+//     display: flex;
+//     align-items: center;
+//     margin-top: 6px;
+//     font-size: 14px;
+//     color: #555;
+//     cursor: pointer;
+
+//     .info-icon {
+//       margin-right: 6px;
+//       color: #1890ff;
+//       font-size: 16px;
+//     }
+
+//     .meta-text {
+//       flex: 1;
+//       word-wrap: break-word;
+//     }
+//   }
+// }
+
+/* ✅ RESPONSIVENESS */
+// @media screen and (max-width: 992px) {
+//   .invoice-container {
+//     padding: 15px;
+
+//     .invoice-header {
+//       flex-direction: column;
+//       align-items: flex-start;
+
+//       .company-details {
+//         text-align: left;
+//         margin-top: 10px;
+//       }
+//     }
+
+//     .invoice-info {
+//       flex-direction: column;
+//       gap: 12px;
+
+//       .info-group {
+//         margin-right: 0;
+//       }
+//     }
+
+//     .invoice-footer {
+//       justify-content: flex-start;
+
+//       .summary {
+//         align-items: flex-start;
+//       }
+//     }
+//   }
+// }
+
+// @media screen and (max-width: 768px) {
+//   .invoice-container {
+//     padding: 12px;
+
+//     .invoice-header .logo img {
+//       max-width: 80px;
+//     }
+
+//     .product-list {
+//       table {
+//         min-width: 600px;
+//         font-size: 13px;
+//       }
+//     }
+
+//     .invoice-info {
+//       .info-group {
+//         font-size: 13px;
+//       }
+//     }
+
+//     .meta-info {
+//       font-size: 13px;
+
+//       .info-icon {
+//         font-size: 14px;
+//       }
+//     }
+
+//     .invoice-footer .summary {
+//       font-size: 13px;
+
+//       .discount input {
+//         width: 45px;
+//       }
+//     }
+//   }
+// }
+
+// @media screen and (max-width: 576px) {
+//   .invoice-container {
+//     padding: 10px;
+
+//     .product-list table {
+//       min-width: 500px;
+//       font-size: 12px;
+//     }
+
+//     .invoice-header h1 {
+//       font-size: 18px;
+//     }
+
+//     .invoice-info,
+//     .invoice-footer {
+//       font-size: 13px;
+//     }
+//   }
+// }
+// .autocomplete-wrapper {
+//   width: 100%;
+//   max-width: 100%;
+//   left: 0;
+//   right: 0;
+// }

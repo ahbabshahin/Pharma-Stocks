@@ -67,6 +67,14 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard, AdminGuard],
       },
+      {
+        path: 'delivery',
+        loadChildren: () =>
+          import('./delivery/delivery.module').then(
+            (m) => m.DeliveryModule
+          ),
+        canActivate: [AuthGuard, AdminGuard],
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route
     ],

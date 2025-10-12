@@ -17,5 +17,8 @@ export interface Product {
   name: string;
   quantity: number;
   price: number;
+  tp: number;
+  vat: number;
+  bonus: number;
   _id: string;
 }
