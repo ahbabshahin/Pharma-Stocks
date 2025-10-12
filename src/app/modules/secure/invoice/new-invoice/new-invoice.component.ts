@@ -148,14 +148,16 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
     const quantity = product.get('quantity')?.value || 0;
     const price = product.get('price')?.value || 0;
-    const subtotal = quantity * price;
-    const discount = (subtotal * this.form.get('discount')?.value) / 100;
-    const total = subtotal - discount;
+    const discount = (price * this.form.get('discount')?.value) / 100;
+    let priceAfterDiscount =
+      price - discount;
+    const subtotal = quantity * priceAfterDiscount;
+    const total = subtotal;
 
     productGroup.patchValue({
       ...productGroup.value,
-      tp: this.vatCalculation(total, 83),
-      vat: this.vatCalculation(total, 17),
+      tp: this.vatCalculation(priceAfterDiscount, 83),
+      vat: this.vatCalculation(priceAfterDiscount, 17),
     });
     return total;
   }

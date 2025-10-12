@@ -85,9 +85,9 @@
 
     <footer class="invoice-footer">
         <div class="summary">
-            <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p>
+            <!-- <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p> -->
             <p>Discount: {{ invoice.discount || 0 }}%</p>
-            <hr />
+            <nz-divider></nz-divider>
             <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
         </div>
     </footer>
