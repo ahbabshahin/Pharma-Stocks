@@ -18,7 +18,7 @@ export class UserComponent {
   subs = new SubSink();
   params = {
     page: 1,
-    limit: 10,
+    limit: 100,
   };
   total: number = 0;
   isMore: boolean = false;
