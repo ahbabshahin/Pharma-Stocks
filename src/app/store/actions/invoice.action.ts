@@ -73,3 +73,18 @@ export const searchInvoice = createAction(
   props<{ params: { [key: string]: any }; isMore: boolean }>()
 );
 
+export const downloadSearchedInvoice = createAction(
+  '[Invoice] download searched invoice',
+  props<{ params: { [key: string]: any } }>()
+);
+
+export const downloadSearchedInvoiceSuccess = createAction(
+  '[Invoice] download searched invoice success'
+);
+
+export const downloadSearchedInvoiceFail = createAction(
+  '[Invoice] download searched invoice fail',
+  props<{ error: string }>()
+);
+
+
