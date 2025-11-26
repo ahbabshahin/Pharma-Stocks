@@ -34,4 +34,11 @@ export class InvoiceApiService {
       params,
     });
   }
+
+  downloadSearchedInvoice(params: { [key: string]: any }){
+    return this.http.get(`${this.env.rootURL}/v1/invoice/export/excel`, {
+      params,
+      responseType: 'blob'
+    });
+  }
 }

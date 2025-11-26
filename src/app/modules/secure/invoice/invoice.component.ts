@@ -8,6 +8,8 @@ import { CustomerApiService } from '../../../service/customer/customer-api.servi
 import { Observable, of } from 'rxjs';
 import { Customer } from '../../../store/models/customer.model';
 import { DatePipe } from '@angular/common';
+import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
+import { CommonService } from '../../../service/common/common.service';
 
 type ComponentState = {
   invoices: Invoice[];
@@ -57,7 +59,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     private invoiceStoreService: InvoiceStoreService,
     private customerStore: CustomerStoreService,
     private customerApi: CustomerApiService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private invoiceApi: InvoiceApiService,
+    private commonService: CommonService,
   ) {}
 
   ngOnInit() {
@@ -83,7 +87,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   loadInvoice() {
-    if(!this.params.status) this.params.status = '';
+    if (!this.params.status) this.params.status = '';
     this.invoiceStoreService.loadInvoice(
       this.params,
       this.componentState?.isMore
@@ -308,7 +312,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       search: '',
       startDate: '',
       endDate: '',
-      status:'',
+      status: '',
     };
     this.componentState = {
       ...this.componentState,
@@ -349,8 +353,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  onStatusChange(status: string){
-    if(status){
+  onStatusChange(status: string) {
+    if (status) {
       this.params = {
         ...this.params,
         page: 1,
@@ -369,13 +373,37 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         delete this.searchParams.endDate;
       }
 
-      if(this.componentState.searchText === '') delete this.searchParams.search;
+      if (this.componentState.searchText === '')
+        delete this.searchParams.search;
       this.invoiceStoreService.setLoader(true);
       this.searchInvoice();
-    }else{
+    } else {
       this.invoiceStoreService.setLoader(true);
       this.loadInvoice();
     }
+  }
+
+  downloadInvoiceExcel() {
+    this.commonService.presentLoading();
+    this.invoiceApi.downloadSearchedInvoice(this.searchParams).subscribe({
+      next: (file) => {
+        try {
+          const url = window.URL.createObjectURL(file);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'invoices.xlsx';
+          a.click();
+          URL.revokeObjectURL(url);
+          this.commonService.dismissLoading();
+        } catch (e) {
+          this.commonService.dismissLoading();
+        }
+      },
+      error: (error) => {
+        // this.commonService.presentToast('Something went wrong')
+        this.commonService.dismissLoading();
+      },
+    });
   }
 
   ngOnDestroy() {

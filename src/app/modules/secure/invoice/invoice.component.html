@@ -53,6 +53,11 @@
     </button>
   </div>
 
+  <button type="button" nz-button class="primary-btn" nzShape="round"
+    *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || params.status"
+    (click)="downloadInvoiceExcel()">
+    Excel
+  </button>
   <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addInvoice()">
     New Invoice
   </button>
