@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,6 +8,7 @@ import { AreaCodeStoreService } from 'src/app/service/area-code/area-code-store.
 import { AreaCode } from 'src/app/store/models/area-code.model';
 import { NzColorPickerModule } from 'ng-zorro-antd/color-picker';
 import { FormsModule } from '@angular/forms';
+import { CommonService } from 'src/app/service/common/common.service';
 type ComponentState = {
 	codes: AreaCode[];
 }
@@ -29,8 +30,10 @@ type ComponentState = {
 export class AreaCodeListComponent {
 	unsubscribe$ = new Subject<void>();
 	componentState: ComponentState;
+	@Output() updateArea: EventEmitter<AreaCode> = new EventEmitter();
 	constructor(
 		private areaCodeStore: AreaCodeStoreService,
+		private commonService: CommonService,
 	) {}
 
 	ngOnInit(){
@@ -60,6 +63,22 @@ export class AreaCodeListComponent {
 			error: (error) => {}
 		});
 		// return this.areaCodeStore.areaCodes;
+	}
+
+	updateAreaCode(area: AreaCode){
+		this.updateArea.emit(area);
+	}
+
+	async deleteAreaCode(area: AreaCode){
+		const { _id: id, code } = area;
+		const ok = await this.commonService.showConfirmModal(
+			`Are you sure you want to delete this area code: ${code}?`
+		);
+
+		if (!ok) return;
+
+		this.commonService.presentLoading();
+		this.areaCodeStore.deleteAreaCode(id as string);
 	}
 
 	ngOnDestroy(){

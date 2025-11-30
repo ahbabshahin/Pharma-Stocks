@@ -9,7 +9,7 @@ import { AreaCodeEffect } from 'src/app/store/effects/area-code.effect';
   declarations: [],
   imports: [
     CommonModule,
-		EffectsModule.forFeature(AreaCodeEffect)
+		EffectsModule.forFeature(AreaCodeEffect),
   ],
 	providers: areaCodeIndex.providers,
 })

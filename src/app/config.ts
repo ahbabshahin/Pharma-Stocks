@@ -15,7 +15,7 @@ export class Config {
         this.http.get<any>('assets/config.json')
       );
       this.rootURL = config.rootURL;
-      // this.rootURL = config.local;
+    //   this.rootURL = config.local;
     } catch (error) {
       console.error('Error loading config.json:', error);
       // Fallback URL if config.json fails to load

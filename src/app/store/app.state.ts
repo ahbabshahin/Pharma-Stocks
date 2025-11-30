@@ -11,6 +11,7 @@ import { filterReducer } from "./reducers/filter.reducer";
 import { notificationReducer } from "./reducers/notification.reducer";
 import { deliveryReducer } from "./reducers/delivery.reducer";
 import { areaCodeReducer } from "./reducers/area-code.reducer";
+import { userReducer } from "./reducers/user.reducer";
 
 export class AppState{}
 export const authStateName = 'auth';
@@ -32,6 +33,7 @@ export const appReducer = {
   [customerStateName]: customerReducer,
   [salesReportStateName]: salesReportReducer,
   [customerSummaryStateName]: customerSummaryReducer,
+  [userStateName]: userReducer,
   [filterStateName]: filterReducer,
   [notificationStateName]: notificationReducer,
   [deliveryStateName]: deliveryReducer,
