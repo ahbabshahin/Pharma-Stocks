@@ -1,0 +1,32 @@
+<!-- <h1>Area Code</h1> -->
+<div class="table-responsive" *ngIf="componentState as state">
+
+	@if(state?.codes?.length){
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Color</th>
+				<th scope="col">Title</th>
+				<th scope="col">Code</th>
+				<th scope="col">Manager</th>
+				<th scope="col">Total Expense</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for(code of state?.codes; track code._id; let i = $index;){
+			<tr>
+				<th scope="row">{{i + 1}}</th>
+				<td scope="row"><nz-color-picker [ngModel]="code?.color"></nz-color-picker></td>
+				<td>{{code?.title | titlecase}}</td>
+				<td>{{code?.code}}</td>
+				<td>{{code?.manager?.name | titlecase}}</td>
+				<td>{{code?.marketingExpense}}</td>
+			</tr>}
+		</tbody>
+	</table>
+	}@else {
+	<app-global-no-data></app-global-no-data>
+	}
+
+</div>
