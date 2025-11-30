@@ -67,7 +67,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   getUserRole() {
-    this.authStore.getUserRole().subscribe({
+    this.subs.sink = this.authStore.getUserRole().subscribe({
       next: (role: string) => {
         if (role) this.role = role;
       },

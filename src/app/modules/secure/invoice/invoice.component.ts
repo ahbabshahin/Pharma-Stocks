@@ -385,7 +385,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   downloadInvoiceExcel() {
     this.commonService.presentLoading();
-    this.invoiceApi.downloadSearchedInvoice(this.searchParams).subscribe({
+    this.subs.sink = this.invoiceApi.downloadSearchedInvoice(this.searchParams).subscribe({
       next: (file) => {
         try {
           const url = window.URL.createObjectURL(file);
