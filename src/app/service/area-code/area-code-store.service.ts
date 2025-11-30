@@ -12,7 +12,7 @@ export class AreaCodeStoreService {
 	dispatch = (action: Action) => this.store.dispatch(action);
 	select = (selector: any) => this.store.select(selector);
 
-	loadAreaCodeList() {
+	loadAreaCodes() {
 		this.dispatch(areaCodeActions.loadAreaCodes());
 	}
 

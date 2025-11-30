@@ -27,7 +27,9 @@ const defaultAreaCodeState: AreaCodeState = {
 };
 
 export const areaCodeAdapter: EntityAdapter<AreaCode> =
-  createEntityAdapter<AreaCode>();
+  createEntityAdapter<AreaCode>({
+	selectId: (areaCode: AreaCode) => areaCode._id as string,
+  });
 
 export const initialState: AreaCodeState =
   areaCodeAdapter.getInitialState(defaultAreaCodeState);

@@ -1,19 +1,20 @@
 export interface AreaCodeRequiredFields {
-  areaName: string;
-  areaCode: string;
-  areaManager: string | AreaManager;
+  title: string;
+  code: string;
+  manager: string | AreaManager;
 }
 
 export interface AreaCode extends AreaCodeRequiredFields {
   _id?: string;
-  areaMarketingSpending?: number;
+  marketingExpense?: number;
   color?: string;
   description?: string;
 }
 
 export interface AreaManager {
-  "_id": "678fd35afa130a442432fe5d",
-  "username": "ahbabshahin",
-  "email": "ahbabshahin7788@gmail.com"
+	_id: string;
+	username: string;
+	email: string;
+	name: string;
 }
 

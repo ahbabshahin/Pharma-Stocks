@@ -75,6 +75,14 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard, AdminGuard],
       },
+      {
+        path: 'area-code',
+        loadChildren: () =>
+          import('src/app/modules/secure/area-code/area-code.module').then(
+            (m) => m.AreaCodeModule
+          ),
+        canActivate: [AuthGuard],
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route
     ],
