@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	FormsModule,
+	ReactiveFormsModule,
+	Validators,
+} from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzColorPickerModule } from 'ng-zorro-antd/color-picker';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { Subject, takeUntil } from 'rxjs';
 import { AreaCodeStoreService } from 'src/app/service/area-code/area-code-store.service';
 import { CommonService } from 'src/app/service/common/common.service';
 import { UserStoreService } from 'src/app/service/user/user-store.service';
-import { AreaCode } from 'src/app/store/models/area-code.model';
+import { AreaCode, AreaManager } from 'src/app/store/models/area-code.model';
 import { User } from 'src/app/store/models/user.model';
 
 @Component({
@@ -40,7 +48,8 @@ export class NewAreaCodeComponent {
 		private areaCodeStore: AreaCodeStoreService,
 		private formBuilder: FormBuilder,
 		private userStore: UserStoreService,
-		private commonService: CommonService
+		private commonService: CommonService,
+		private drawerRef: NzDrawerRef
 	) {}
 
 	ngOnInit() {
@@ -62,6 +71,21 @@ export class NewAreaCodeComponent {
 			description: [''],
 			color: [''],
 		});
+
+		if (this.area) {
+			this.populateForm();
+		}
+	}
+
+	populateForm() {
+		let manager = this.area?.manager as AreaManager;
+		this.form.patchValue({
+			...this.area,
+			manager: manager?._id,
+			color: this.area?.color,
+		});
+
+		this.form?.addControl('_id', new FormControl(this.area?._id));
 	}
 
 	isUsersLoaded() {
@@ -109,9 +133,11 @@ export class NewAreaCodeComponent {
 				...payload,
 				color: this.color,
 				code: payload?.code?.toUpperCase(),
-			}
+			};
 			if (this.area) {
+				this.areaCodeStore.updateAreaCode(payload);
 			} else this.areaCodeStore.addAreaCode(payload);
+			this.drawerRef.close();
 		} catch (e) {
 			this.commonService.dismissLoading();
 		}

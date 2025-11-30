@@ -22,7 +22,7 @@ export class AreaCodeApiService {
 
   updateAreaCode(payload: AreaCode): Observable<AreaCode> {
     return this.http
-      .post<AreaCode>(`${this.env.rootURL}/v1/area-code/${payload?._id}`, payload)
+      .put<AreaCode>(`${this.env.rootURL}/v1/area-code/${payload?._id}`, payload)
       .pipe(map((res: any) => res?.body));
   }
 

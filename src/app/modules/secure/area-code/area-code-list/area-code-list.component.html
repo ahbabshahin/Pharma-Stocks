@@ -11,6 +11,7 @@
 				<th scope="col">Code</th>
 				<th scope="col">Manager</th>
 				<th scope="col">Total Expense</th>
+				<th scope="col">Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -22,6 +23,14 @@
 				<td>{{code?.code}}</td>
 				<td>{{code?.manager?.name | titlecase}}</td>
 				<td>৳ {{code?.marketingExpense}}</td>
+				<td>
+					<button nz-button title="delete" class="mx-2" nzShape="circle" nzDanger (click)="deleteAreaCode(code)">
+						<span nz-icon nzType="delete" nzTheme="outline"></span>
+					</button>
+					<button nz-button title="edit" nzShape="circle" (click)="updateAreaCode(code)">
+						<span nz-icon nzType="edit" nzTheme="outline"></span>
+					</button>
+				</td>
 			</tr>}
 		</tbody>
 	</table>

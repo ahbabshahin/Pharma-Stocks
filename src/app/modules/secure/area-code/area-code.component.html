@@ -5,5 +5,5 @@
 	<button type="button" nz-button class="primary-btn" nzShape="round" (click)="addAreaCode()">Add Area
 		Code</button>
 </div>
-<app-area-code-list></app-area-code-list>
+<app-area-code-list (updateArea)="addAreaCode($event)"></app-area-code-list>
 }
