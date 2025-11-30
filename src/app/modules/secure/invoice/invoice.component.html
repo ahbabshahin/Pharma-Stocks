@@ -38,9 +38,11 @@
 
     <div>
       <nz-select
+	  	  class="w-100"
           [(ngModel)]="params.status"
           (ngModelChange)="onStatusChange($event)"
-          nzAllowClear
+          [nzAllowClear]="params.status ? true : false"
+		  nzPlaceHolder="Paid/due"
       >
         <nz-option nzLabel="Due" nzValue="due"></nz-option>
         <nz-option nzLabel="Paid" nzValue="paid"></nz-option>

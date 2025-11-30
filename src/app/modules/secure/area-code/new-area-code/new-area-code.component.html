@@ -1,0 +1,56 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+	<div class="form-group">
+		<label for="title">Title <sup class="text-danger">*</sup></label>
+		<input nz-input type="text" class="form-control" formControlName="title" placeholder="e.g., Golapgonj" />
+		<p>
+			<small class="text-danger" *ngIf="form?.get('title')?.errors?.['required'] && (form.get('title')?.touched || form.get('title')?.dirty)">
+				Title is required.
+			</small>
+		</p>
+	</div>
+	<div class="form-group">
+		<label for="Area Code">Area Code <sup class="text-danger">*</sup></label>
+		<input nz-input type="text" class="form-control" formControlName="code" placeholder="e.g., GPJ" />
+		<p>
+			<small class="text-danger" *ngIf="form?.get('code')?.errors?.['required'] && (form.get('code')?.touched || form.get('code')?.dirty)">
+				Area Code is required.
+			</small>
+			<small class="text-danger" *ngIf="form?.get('code')?.errors?.['minlength']">
+				Area Code must be at least 3 characters.
+			</small>
+		</p>
+	</div>
+	<div class="form-group">
+		<label for="manager">Manager <sup class="text-danger">*</sup></label><br/>
+		 <nz-select class="w-100" nzShowSearch [nzAllowClear]="form?.get('manager')?.value ? true: false" nzPlaceHolder="Select a person" formControlName="manager">
+			@for(user of users; track user._id){
+		 	<nz-option [nzLabel]="user?.name" [nzValue]="user?._id"></nz-option>
+			}
+		 </nz-select>
+		 <p>
+			<small class="text-danger" *ngIf="form?.get('manager')?.errors?.['required'] && (form.get('manager')?.touched || form.get('manager')?.dirty)">
+				Manager is required.
+			</small>
+		 </p>
+	</div>
+	<div class="form-group">
+		<label for="Marketing Expense">Marketing Expense </label>
+		<input nz-input type="number" class="form-control" formControlName="marketingExpense" placeholder="e.g., ৳ 10000" />
+	</div>
+	<div class="form-group">
+		<label for="description">Description</label>
+		<input nz-input type="text" class="form-control" formControlName="description" placeholder="e.g., prime location" />
+	</div>
+	<div class="form-group">
+		<label for="color">Color</label><br>
+		<nz-color-picker [(ngModel)]="color" [ngModelOptions]="{ standalone: true }"></nz-color-picker>
+		<!-- <input nz-input type="text" class="form-control" formControlName="color" placeholder="e.g., Dhaka"/> -->
+	</div>
+
+	<div class="d-flex justify-content-end">
+		<button [disabled]="form?.invalid" type="submit" class="primary-btn" nz-button nzShape="round">
+			Submit
+		</button>
+	</div>
+
+</form>

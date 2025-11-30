@@ -12,7 +12,7 @@ export class AreaCodeEffect {
   constructor(
     private actions$: Actions,
     private commonService: CommonService,
-    private areaCodeApi: AreaCodeApiService
+    private areaCodeApi: AreaCodeApiService,
   ) {}
 
   loadAreaCodes$ = createEffect(() =>
@@ -39,10 +39,12 @@ export class AreaCodeEffect {
         return this.areaCodeApi.addAreaCode(action.payload).pipe(
           map((res: AreaCode) => {
             this.commonService.showSuccessToast('Area code added successfully');
+			this.commonService.dismissLoading();
             return areaCodeActions.addAreaCodeSuccess({ res });
           }),
           catchError((err) => {
             let errMsg: string = err || 'Add area code failed';
+			this.commonService.dismissLoading();
             return of(areaCodeActions.addAreaCodeFail({ error: errMsg }));
           })
         );
@@ -59,6 +61,7 @@ export class AreaCodeEffect {
             this.commonService.showSuccessToast(
               'Area code updated successfully'
             );
+			this.commonService.dismissLoading();
             let response: Update<AreaCode> = {
               id: res._id as string,
               changes: res,
@@ -67,6 +70,7 @@ export class AreaCodeEffect {
           }),
           catchError((err) => {
             let errMsg: string = err || 'Update area code failed';
+			this.commonService.dismissLoading();
             return of(areaCodeActions.updateAreaCodeFail({ error: errMsg }));
           })
         );
@@ -83,10 +87,12 @@ export class AreaCodeEffect {
             this.commonService.showSuccessToast(
               'Area code deleted successfully'
             );
+			this.commonService.dismissLoading();
             return areaCodeActions.deleteAreaCodeSuccess({ id: action.id });
           }),
           catchError((err) => {
             let errMsg: string = err || 'Delete area code failed';
+			this.commonService.dismissLoading();
             return of(areaCodeActions.deleteAreaCodeFail({ error: errMsg }));
           })
         );

@@ -4,18 +4,29 @@ import { AreaCodeListComponent } from 'src/app/modules/secure/area-code/area-cod
 import { AreaCodeStoreService } from 'src/app/service/area-code/area-code-store.service';
 import { Observable, of, Subject, takeUntil } from 'rxjs';
 import { LoaderComponent } from 'src/app/common-component/loader/loader.component';
+import { AreaCode } from 'src/app/store/models/area-code.model';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
 	standalone: true,
 	selector: 'app-area-code',
 	templateUrl: './area-code.component.html',
 	styleUrl: './area-code.component.scss',
-	imports: [CommonModule, AreaCodeListComponent, LoaderComponent],
+	imports: [
+		CommonModule,
+		AreaCodeListComponent,
+		LoaderComponent,
+		NzButtonModule,
+	],
 })
 export class AreaCodeComponent {
 	unsubscribe$: any = new Subject<void>();
 	loader$: Observable<boolean> = of(true);
-	constructor(private areaCodeStore: AreaCodeStoreService) {}
+	constructor(
+		private areaCodeStore: AreaCodeStoreService,
+		private drawerService: NzDrawerService
+	) {}
 
 	ngOnInit() {
 		this.intitalize();
@@ -26,7 +37,7 @@ export class AreaCodeComponent {
 		this.isAreaCodeLoaded();
 	}
 
-	getLoader(){
+	getLoader() {
 		const { getAreaCodeLoader } = this.areaCodeStore;
 		this.loader$ = getAreaCodeLoader();
 	}
@@ -47,6 +58,21 @@ export class AreaCodeComponent {
 
 	loadAreaCodes() {
 		this.areaCodeStore.loadAreaCodes();
+	}
+
+	async addAreaCode(area?: AreaCode) {
+		const { NewAreaCodeComponent } = await import(
+			'src/app/modules/secure/area-code/new-area-code/new-area-code.component'
+		);
+		this.drawerService.create({
+			nzTitle: 'New Area Code',
+			nzClosable: true,
+			nzMaskClosable: false,
+			nzWidth: '50%',
+			nzWrapClassName: 'full-drawer',
+			nzContent: NewAreaCodeComponent,
+			nzData: { area },
+		});
 	}
 
 	ngOnDestroy() {

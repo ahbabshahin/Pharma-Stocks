@@ -1,5 +1,9 @@
 @if(loader$ | async){
 <app-global-loader></app-global-loader>
 }@else{
+<div class="d-flex justify-content-end">
+	<button type="button" nz-button class="primary-btn" nzShape="round" (click)="addAreaCode()">Add Area
+		Code</button>
+</div>
 <app-area-code-list></app-area-code-list>
 }
