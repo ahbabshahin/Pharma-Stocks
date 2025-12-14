@@ -53,7 +53,7 @@
                             <strong>Brand:</strong> {{ list?.brand }}
                         </div>
                         <div class="detail-row" *ngIf="list?.price">
-                            <strong>Price:</strong> ৳ {{ list?.price | number : "1.2-2" }}
+                            <strong>Price:</strong>{{ list?.price  | currency  }}
                         </div>
                         <div class="detail-row" *ngIf="list?.dosage">
                             <strong>Dosage:</strong> {{ list?.dosage }}

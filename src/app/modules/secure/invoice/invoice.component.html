@@ -103,7 +103,7 @@
             <p class="product-details" *ngFor="let product of list?.products">
               <span><strong>Product:</strong> {{ product?.name | titlecase }}</span><br />
               <span><strong>Quantity:</strong> {{ product?.quantity }}</span><br />
-              <span><strong>Price:</strong> ৳ {{ product?.price | number : '1.2-2' }}</span>
+              <span><strong>Price:</strong>{{ product?.price | currency }}</span>
             </p>
 
             <p *ngIf="list?.discount">
@@ -111,7 +111,7 @@
             </p>
 
             <hr />
-            <p class="total-amount"><strong>Total:</strong> ৳ {{ list?.totalAmount | number : '1.2-2' }}</p>
+            <p class="total-amount"><strong>Total:</strong> {{ list?.totalAmount  | currency }}</p>
           </div>
         </div>
       </nz-collapse-panel>

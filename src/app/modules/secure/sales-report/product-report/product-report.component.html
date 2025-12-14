@@ -2,7 +2,7 @@
 <div class="d-flex justify-content-between">
   <div *ngIf="grandTotals">
     <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
-    <p *ngIf="isAmount">৳ {{(grandTotals?.totalRevenue) | number : '1.2-2'}}</p>
+    <p *ngIf="isAmount"> {{(grandTotals?.totalRevenue)  | currency}}</p>
     <p *ngIf="!isAmount">{{(grandTotals?.totalQuantity)}}</p>
   </div>
 

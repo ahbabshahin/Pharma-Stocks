@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AreaCodeListComponent } from 'src/app/modules/secure/area-code/area-code-list/area-code-list.component';
 import { AreaCodeStoreService } from 'src/app/service/area-code/area-code-store.service';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { lastValueFrom, Observable, of, Subject, takeUntil } from 'rxjs';
 import { LoaderComponent } from 'src/app/common-component/loader/loader.component';
 import { AreaCode } from 'src/app/store/models/area-code.model';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { CommonService } from '../../../service/common/common.service';
 
 @Component({
 	standalone: true,
@@ -23,9 +24,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 export class AreaCodeComponent {
 	unsubscribe$: any = new Subject<void>();
 	loader$: Observable<boolean> = of(true);
+	isMobile: boolean = false;
 	constructor(
 		private areaCodeStore: AreaCodeStoreService,
-		private drawerService: NzDrawerService
+		private drawerService: NzDrawerService,
+		private commonService: CommonService
 	) {}
 
 	ngOnInit() {
@@ -35,6 +38,11 @@ export class AreaCodeComponent {
 	intitalize() {
 		this.getLoader();
 		this.isAreaCodeLoaded();
+		this.getScreenSize();
+	}
+
+	async getScreenSize() {
+		this.isMobile = await lastValueFrom(this.commonService.isItAMobile$());
 	}
 
 	getLoader() {
@@ -65,10 +73,10 @@ export class AreaCodeComponent {
 			'src/app/modules/secure/area-code/new-area-code/new-area-code.component'
 		);
 		this.drawerService.create({
-			nzTitle: 'New Area Code',
+			nzTitle: `${area ? 'Update': 'New'} Area Code`,
 			nzClosable: true,
 			nzMaskClosable: false,
-			nzWidth: '50%',
+			nzWidth: this.isMobile ? '100%' : '50%',
 			nzWrapClassName: 'full-drawer',
 			nzContent: NewAreaCodeComponent,
 			nzData: { area },
