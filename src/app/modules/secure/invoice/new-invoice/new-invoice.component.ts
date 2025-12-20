@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 import { Invoice, Product } from '../../../../store/models/invoice.model';
@@ -14,7 +14,7 @@ import { CustomerStoreService } from '../../../../service/customer/customer-stor
 import { BusinessService } from '../../../../service/business/business.service';
 import { AuthService } from '../../../../service/auth/auth.service';
 import { AuthStoreService } from '../../../../service/auth/auth-store.service';
-
+import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-new-invoice',
   templateUrl: './new-invoice.component.html',
@@ -30,7 +30,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   date: Date = new Date();
   products: Stock[] = [];
   customers: Customer[] = [];
-  invoice!: Invoice;
+  invoice!: Invoice<Customer>;
   invoiceForm!: FormGroup;
   customer!: Customer;
   stock!: Stock;
@@ -52,7 +52,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
-    this.getUserRole();
+    // this.getUserRole();
     this.getBusiness();
     this.getCustomers();
     this.getTotalInvoice();
@@ -91,15 +91,15 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   populateForm() {
     this.form.patchValue({
       sn: this.invoice?.sn,
-      customer: this.invoice?.customer,
+      customer: this.invoice?.customer?._id,
       status: this.invoice?.status,
       discount: this.invoice?.discount,
     });
-    const customer = this.customers.find(
-      (item) => item?._id == this.invoice?.customer
-    );
+    // const customer = this.customers.find(
+    //   (item) => item?._id == this.invoice?.customer
+    // );
 
-    if (customer) this.customer = customer;
+    if (this.invoice?.customer) this.customer = this.invoice?.customer;
     this.populateProduct();
   }
 
@@ -259,7 +259,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.form.valid) {
       const formRes = this.form.value;
-      let payload: Invoice = {
+      let payload: Invoice<string> = {
         sn: `SN-${this.total + 1}`,
         products: formRes?.products,
         discount: formRes?.discount,

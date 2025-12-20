@@ -22,9 +22,9 @@ import { DatePipe } from '@angular/common';
 })
 export class ViewInvoiceComponent {
   subs = new SubSink();
-  invoice: Invoice;
+  invoice: Invoice<Customer>;
   business: Business;
-  customer: Customer;
+//   customer: Customer;
   invoiceNumber: number;
   date: string;
   invoiceStatus: string;
@@ -92,7 +92,7 @@ export class ViewInvoiceComponent {
       nzData: { invoice: this.invoice },
     });
 
-    this.subs.sink = drawerRef.afterClose.subscribe((invoice: Invoice) => {
+    this.subs.sink = drawerRef.afterClose.subscribe((invoice: Invoice<Customer>) => {
       if (invoice) {
         this.invoice = invoice;
       }
@@ -100,18 +100,18 @@ export class ViewInvoiceComponent {
   }
 
   getCustomers() {
-    this.subs.sink = this.customerStore.getCustomers().subscribe({
-      next: (customers: Customer[]) => {
+    // this.subs.sink = this.customerStore.getCustomers().subscribe({
+    //   next: (customers: Customer[]) => {
 
-        if (customers?.length)
-          this.customer = customers.find(
-            (item) => item?._id === this.invoice?.customer
-          ) as Customer;
-      },
-      error: () => {
+    //     if (customers?.length)
+    //       this.customer = customers.find(
+    //         (item) => item?._id === this.invoice?.customer
+    //       ) as Customer;
+    //   },
+    //   error: () => {
 
-      },
-    });
+    //   },
+    // });
   }
 
   async deleteInvoice() {
@@ -157,13 +157,13 @@ export class ViewInvoiceComponent {
       doc.line(15, 50, 195, 50);
 
       // Customer Details
-      doc.text(`Customer code: #${this.customer?.sn || 'N/A'}`, 15, 55);
-      doc.text(`Customer: ${this.customer?.name || 'N/A'}`, 15, 60);
-      if (this.customer?.contacts) {
-        doc.text(`Phone: ${this.customer.contacts}`, 15, 70);
+      doc.text(`Customer code: #${this.invoice?.customer?.sn || 'N/A'}`, 15, 55);
+      doc.text(`Customer: ${this.invoice?.customer?.name || 'N/A'}`, 15, 60);
+      if (this.invoice?.customer?.contacts) {
+        doc.text(`Phone: ${this.invoice?.customer.contacts}`, 15, 70);
       }
-      if (this.customer?.address) {
-        doc.text(`Address: ${this.customer.address}`, 15, 80);
+      if (this.invoice?.customer?.address) {
+        doc.text(`Address: ${this.invoice?.customer.address}`, 15, 80);
       }
 
       // Generate Table of Products

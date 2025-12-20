@@ -40,7 +40,7 @@
         Phone: {{ business?.contact }}
       </address>
         </div>
-        <div class="info-group">
+        <div class="info-group" *ngIf="invoice?.customer as customer">
             <h6>Customer Details:</h6>
             <span *ngIf="customer?.sn">Customer Code: #{{ customer?.sn }}</span>
             <p>{{ customer?.name | titlecase }}</p>

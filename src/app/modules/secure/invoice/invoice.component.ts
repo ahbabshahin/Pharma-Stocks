@@ -12,7 +12,7 @@ import { InvoiceApiService } from '../../../service/invoice/invoice-api.service'
 import { CommonService } from '../../../service/common/common.service';
 
 type ComponentState = {
-  invoices: Invoice[];
+  invoices: Invoice<Customer>[];
   total: number;
   isMore: boolean;
   customers: Customer[];
@@ -80,8 +80,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       searchText: '',
     };
     this.getLoader();
-    this.isCustomerLoaded();
-    this.getCustomers();
+    // this.isCustomerLoaded();
+    // this.getCustomers();
     this.isInvoiceLoaded();
     this.getInvoices();
   }
@@ -96,7 +96,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   getInvoices() {
     this.subs.sink = this.invoiceStoreService.getInvoices().subscribe({
-      next: (res: Invoice[]) => {
+      next: (res: Invoice<Customer>[]) => {
         if (res) {
           this.componentState = {
             ...this.componentState,
@@ -186,7 +186,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  async addInvoice(invoice?: Invoice) {
+  async addInvoice(invoice?: Invoice<Customer>) {
     const { NewInvoiceComponent } = await import(
       './new-invoice/new-invoice.component'
     );
@@ -201,7 +201,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  async viewInvoice(invoice: Invoice) {
+  async viewInvoice(invoice: Invoice<Customer>) {
     const { ViewInvoiceComponent } = await import(
       './view-invoice/view-invoice.component'
     );

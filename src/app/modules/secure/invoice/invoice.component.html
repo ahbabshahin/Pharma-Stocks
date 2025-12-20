@@ -80,7 +80,7 @@
         <ng-template #collapseHeader>
           <div class="collapse-header" (click)="$event.stopPropagation()">
             <span class="customer-name">
-              {{list?.sn}} - {{ (componentState?.customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
+              {{list?.sn}} - {{ list?.customer?.name || 'Unknown Customer' }}
             </span>
             <div class="header-details">
               <span class="date">{{ list?.createdAt | date : 'dd-MM-yyyy' }}</span>
