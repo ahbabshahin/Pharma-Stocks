@@ -36,9 +36,11 @@
               [(ngModel)]="customer"
               [ngModelOptions]="{ standalone: true }"
               (ngModelChange)="onCustomerSelect($event)"
+			  (nzOnSearch)="searchCustomer($event)"
             >
-              <nz-option
-                *ngFor="let customer of customers; let i = index"
+			<!--*ngFor="let customer of customers(); let i = index" -->
+              @for(customer of customers(); track customer._id; let i = $index){
+				<nz-option
                 nzCustomContent
                 [nzLabel]="customer.name"
                 [nzValue]="customer"
@@ -46,7 +48,7 @@
                 <!-- <span nz-icon nzType="windows"></span> -->
                 {{ customer?.name | titlecase }}
                 <!-- ({{ customer?.contacts }}) -->
-              </nz-option>
+              </nz-option>}
             </nz-select>
 
             <!-- <nz-autocomplete #autoC [nzDefaultActiveFirstOption]="false">
@@ -93,7 +95,7 @@
         </div>
 
         <!-- 🔹 New Info Section -->
-        @if((role === 'admin' || role === 'office') && customer?.customMessage){
+        @if((role() === 'admin' || role() === 'office') && customer?.customMessage){
           <div class="meta-info" (click)="info()">
           <span nz-icon nzType="info-circle" nzTheme="outline" class="info-icon"></span>
           <span class="meta-text">Additional Info</span>
@@ -134,16 +136,17 @@
                     />
                     <div class="autocomplete-wrapper">
                       <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false" [nzBackfill]="true">
-                        <ng-container *ngIf="products.length > 0">
-                          <nz-auto-option
-                            *ngFor="let item of products"
+                        <ng-container *ngIf="products().length > 0">
+							<!-- *ngFor="let item of products()"˚s -->
+                          @for(item of products(); track item._id){
+							<nz-auto-option
                             [nzValue]="item?.name"
                             (click)="onProductSelect(item, i)"
                           >
                             <div class="d-flex jc-between gap-2">
                               <span>{{ item?.name | titlecase }}</span>
                             </div>
-                          </nz-auto-option>
+                          </nz-auto-option>}
                         </ng-container>
                       </nz-autocomplete>
                     </div>
@@ -248,7 +251,10 @@
                   <input nz-input [nzBorderless]="true" formControlName="bonus" type="number" placeholder="Qty"
                           min="0" aria-label="Bonus Qty" />
                 </td>
-                <td>৳ {{ calculateProductTotal(product, i) }}</td>
+                <!-- <td>৳ {{ calculateProductTotal(product, i) }}</td> -->
+                <td>
+					 {{ product?.get('total')?.value | currency}}
+                </td>
                 <td>
                   <button
                     *ngIf="i !== 0"
@@ -317,7 +323,7 @@
             %
           </div>
           <nz-divider></nz-divider>
-          <p>Total Amount: {{ totalAmount | currency  }}</p>
+          <p>Total Amount: {{ totals()?.total | currency  }}</p>
         </div>
       </footer>
     </div>

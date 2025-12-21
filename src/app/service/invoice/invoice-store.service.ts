@@ -7,6 +7,7 @@ import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs';
 import { InvoiceState } from '../../store/reducers/invoice.reducer';
 import { Customer } from 'src/app/store/models/customer.model';
+import { toSignal } from '@angular/core/rxjs-interop';
 @Injectable()
 export class InvoiceStoreService {
   constructor(private store: Store<InvoiceState>) {}
@@ -82,4 +83,10 @@ export class InvoiceStoreService {
     this.select(invoiceSelectors.getTotalInvoice);
   getInvoices = (): Observable<Invoice<Customer>[]> =>
     this.select(invoiceSelectors.getInvoices);
+
+  getInvoiceById = (id: string): Observable<Invoice<Customer>> =>
+	this.select(invoiceSelectors.getInvoiceById(id))
+
+  totalInvoice = toSignal(this.getTotalInvoice(), {initialValue: 0});
+  invoices = toSignal(this.getInvoices(), {initialValue: []});
 }

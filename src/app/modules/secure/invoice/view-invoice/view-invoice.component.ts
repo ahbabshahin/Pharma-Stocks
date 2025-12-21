@@ -1,19 +1,18 @@
-import { Component } from '@angular/core';
-import { Business } from '../../../../store/models/business.model';
-import { Customer } from '../../../../store/models/customer.model';
-import { Invoice } from '../../../../store/models/invoice.model';
-import { CommonService } from '../../../../service/common/common.service';
-import { NewInvoiceComponent } from '../new-invoice/new-invoice.component';
+import { Component, computed, Injector, Signal } from '@angular/core';
+import { Business } from 'src/app/store/models/business.model';
+import { Customer } from 'src/app/store/models/customer.model';
+import { Invoice, Product } from 'src/app/store/models/invoice.model';
+import { CommonService } from 'src/app/service/common/common.service';
+import { NewInvoiceComponent } from 'src/app/modules/secure/invoice/new-invoice/new-invoice.component';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
-import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
-import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
-import { Observable } from 'rxjs';
-import { SubSink } from 'subsink';
-import { BusinessService } from '../../../../service/business/business.service';
-import { AuthStoreService } from '../../../../service/auth/auth-store.service';
+import { InvoiceStoreService } from 'src/app/service/invoice/invoice-store.service';
+import { CustomerStoreService } from 'src/app/service/customer/customer-store.service';
+import { BusinessService } from 'src/app/service/business/business.service';
+import { AuthStoreService } from 'src/app/service/auth/auth-store.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-view-invoice',
@@ -21,10 +20,8 @@ import { DatePipe } from '@angular/common';
   styleUrl: './view-invoice.component.scss',
 })
 export class ViewInvoiceComponent {
-  subs = new SubSink();
-  invoice: Invoice<Customer>;
+  invoice!: Invoice<Customer>;
   business: Business;
-//   customer: Customer;
   invoiceNumber: number;
   date: string;
   invoiceStatus: string;
@@ -33,26 +30,34 @@ export class ViewInvoiceComponent {
   totalAmount: number;
   isAdmin: boolean = false;
 
+	// signal
+	invoiceSignal: Signal<Invoice<Customer> | null>;
   constructor(
     private commonService: CommonService,
     private drawerService: NzDrawerService,
     private invoiceStore: InvoiceStoreService,
-    private customerStore: CustomerStoreService,
     private businessService: BusinessService,
     private authStore: AuthStoreService,
     private drawerRef: NzDrawerRef,
     private datePipe: DatePipe,
+	private injector: Injector,
   ) {}
 
   ngOnInit() {
-    this.initialize();
+	  this.initialize();
   }
 
   async initialize() {
+	this.invoiceSignal = toSignal(
+		this.invoiceStore.getInvoiceById(this.invoice?._id as string),
+		{
+			initialValue: null,
+			injector: this.injector,
+		}
+	);
     await this.isAdminUser();
     this.getBusiness();
-    this.getCustomers();
-    this.date = this.datePipe.transform(this.invoice.createdAt, 'dd-MM-yyyy') as string;
+    this.date = this.datePipe.transform(this.invoiceSignal()?.createdAt, 'dd-MM-yyyy') as string;
   }
 
   getBusiness() {
@@ -66,18 +71,36 @@ export class ViewInvoiceComponent {
 
   }
 
+  invoiceWithTotals = computed(() => {
+    const invoice = this.invoiceSignal();
+    if (!invoice) return null;
+
+    // Map the products to include the calculated total
+    const enhancedProducts = invoice.products.map((product: Product) => {
+        const tp = product?.tp || 0;
+        const vat = product?.vat || 0;
+        const quantity = product?.quantity || 0;
+
+        return {
+            ...product,
+            total: quantity * (tp + vat)
+        };
+    });
+
+    // Return the new object structure
+    return {
+        ...invoice,
+        products: enhancedProducts
+    };
+});
+
   calculateProductTotal(product: any): number {
     const quantity = product?.quantity || 0;
     const price = product?.price || 0;
     const tp = product?.tp || 0;
     const vat = product?.vat || 0;
+	product
     return quantity * (tp + vat);
-  }
-
-  get subTotalAmount(): number {
-    return this.invoice?.products.reduce((total, product) => {
-      return total + this.calculateProductTotal(product);
-    }, 0);
   }
 
   updateInvoice() {
@@ -89,29 +112,8 @@ export class ViewInvoiceComponent {
       nzWrapClassName: 'full-drawer',
       // nzSize: 'large',
       nzContent: NewInvoiceComponent,
-      nzData: { invoice: this.invoice },
+      nzData: { invoice: this.invoiceSignal() },
     });
-
-    this.subs.sink = drawerRef.afterClose.subscribe((invoice: Invoice<Customer>) => {
-      if (invoice) {
-        this.invoice = invoice;
-      }
-    });
-  }
-
-  getCustomers() {
-    // this.subs.sink = this.customerStore.getCustomers().subscribe({
-    //   next: (customers: Customer[]) => {
-
-    //     if (customers?.length)
-    //       this.customer = customers.find(
-    //         (item) => item?._id === this.invoice?.customer
-    //       ) as Customer;
-    //   },
-    //   error: () => {
-
-    //   },
-    // });
   }
 
   async deleteInvoice() {
@@ -122,7 +124,7 @@ export class ViewInvoiceComponent {
     if (!ok) return;
 
     this.commonService.presentLoading();
-    this.invoiceStore.deleteInvoice(this.invoice?._id as string);
+    this.invoiceStore.deleteInvoice(this.invoiceSignal()?._id as string);
     this.drawerRef.close();
   }
 
@@ -149,28 +151,28 @@ export class ViewInvoiceComponent {
 
       // Invoice Details
       doc.setFontSize(12);
-      doc.text(`Invoice #: ${this.invoice?.sn || 'N/A'}`, 140, 20);
+      doc.text(`Invoice #: ${this.invoiceSignal()?.sn || 'N/A'}`, 140, 20);
       doc.text(`Date: ${this.date}`, 140, 30);
-      doc.text(`Status: ${this.invoice?.status || 'N/A'}`, 140, 40);
+      doc.text(`Status: ${this.invoiceSignal()?.status || 'N/A'}`, 140, 40);
 
       // Line Separator
       doc.line(15, 50, 195, 50);
 
       // Customer Details
-      doc.text(`Customer code: #${this.invoice?.customer?.sn || 'N/A'}`, 15, 55);
-      doc.text(`Customer: ${this.invoice?.customer?.name || 'N/A'}`, 15, 60);
-      if (this.invoice?.customer?.contacts) {
-        doc.text(`Phone: ${this.invoice?.customer.contacts}`, 15, 70);
+      doc.text(`Customer code: #${this.invoiceSignal()?.customer?.sn || 'N/A'}`, 15, 55);
+      doc.text(`Customer: ${this.invoiceSignal()?.customer?.name || 'N/A'}`, 15, 60);
+      if (this.invoiceSignal()?.customer?.contacts) {
+        doc.text(`Phone: ${this.invoiceSignal()?.customer.contacts}`, 15, 70);
       }
-      if (this.invoice?.customer?.address) {
-        doc.text(`Address: ${this.invoice?.customer.address}`, 15, 80);
+      if (this.invoiceSignal()?.customer?.address) {
+        doc.text(`Address: ${this.invoiceSignal()?.customer.address}`, 15, 80);
       }
 
       // Generate Table of Products
       autoTable(doc, {
         startY: 90,
         head: [['Product Name', 'Quantity', 'TP (/=)', 'VAT (/=)', 'Bonus Qty' ,'Total (/=)']],
-        body: this.invoice?.products.map(product => [
+        body: this.invoiceSignal()?.products.map(product => [
           product.name,
           product.quantity,
           product?.tp.toFixed(2),
@@ -185,8 +187,8 @@ export class ViewInvoiceComponent {
       // Calculate & Display Total
       const finalY = (doc as any).lastAutoTable.finalY + 10;
       // doc.text(`Subtotal: ${this.subTotalAmount.toFixed(2)}/=`, 140, finalY + 10);
-      // doc.text(`Discount: ${this.invoice.discount || 0}%`, 140, finalY + 20);
-      doc.text(`Total Amount: ${this.invoice?.totalAmount.toFixed(2)}/=`, 140, finalY + 10);
+      // doc.text(`Discount: ${this.invoiceSignal().discount || 0}%`, 140, finalY + 20);
+      doc.text(`Total Amount: ${this.invoiceSignal()?.totalAmount.toFixed(2)}/=`, 140, finalY + 10);
 
       // Signature Section with equal spacing and line lengths
       const signatureY = finalY + 50;
@@ -216,20 +218,18 @@ export class ViewInvoiceComponent {
   }
 
   async showLogs() {
-    const { LogComponent } = await import('../../../../common-component/log/log.component');
+    const { LogComponent } = await import('src/app/common-component/log/log.component');
     this.drawerService.create({
       nzTitle: 'Activity Logs',
       nzWidth: '100%',
       nzWrapClassName: 'full-drawer',
       nzContent: LogComponent,
       nzData: {
-        logs: this.invoice?.activity_log,
+        logs: this.invoiceSignal()?.activity_log,
       },
     });
   }
 
 
-  ngOnDestroy() {
-    this.subs.unsubscribe();
-  }
+  ngOnDestroy() {}
 }

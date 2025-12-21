@@ -21,4 +21,5 @@ export interface Product {
   vat: number;
   bonus: number;
   _id: string;
+  total?: number;
 }

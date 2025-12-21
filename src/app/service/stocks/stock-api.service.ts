@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Config } from '../../config';
 import { Stock } from '../../store/models/stocks.model';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class StockApiService {
@@ -26,7 +26,7 @@ export class StockApiService {
     return this.http.delete(`${this.env.rootURL}/v1/stock/${id}`);
   }
 
-  searchStock(params: { [key: string]: any }) {
-    return this.http.get(`${this.env.rootURL}/v1/stock/search`, { params });
+  searchStock(params: { [key: string]: any }){
+    return this.http.get(`${this.env.rootURL}/v1/stock/search`, { params })
   }
 }
