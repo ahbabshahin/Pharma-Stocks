@@ -1,15 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { StockState } from '../../store/reducers/stocks.reducer';
-import { Observable } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap } from 'rxjs';
 import * as stockActions from '../../store/actions/stocks.action';
 import { Stock } from '../../store/models/stocks.model';
 import { Update } from '@ngrx/entity';
 import * as stockSelectors from '../../store/selectors/stocks.selector';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { StockApiService } from './stock-api.service';
 
 @Injectable()
 export class StockStoreService {
-  constructor(private store: Store<StockState>) {}
+	stockSearchTerm = signal('');
+
+  constructor(private store: Store<StockState>,
+	private stockApi: StockApiService,
+  ) {}
 
   dispatch = (action: Action) => this.store.dispatch(action);
   select = <T>(action: any): Observable<T> => this.store.select(action);
@@ -86,4 +92,32 @@ export class StockStoreService {
     this.select(stockSelectors.getStockError);
 
   getStocks = (): Observable<Stock[]> => this.select(stockSelectors.getStocks);
+
+  setStockSearchParams(searchTerm: string){
+	const searchText: string = searchTerm?.trim();
+	this.stockSearchTerm.set(searchText);
+  }
+
+  products: Signal<Stock[]> = toSignal(
+	toObservable(this.stockSearchTerm).pipe(
+		debounceTime(300),
+		distinctUntilChanged(),
+		switchMap((searchTerm: string) =>{
+			if(!searchTerm) return [];
+			const params = {
+				query: searchTerm,
+			};
+			const request$ = this.stockApi.searchStock(params).pipe(
+				map((res: any) => res?.body)
+			);
+
+			return request$.pipe(
+				catchError((err) => {
+					return of([]);
+				})
+			)
+		})
+	),
+	{initialValue: []}
+  )
 }

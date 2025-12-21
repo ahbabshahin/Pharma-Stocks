@@ -1,4 +1,4 @@
-import { isDevMode, NgModule, APP_INITIALIZER } from '@angular/core';
+import { isDevMode, NgModule, APP_INITIALIZER, DEFAULT_CURRENCY_CODE } from '@angular/core';
 import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +27,7 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SalesReportEffects } from './store/effects/sales-report.effect';
 import { NotificationEffects } from './store/effects/notification.effect';
+import { LayoutModule } from '@angular/cdk/layout';
 registerLocaleData(en);
 
 export function loadConfig(config: Config): () => Promise<void> {
@@ -50,6 +51,7 @@ export function loadConfig(config: Config): () => Promise<void> {
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     SharedModule,
+	LayoutModule,
   ],
   exports: [RouterModule, RouterOutlet, HttpClientModule],
   bootstrap: [AppComponent],
@@ -68,6 +70,7 @@ export function loadConfig(config: Config): () => Promise<void> {
       multi: true,
     },
     { provide: NZ_I18N, useValue: en_US },
+	{provide: DEFAULT_CURRENCY_CODE, useValue:'৳'},
     provideAnimationsAsync(),
     provideHttpClient(),
     // provideToastr(),

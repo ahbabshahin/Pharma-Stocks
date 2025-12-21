@@ -33,3 +33,11 @@ export const getInvoices = createSelector(
   getInvoiceState,
   invoiceAdapter.getSelectors().selectAll
 );
+
+export const selectInvoiceEntities = createSelector(
+	getInvoiceState,
+	invoiceAdapter.getSelectors().selectEntities,
+);
+
+export const getInvoiceById = (id: string) =>
+	createSelector(selectInvoiceEntities, (entities) => entities[id]);

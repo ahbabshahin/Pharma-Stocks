@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { Invoice } from '../models/invoice.model';
+import { Customer } from '../models/customer.model';
 
 export const setLoader = createAction(
   '[Invoice] set loader',
@@ -22,7 +23,7 @@ export const loadInvoice = createAction(
 );
 export const loadInvoiceSuccess = createAction(
   '[Invoice] load invoice success',
-  props<{ res: Invoice[]; total: number, isMore: boolean }>()
+  props<{ res: Invoice<Customer>[]; total: number, isMore: boolean }>()
 );
 export const loadInvoiceFail = createAction(
   '[Invoice] load invoice fail',
@@ -31,11 +32,11 @@ export const loadInvoiceFail = createAction(
 
 export const addInvoice = createAction(
   '[Invoice] add invoice',
-  props<{ payload: Invoice }>()
+  props<{ payload: Invoice<string> }>()
 );
 export const addInvoiceSuccess = createAction(
-  '[Invoice] add invoice success',
-  props<{ res: Invoice }>()
+	'[Invoice] add invoice success',
+	props<{ res: Invoice<Customer> }>()
 );
 export const addInvoiceFail = createAction(
   '[Invoice] add invoice fail',
@@ -44,11 +45,11 @@ export const addInvoiceFail = createAction(
 
 export const updateInvoice = createAction(
   '[Invoice] update invoice',
-  props<{ payload: Invoice }>()
+  props<{ payload: Invoice<string> }>()
 );
 export const updateInvoiceSuccess = createAction(
-  '[Invoice] update invoice success',
-  props<{ res: Update<Invoice> }>()
+	'[Invoice] update invoice success',
+	props<{ res: Update<Invoice<Customer>> }>()
 );
 export const updateInvoiceFail = createAction(
   '[Invoice] update invoice fail',

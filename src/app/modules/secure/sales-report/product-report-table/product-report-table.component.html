@@ -14,9 +14,9 @@
     <tr *ngFor="let data of sortTable.data">
       <td>{{ data?.product | titlecase}}</td>
       <td>{{ data?.totalQuantity }}</td>
-      <td>৳ {{ data?.price | number: '1.2-2' }}</td>
+      <td>{{ data?.price | currency }}</td>
       <td>{{ data?.discount  }}%</td>
-      <td>৳ {{ data?.totalRevenue | number: '1.2-2'}}</td>
+      <td>{{ data?.totalRevenue | currency}}</td>
     </tr>
   </tbody>
 </nz-table>

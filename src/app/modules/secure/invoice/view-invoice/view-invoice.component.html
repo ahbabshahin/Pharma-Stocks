@@ -40,7 +40,7 @@
         Phone: {{ business?.contact }}
       </address>
         </div>
-        <div class="info-group">
+        <div class="info-group" *ngIf="invoiceSignal()?.customer as customer">
             <h6>Customer Details:</h6>
             <span *ngIf="customer?.sn">Customer Code: #{{ customer?.sn }}</span>
             <p>{{ customer?.name | titlecase }}</p>
@@ -50,9 +50,9 @@
       </address>
         </div>
         <div class="info-group invoice-meta">
-            <span>Invoice #: <span>{{ invoice?.sn || "N/A" }}</span></span><br />
+            <span>Invoice #: <span>{{ invoiceSignal()?.sn || "N/A" }}</span></span><br />
             <span>Date: <span>{{ date  }}</span></span><br />
-            <span>Status: <span>{{ invoice?.status | titlecase }}</span></span>
+            <span>Status: <span>{{ invoiceSignal()?.status | titlecase }}</span></span>
         </div>
     </section>
 
@@ -70,14 +70,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let product of invoice?.products">
+                <tr *ngFor="let product of invoiceWithTotals()?.products">
                     <td>{{ product.name | titlecase }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.price | number: "1.2-2" }}</td>
                     <td>{{ (product?.tp) | number: "1.2-2" }}</td>
                     <td>{{ (product?.vat || 0) | number: "1.2-2" }}</td>
                     <td>{{ (product?.bonus || 0) }}</td>
-                    <td>{{ calculateProductTotal(product) }}</td>
+                    <td>{{ product?.total | number: "1.2-2"}}</td>
                 </tr>
             </tbody>
         </table>
@@ -85,10 +85,9 @@
 
     <footer class="invoice-footer">
         <div class="summary">
-            <!-- <p>Sub Amount: ৳ {{ subTotalAmount | number: "1.2-2" }}</p> -->
-            <p>Discount: {{ invoice.discount || 0 }}%</p>
+            <p>Discount: {{ invoiceSignal()?.discount || 0 }}%</p>
             <nz-divider></nz-divider>
-            <p><strong>Total Amount: ৳ {{ invoice?.totalAmount | number: "1.2-2" }}</strong></p>
+            <p><strong>Total Amount: {{ invoiceSignal()?.totalAmount| currency }}</strong></p>
         </div>
     </footer>
 

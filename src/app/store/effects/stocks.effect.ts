@@ -136,7 +136,7 @@ export class StockEffects {
         switchMap((action) => {
           return this.stockApi.searchStock(action.params).pipe(
             map((res: any) => {
-              if (res?.body?.length) {
+              if (res?.bodylength) {
                 this.stockStore.searchStockSuccess(res.body ?? [], res?.total ?? 0);
               } else {
                 this.commonService.showErrorToast('Stock search failed');

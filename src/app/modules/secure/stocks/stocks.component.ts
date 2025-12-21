@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { StockStoreService } from '../../../service/stocks/stock-store.service';
 import { CommonService } from '../../../service/common/common.service';
 import { SubSink } from 'subsink';
-import { Observable, of } from 'rxjs';
+import { lastValueFrom, Observable, of } from 'rxjs';
 import { Stock } from '../../../store/models/stocks.model';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NewStockComponent } from './new-stock/new-stock.component';
@@ -27,7 +27,7 @@ export class StocksComponent {
   subLoader$: Observable<boolean> = of(false);
   isMore: boolean = false;
   isAdmin: boolean = false;
-
+  isMobile: boolean = false;
   constructor(
     private stockStore: StockStoreService,
     private commonService: CommonService,
@@ -45,6 +45,11 @@ export class StocksComponent {
     this.isStockLoaded();
     this.getStocks();
     this.getTotalStocks();
+	this.getScreenSize();
+  }
+
+  async getScreenSize() {
+	this.isMobile = await lastValueFrom(this.commonService.isItAMobile$());
   }
 
   isStockLoaded() {
@@ -98,14 +103,14 @@ export class StocksComponent {
   addStock(stock?: Stock) {
 
     this.drawerService.create({
-      nzTitle: 'New Stock',
-      nzClosable: true,
-      nzMaskClosable: false,
-      nzWidth: '50%',
-      // nzWrapClassName: 'md-drawer',
-      nzContent: NewStockComponent,
-      nzData: { stock },
-    });
+		nzTitle: `${stock ? 'Update' : 'New'} Stock`,
+		nzClosable: true,
+		nzMaskClosable: false,
+		nzWidth: this.isMobile ? '100%' : '50%',
+		// nzWrapClassName: 'md-drawer',
+		nzContent: NewStockComponent,
+		nzData: { stock },
+	});
   }
 
   async deleteStock(id: string) {
