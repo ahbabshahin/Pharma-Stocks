@@ -1,110 +1,153 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, Signal } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { CustomerState } from '../../store/reducers/customer.reducer';
-import { Observable } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap } from 'rxjs';
 import * as customerActions from '../../store/actions/customer.action';
 import { Update } from '@ngrx/entity';
 import { Customer } from '../../store/models/customer.model';
 import * as customerSelectors from '../../store/selectors/customer.selector';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { CustomerApiService } from './customer-api.service';
 
 @Injectable()
 export class CustomerStoreService {
-  constructor(private store: Store<CustomerState>) {}
+	customerSearchTerm = signal('');
 
-  dispatch = (action: Action) => this.store.dispatch(action);
-  select = <T>(action: any): Observable<T> => this.store.select(action);
+	constructor(
+		private store: Store<CustomerState>,
+		private customerApi: CustomerApiService
+	) {}
 
-  // Set Sub Loader
-  setCustomerSubLoader(status: boolean) {
-    this.dispatch(customerActions.setCustomerSubLoader({ status }));
-  }
+	dispatch = (action: Action) => this.store.dispatch(action);
+	select = <T>(action: any): Observable<T> => this.store.select(action);
 
-  // Load Customers
-  loadCustomer(params: { [key: string]: any }, isMore: boolean) {
-    this.dispatch(customerActions.loadCustomer({ params, isMore }));
-  }
-  loadCustomerSuccess(res: Customer[], total: number, isMore: boolean) {
-    this.dispatch(customerActions.loadCustomerSuccess({ res, total, isMore }));
-  }
-  loadCustomerFail(error: string) {
-    this.dispatch(customerActions.loadCustomerFail({ error }));
-  }
+	// Set Sub Loader
+	setCustomerSubLoader(status: boolean) {
+		this.dispatch(customerActions.setCustomerSubLoader({ status }));
+	}
 
-  // Add Customer
-  addCustomer(payload: Customer) {
-    this.dispatch(customerActions.addCustomer({ payload }));
-  }
-  addCustomerSuccess(res: Customer) {
-    this.dispatch(customerActions.addCustomerSuccess({ res }));
-  }
-  addCustomerFail(error: string) {
-    this.dispatch(customerActions.addCustomerFail({ error }));
-  }
+	// Load Customers
+	loadCustomer(params: { [key: string]: any }, isMore: boolean) {
+		this.dispatch(customerActions.loadCustomer({ params, isMore }));
+	}
+	loadCustomerSuccess(res: Customer[], total: number, isMore: boolean) {
+		this.dispatch(
+			customerActions.loadCustomerSuccess({ res, total, isMore })
+		);
+	}
+	loadCustomerFail(error: string) {
+		this.dispatch(customerActions.loadCustomerFail({ error }));
+	}
 
-  // Update Customer
-  updateCustomer(payload: Customer) {
-    this.dispatch(customerActions.updateCustomer({ payload }));
-  }
-  updateCustomerSuccess(res: Update<Customer>) {
-    this.dispatch(customerActions.updateCustomerSuccess({ res }));
-  }
-  updateCustomerFail(error: string) {
-    this.dispatch(customerActions.updateCustomerFail({ error }));
-  }
+	// Add Customer
+	addCustomer(payload: Customer) {
+		this.dispatch(customerActions.addCustomer({ payload }));
+	}
+	addCustomerSuccess(res: Customer) {
+		this.dispatch(customerActions.addCustomerSuccess({ res }));
+	}
+	addCustomerFail(error: string) {
+		this.dispatch(customerActions.addCustomerFail({ error }));
+	}
 
-  // Delete Customer
-  deleteCustomer(id: string) {
-    this.dispatch(customerActions.deleteCustomer({ id }));
-  }
-  deleteCustomerSuccess(id: string) {
-    this.dispatch(customerActions.deleteCustomerSuccess({ id }));
-  }
-  deleteCustomerFail(error: string) {
-    this.dispatch(customerActions.deleteCustomerFail({ error }));
-  }
+	// Update Customer
+	updateCustomer(payload: Customer) {
+		this.dispatch(customerActions.updateCustomer({ payload }));
+	}
+	updateCustomerSuccess(res: Update<Customer>) {
+		this.dispatch(customerActions.updateCustomerSuccess({ res }));
+	}
+	updateCustomerFail(error: string) {
+		this.dispatch(customerActions.updateCustomerFail({ error }));
+	}
 
-  // Search Customer
-  searchCustomer(params: { [key: string]: any }, isMore: boolean) {
-    this.dispatch(customerActions.searchCustomer({ params, isMore }));
-  }
-  searchCustomerSuccess(res: Customer[]) {
-    this.dispatch(customerActions.searchCustomerSuccess({ res }));
-  }
-  searchCustomerFail(error: string) {
-    this.dispatch(customerActions.searchCustomerFail({ error }));
-  }
+	// Delete Customer
+	deleteCustomer(id: string) {
+		this.dispatch(customerActions.deleteCustomer({ id }));
+	}
+	deleteCustomerSuccess(id: string) {
+		this.dispatch(customerActions.deleteCustomerSuccess({ id }));
+	}
+	deleteCustomerFail(error: string) {
+		this.dispatch(customerActions.deleteCustomerFail({ error }));
+	}
 
-  //selectors
+	// Search Customer
+	searchCustomer(params: { [key: string]: any }, isMore: boolean) {
+		this.dispatch(customerActions.searchCustomer({ params, isMore }));
+	}
+	searchCustomerSuccess(res: Customer[]) {
+		this.dispatch(customerActions.searchCustomerSuccess({ res }));
+	}
+	searchCustomerFail(error: string) {
+		this.dispatch(customerActions.searchCustomerFail({ error }));
+	}
 
-  getCustomerLoader = (): Observable<boolean> =>
-    this.select(customerSelectors.getCustomerLoader);
+	//selectors
 
-  getCustomerSubLoader = (): Observable<boolean> =>
-    this.select(customerSelectors.getCustomerSubLoader);
+	getCustomerLoader = (): Observable<boolean> =>
+		this.select(customerSelectors.getCustomerLoader);
 
-  getCustomerLoaded = (): Observable<boolean> =>
-    this.select(customerSelectors.getCustomerLoaded);
+	getCustomerSubLoader = (): Observable<boolean> =>
+		this.select(customerSelectors.getCustomerSubLoader);
 
-  getCustomerTotal = (): Observable<number> =>
-    this.select(customerSelectors.getCustomerTotal);
+	getCustomerLoaded = (): Observable<boolean> =>
+		this.select(customerSelectors.getCustomerLoaded);
 
-  getCustomerError = (): Observable<string> =>
-    this.select(customerSelectors.getCustomerError);
+	getCustomerTotal = (): Observable<number> =>
+		this.select(customerSelectors.getCustomerTotal);
 
-  getCustomers = (): Observable<Customer[]> =>
-    this.select(customerSelectors.getCustomers);
+	getCustomerError = (): Observable<string> =>
+		this.select(customerSelectors.getCustomerError);
 
-  generateSerialNumber() {
-    // Generate two random uppercase letters
-    const letters = String.fromCharCode(
-      Math.floor(Math.random() * 26) + 65,
-      Math.floor(Math.random() * 26) + 65
-    );
+	getCustomers = (): Observable<Customer[]> =>
+		this.select(customerSelectors.getCustomers);
 
-    // Generate four random digits
-    const digits = Math.floor(1000 + Math.random() * 9000);
+	generateSerialNumber() {
+		// Generate two random uppercase letters
+		const letters = String.fromCharCode(
+			Math.floor(Math.random() * 26) + 65,
+			Math.floor(Math.random() * 26) + 65
+		);
 
-    // Combine letters and digits
-    return letters + digits;
-  }
+		// Generate four random digits
+		const digits = Math.floor(1000 + Math.random() * 9000);
+
+		// Combine letters and digits
+		return letters + digits;
+	}
+
+	setCustomerSearchParams(search: string) {
+		console.log('search: ', search);
+		let searchTerm = search?.trim();
+		this.customerSearchTerm?.set(searchTerm);
+	}
+
+	customers: Signal<Customer[]> = toSignal(
+		toObservable(this.customerSearchTerm).pipe(
+			debounceTime(300),
+			distinctUntilChanged(),
+			switchMap((search: string) => {
+				if (!search) return [];
+				else {
+					const params = {
+						name: search,
+					};
+
+				const request$ = this.customerApi.searchCustomer(params);
+
+				return request$.pipe(
+					catchError((error) => {
+						return of([]);
+					})
+				);
+
+					// return request$
+				}
+			})
+		),
+		{
+			initialValue: [],
+		}
+	);
 }

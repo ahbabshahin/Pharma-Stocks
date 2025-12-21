@@ -22,7 +22,7 @@
         <td>{{customer?.customerName | titlecase}}</td>
         <td>{{customer?.areaCode}}</td>
         <td>{{customer?.totalQuantity}}</td>
-        <td> ৳ {{customer?.totalRevenue | number : '1.2-2'}}</td>
+        <td>{{customer?.totalRevenue  | currency}}</td>
         <!-- <td>
           <span nz-icon nzType="eye" nzTheme="outline"></span>
         </td> -->

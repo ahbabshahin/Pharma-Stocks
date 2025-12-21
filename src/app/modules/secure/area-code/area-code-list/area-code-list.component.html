@@ -22,9 +22,9 @@
 				<td>{{code?.title | titlecase}}</td>
 				<td>{{code?.code}}</td>
 				<td>{{code?.manager?.name | titlecase}}</td>
-				<td>৳ {{code?.marketingExpense}}</td>
+				<td>{{code?.marketingExpense | currency}}</td>
 				<td>
-					<button nz-button title="delete" class="mx-2" nzShape="circle" nzDanger (click)="deleteAreaCode(code)">
+					<button nz-button title="delete" nzShape="circle" nzDanger (click)="deleteAreaCode(code)">
 						<span nz-icon nzType="delete" nzTheme="outline"></span>
 					</button>
 					<button nz-button title="edit" nzShape="circle" (click)="updateAreaCode(code)">

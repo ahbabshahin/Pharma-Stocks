@@ -84,7 +84,7 @@ export class NewAreaCodeComponent {
 			manager: manager?._id,
 			color: this.area?.color,
 		});
-
+		this.color = this.area?.color as string;
 		this.form?.addControl('_id', new FormControl(this.area?._id));
 	}
 
