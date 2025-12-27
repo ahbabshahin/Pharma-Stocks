@@ -52,8 +52,11 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 	) {
 		effect(() =>{
 			const formRes = this.formValues?.();
-			if(!formRes) return;
-			untracked(() => this.calculateProductTotal())
+			const customers = this.customers();
+			if (!customers) return;
+			untracked(() => this.onCustomerSelected());
+			if (!formRes) return;
+			untracked(() => this.calculateProductTotal());
 		})
 	}
 
@@ -122,6 +125,21 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 			this.customerStore.setCustomerSearchParams(this.customer?.name);
 		}
 		this.populateProduct();
+	}
+
+	onCustomerSelected = () =>{
+		const customers = this.customers();
+		console.log('customers: ', customers);
+		if (!customers?.length || !this.form?.value?.customer)
+			return null
+			let customerSelected = customers.find(
+				(item) => item?._id == this.form?.value?.customer
+			);
+		if(!customerSelected) return null;
+		this.customer = customerSelected;
+		console.log('this.customer: ', this.customer);
+		// this.customerStore.setCustomerSearchParams(this.customer?.name);
+		return customerSelected;
 	}
 
 	get productsFormArray(): FormArray {
