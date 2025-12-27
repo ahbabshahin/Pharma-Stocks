@@ -2,8 +2,9 @@ import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Invoice } from '../models/invoice.model';
 import { createReducer, on } from '@ngrx/store';
 import * as invoiceActions from '../../store/actions/invoice.action';
+import { Customer } from '../models/customer.model';
 
-export interface InvoiceState extends EntityState<Invoice> {
+export interface InvoiceState extends EntityState<Invoice<Customer>> {
   loader: boolean;
   subLoader: boolean;
   loaded: boolean;
@@ -21,9 +22,9 @@ export const defaultInvoiceState: InvoiceState = {
   error: '',
 };
 
-export const invoiceAdapter: EntityAdapter<Invoice> =
-  createEntityAdapter<Invoice>({
-    selectId: (invoice: Invoice) => invoice._id as string,
+export const invoiceAdapter: EntityAdapter<Invoice<Customer>> =
+  createEntityAdapter<Invoice<Customer>>({
+    selectId: (invoice: Invoice<Customer>) => invoice._id as string,
   });
 export const initialState: InvoiceState =
   invoiceAdapter.getInitialState(defaultInvoiceState);

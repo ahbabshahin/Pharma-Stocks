@@ -3,7 +3,7 @@ import { CommonService } from '../../../service/common/common.service';
 import { SubSink } from 'subsink';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
 import { Customer } from '../../../store/models/customer.model';
-import { Observable, of } from 'rxjs';
+import { lastValueFrom, Observable, of } from 'rxjs';
 import { AuthStoreService } from '../../../service/auth/auth-store.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
@@ -35,7 +35,7 @@ export class CustomerComponent {
     loader$: of(true),
     subLoader$: of(false),
   };
-
+  isMobile: boolean = false;
   constructor(
     private commonService: CommonService,
     private customerStore: CustomerStoreService,
@@ -59,7 +59,12 @@ export class CustomerComponent {
     this.getLoader();
     this.isCustomerLoaded();
     this.getCustomer();
+	this.getScreenSize();
     await this.isAdminUser();
+  }
+
+  async getScreenSize() {
+	this.isMobile = await lastValueFrom(this.commonService.isItAMobile$());
   }
 
   isCustomerLoaded() {
@@ -126,14 +131,14 @@ export class CustomerComponent {
       './new-customer/new-customer.component'
     );
     this.drawerService.create({
-      nzTitle: 'New Customer',
-      nzClosable: true,
-      nzMaskClosable: false,
-      nzWidth: '50%',
-      // nzWrapClassName: 'md-drawer',
-      nzContent: NewCustomerComponent,
-      nzData: { customer },
-    });
+		nzTitle: `${customer ? 'Update' : 'New'} Customer`,
+		nzClosable: true,
+		nzMaskClosable: false,
+		nzWidth: this.isMobile ? '100%' : '50%',
+		// nzWrapClassName: 'md-drawer',
+		nzContent: NewCustomerComponent,
+		nzData: { customer },
+	});
   }
 
   async deleteCustomer(customer: Customer) {

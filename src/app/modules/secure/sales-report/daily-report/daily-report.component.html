@@ -2,7 +2,7 @@
 <div class="d-flex justify-content-between">
     <div *ngIf="componentState as state">
         <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
-        <p *ngIf="isAmount">৳ {{(state?.totalRevenue$ | async) | number : '1.2-2'}}</p>
+        <p *ngIf="isAmount">{{(state?.totalRevenue$ | async)  | currency}}</p>
         <p *ngIf="!isAmount">{{state?.totalQuantity$ | async}}</p>
     </div>
     <div class="date-selection">

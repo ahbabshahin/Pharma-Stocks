@@ -3,22 +3,23 @@ import { Injectable } from '@angular/core';
 import { Invoice } from '../../store/models/invoice.model';
 import { map, Observable } from 'rxjs';
 import { Config } from '../../config';
+import { Customer } from 'src/app/store/models/customer.model';
 
 @Injectable()
 export class InvoiceApiService {
   constructor(private http: HttpClient, private env: Config) {}
 
-  getInvoices(params: { [key: string]: any }): Observable<Invoice[]> {
-    return this.http.get<Invoice[]>(`${this.env.rootURL}/v1/invoice`, {
+  getInvoices(params: { [key: string]: any }): Observable<Invoice<Customer>[]> {
+    return this.http.get<Invoice<Customer>[]>(`${this.env.rootURL}/v1/invoice`, {
       params,
     });
   }
 
-  addInvoice(payload: Invoice) {
+  addInvoice(payload: Invoice<string>) {
     return this.http.post(`${this.env.rootURL}/v1/invoice`, payload).pipe(map((res: any) => res?.body));
   }
 
-  updateInvoice(payload: Invoice){
+  updateInvoice(payload: Invoice<string>){
     return this.http.patch(
       `${this.env.rootURL}/v1/invoice/${payload?._id}`,
       payload

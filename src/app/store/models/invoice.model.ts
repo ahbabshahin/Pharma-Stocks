@@ -1,6 +1,6 @@
 import { ActivityLog } from "./common.model";
 
-export interface Invoice {
+export interface Invoice<T> {
   _id?: string;
   sn:string;
   user?: string;
@@ -8,7 +8,7 @@ export interface Invoice {
   discount: number;
   totalAmount: number;
   status: string;
-  customer: string;
+  customer: T;
   createdAt?: string;
   activity_log?: ActivityLog[];
 }
@@ -21,4 +21,5 @@ export interface Product {
   vat: number;
   bonus: number;
   _id: string;
+  total?: number;
 }

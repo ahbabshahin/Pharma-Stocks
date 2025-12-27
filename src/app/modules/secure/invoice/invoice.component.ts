@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Signal } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { SubSink } from 'subsink';
 import { Invoice } from '../../../store/models/invoice.model';
@@ -12,8 +12,8 @@ import { InvoiceApiService } from '../../../service/invoice/invoice-api.service'
 import { CommonService } from '../../../service/common/common.service';
 
 type ComponentState = {
-  invoices: Invoice[];
-  total: number;
+  invoices: Signal<Invoice<Customer>[]>;
+  total: Signal<number>;
   isMore: boolean;
   customers: Customer[];
   startDate: string;
@@ -57,8 +57,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   constructor(
     private drawerService: NzDrawerService,
     private invoiceStoreService: InvoiceStoreService,
-    private customerStore: CustomerStoreService,
-    private customerApi: CustomerApiService,
     private datePipe: DatePipe,
     private invoiceApi: InvoiceApiService,
     private commonService: CommonService,
@@ -71,17 +69,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   initialize() {
     this.componentState = {
       ...this.componentState,
-      invoices: [],
+      invoices: this.invoiceStoreService.invoices,
       customers: [],
-      total: 0,
+      total: this.invoiceStoreService.totalInvoice,
       isMore: false,
       startDate: '',
       endDate: '',
       searchText: '',
     };
     this.getLoader();
-    this.isCustomerLoaded();
-    this.getCustomers();
     this.isInvoiceLoaded();
     this.getInvoices();
   }
@@ -96,28 +92,28 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   getInvoices() {
     this.subs.sink = this.invoiceStoreService.getInvoices().subscribe({
-      next: (res: Invoice[]) => {
+      next: (res: Invoice<Customer>[]) => {
         if (res) {
-          this.componentState = {
-            ...this.componentState,
-            invoices: res,
-          };
+        //   this.componentState = {
+        //     ...this.componentState,
+        //     invoices: res,
+        //   };
         }
       },
       error: (error) => {},
     });
 
-    this.subs.sink = this.invoiceStoreService.getTotalInvoice().subscribe({
-      next: (total: number) => {
-        if (total !== undefined) {
-          this.componentState = {
-            ...this.componentState,
-            total,
-          };
-        }
-      },
-      error: (error) => {},
-    });
+    // this.subs.sink = this.invoiceStoreService.getTotalInvoice().subscribe({
+    //   next: (total: number) => {
+    //     if (total !== undefined) {
+    //       this.componentState = {
+    //         ...this.componentState,
+    //         total,
+    //       };
+    //     }
+    //   },
+    //   error: (error) => {},
+    // });
   }
 
   isInvoiceLoaded() {
@@ -141,52 +137,52 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     };
   }
 
-  loadCustomer() {
-    const params = {
-      page: 1,
-      limit: 1000,
-    };
-    this.subs.sink = this.customerApi.getCustomers(params).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.customerStore.loadCustomerSuccess(
-            res?.body ?? [],
-            res?.total ?? 0,
-            false
-          );
-        }
-      },
-      error: (error) => {
-        this.customerStore.loadCustomerFail('Customer load failed');
-      },
-    });
-  }
+//   loadCustomer() {
+//     const params = {
+//       page: 1,
+//       limit: 1000,
+//     };
+//     this.subs.sink = this.customerApi.getCustomers(params).subscribe({
+//       next: (res: any) => {
+//         if (res) {
+//           this.customerStore.loadCustomerSuccess(
+//             res?.body ?? [],
+//             res?.total ?? 0,
+//             false
+//           );
+//         }
+//       },
+//       error: (error) => {
+//         this.customerStore.loadCustomerFail('Customer load failed');
+//       },
+//     });
+//   }
 
-  isCustomerLoaded() {
-    this.subs.sink = this.customerStore
-      .getCustomerLoaded()
-      .subscribe((loaded: boolean) => {
-        if (loaded === false) {
-          this.loadCustomer();
-        }
-      });
-  }
+//   isCustomerLoaded() {
+//     this.subs.sink = this.customerStore
+//       .getCustomerLoaded()
+//       .subscribe((loaded: boolean) => {
+//         if (loaded === false) {
+//           this.loadCustomer();
+//         }
+//       });
+//   }
 
-  getCustomers() {
-    this.subs.sink = this.customerStore.getCustomers().subscribe({
-      next: (res: Customer[]) => {
-        if (res) {
-          this.componentState = {
-            ...this.componentState,
-            customers: res,
-          };
-        }
-      },
-      error: (error) => {},
-    });
-  }
+//   getCustomers() {
+//     this.subs.sink = this.customerStore.getCustomers().subscribe({
+//       next: (res: Customer[]) => {
+//         if (res) {
+//           this.componentState = {
+//             ...this.componentState,
+//             customers: res,
+//           };
+//         }
+//       },
+//       error: (error) => {},
+//     });
+//   }
 
-  async addInvoice(invoice?: Invoice) {
+  async addInvoice(invoice?: Invoice<Customer>) {
     const { NewInvoiceComponent } = await import(
       './new-invoice/new-invoice.component'
     );
@@ -201,7 +197,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  async viewInvoice(invoice: Invoice) {
+  async viewInvoice(invoice: Invoice<Customer>) {
     const { ViewInvoiceComponent } = await import(
       './view-invoice/view-invoice.component'
     );
@@ -327,7 +323,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   loadMore() {
     const { invoices, total } = this.componentState;
-    if (invoices?.length < total) {
+    if (invoices()?.length < total()) {
       this.invoiceStoreService.setSubLoader(true);
       this.componentState = {
         ...this.componentState,
@@ -391,7 +387,10 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           const url = window.URL.createObjectURL(file);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'invoices.xlsx';
+		  let fileName: string = 'Invoices.xlsx';
+		  if(this.componentState?.startDate && this.componentState?.endDate)
+		  	fileName = `Invoices for ${this.componentState?.startDate} to ${this.componentState?.endDate}.xlsx`;
+          a.download = fileName;
           a.click();
           URL.revokeObjectURL(url);
           this.commonService.dismissLoading();

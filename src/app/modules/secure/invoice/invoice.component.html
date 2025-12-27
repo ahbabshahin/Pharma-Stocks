@@ -70,17 +70,18 @@
 <app-global-loader class="my-3"></app-global-loader>
 }@else{
 <ng-container>
-  @if(componentState?.invoices?.length){
-  <div class="container my-3" *ngIf="componentState?.invoices as invoices;">
+  @if(componentState?.invoices()?.length){
+  <div class="container my-3" *ngIf="componentState?.invoices() as invoices;">
     <nz-collapse>
-      <nz-collapse-panel *ngFor="let list of invoices; let i = index"
+    @for(list of invoices; track list._id; let i = $index){
+	<nz-collapse-panel
         [nzHeader]="collapseHeader"
         [nzActive]="false"
         class="invoice-panel">
         <ng-template #collapseHeader>
           <div class="collapse-header" (click)="$event.stopPropagation()">
             <span class="customer-name">
-              {{list?.sn}} - {{ (componentState?.customers | find : '_id' : list.customer)?.name || 'Unknown Customer' }}
+              {{list?.sn}} - {{ list?.customer?.name || 'Unknown Customer' }}
             </span>
             <div class="header-details">
               <span class="date">{{ list?.createdAt | date : 'dd-MM-yyyy' }}</span>
@@ -103,7 +104,7 @@
             <p class="product-details" *ngFor="let product of list?.products">
               <span><strong>Product:</strong> {{ product?.name | titlecase }}</span><br />
               <span><strong>Quantity:</strong> {{ product?.quantity }}</span><br />
-              <span><strong>Price:</strong> ৳ {{ product?.price | number : '1.2-2' }}</span>
+              <span><strong>Price:</strong>{{ product?.price | currency }}</span>
             </p>
 
             <p *ngIf="list?.discount">
@@ -111,19 +112,19 @@
             </p>
 
             <hr />
-            <p class="total-amount"><strong>Total:</strong> ৳ {{ list?.totalAmount | number : '1.2-2' }}</p>
+            <p class="total-amount"><strong>Total:</strong> {{ list?.totalAmount  | currency }}</p>
           </div>
         </div>
-      </nz-collapse-panel>
+      </nz-collapse-panel>}
     </nz-collapse>
 
     <p *ngIf="invoices?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
-      Showing invoice(s) {{ invoices?.length }} out of {{ componentState?.total }}
+      Showing invoice(s) {{ invoices?.length }} out of {{ componentState?.total() }}
     </p>
 
     <app-global-loader *ngIf="loader?.subLoader$ | async"></app-global-loader>
 
-    <div *ngIf="componentState?.total > params.limit && invoices.length < componentState?.total"
+    <div *ngIf="componentState?.total() > params.limit && invoices.length < componentState?.total()"
       class="d-flex justify-content-center align-items-center my-3">
       <button [disabled]="loader?.subLoader$ | async" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
         Load More

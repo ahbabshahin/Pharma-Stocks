@@ -6,6 +6,8 @@ import { Invoice } from '../../store/models/invoice.model';
 import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs';
 import { InvoiceState } from '../../store/reducers/invoice.reducer';
+import { Customer } from 'src/app/store/models/customer.model';
+import { toSignal } from '@angular/core/rxjs-interop';
 @Injectable()
 export class InvoiceStoreService {
   constructor(private store: Store<InvoiceState>) {}
@@ -26,27 +28,27 @@ export class InvoiceStoreService {
   loadInvoice(params: { [key: string]: any }, isMore: boolean) {
     this.dispatch(invoiceActions.loadInvoice({ params, isMore }));
   }
-  loadInvoiceSuccess(res: Invoice[], total: number, isMore: boolean) {
+  loadInvoiceSuccess(res: Invoice<Customer>[], total: number, isMore: boolean) {
     this.dispatch(invoiceActions.loadInvoiceSuccess({ res, total, isMore }));
   }
   loadInvoiceFail(error: string) {
     this.dispatch(invoiceActions.loadInvoiceFail({ error }));
   }
 
-  addInvoice(payload: Invoice) {
+  addInvoice(payload: Invoice<string>) {
     this.dispatch(invoiceActions.addInvoice({ payload }));
   }
-  addInvoiceSuccess(res: Invoice) {
+  addInvoiceSuccess(res: Invoice<Customer>) {
     this.dispatch(invoiceActions.addInvoiceSuccess({ res }));
   }
   addInvoiceFail(error: string) {
     this.dispatch(invoiceActions.addInvoiceFail({ error }));
   }
 
-  updateInvoice(payload: Invoice) {
+  updateInvoice(payload: Invoice<string>) {
     this.dispatch(invoiceActions.updateInvoice({ payload }));
   }
-  updateInvoiceSuccess(res: Update<Invoice>) {
+  updateInvoiceSuccess(res: Update<Invoice<Customer>>) {
     this.dispatch(invoiceActions.updateInvoiceSuccess({ res }));
   }
   updateInvoiceFail(error: string) {
@@ -79,6 +81,12 @@ export class InvoiceStoreService {
     this.select(invoiceSelectors.getInvoiceError);
   getTotalInvoice = (): Observable<number> =>
     this.select(invoiceSelectors.getTotalInvoice);
-  getInvoices = (): Observable<Invoice[]> =>
+  getInvoices = (): Observable<Invoice<Customer>[]> =>
     this.select(invoiceSelectors.getInvoices);
+
+  getInvoiceById = (id: string): Observable<Invoice<Customer>> =>
+	this.select(invoiceSelectors.getInvoiceById(id))
+
+  totalInvoice = toSignal(this.getTotalInvoice(), {initialValue: 0});
+  invoices = toSignal(this.getInvoices(), {initialValue: []});
 }
