@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { Customer } from "../models/customer.model";
 import { Update } from "@ngrx/entity";
+import { AreaCode } from "../models/area-code.model";
 
 export const setCustomerSubLoader = createAction(
   '[Customer] set customer sub loader',
@@ -13,7 +14,7 @@ export const loadCustomer = createAction(
 );
 export const loadCustomerSuccess = createAction(
   '[Customer] load customer success',
-  props<{ res: Customer[], total: number, isMore: boolean }>()
+  props<{ res: Customer<AreaCode>[], total: number, isMore: boolean }>()
 );
 export const loadCustomerFail = createAction(
   '[Customer] load customer fail',
@@ -22,11 +23,11 @@ export const loadCustomerFail = createAction(
 
 export const addCustomer = createAction(
   '[Customer] add customer',
-  props<{ payload: Customer }>()
+  props<{ payload: Customer<string> }>()
 );
 export const addCustomerSuccess = createAction(
   '[Customer] add customer success',
-  props<{ res: Customer }>()
+  props<{ res: Customer<AreaCode> }>()
 );
 export const addCustomerFail = createAction(
   '[Customer] add customer fail',
@@ -35,11 +36,11 @@ export const addCustomerFail = createAction(
 
 export const updateCustomer = createAction(
   '[Customer] update customer',
-  props<{ payload: Customer }>()
+  props<{ payload: Customer<string> }>()
 );
 export const updateCustomerSuccess = createAction(
   '[Customer] update customer success',
-  props<{ res: Update<Customer> }>()
+  props<{ res: Update<Customer<AreaCode>> }>()
 );
 export const updateCustomerFail = createAction(
   '[Customer] update customer fail',
@@ -65,7 +66,7 @@ export const searchCustomer = createAction(
 );
 export const searchCustomerSuccess = createAction(
   '[Customer] search customer success',
-  props<{ res: Customer[] }>()
+  props<{ res: Customer<AreaCode>[] }>()
 );
 export const searchCustomerFail = createAction(
   '[Customer] search customer fail',

@@ -1,4 +1,4 @@
-export interface Customer {
+export interface Customer<T> {
   _id?: string;
   name: string;
   contacts: string;
@@ -7,6 +7,6 @@ export interface Customer {
   address: string;
   invoices?: string[];
   sn: string;
-  areaCode: string;
+  areaCode: T;
   customMessage?: string;
 }

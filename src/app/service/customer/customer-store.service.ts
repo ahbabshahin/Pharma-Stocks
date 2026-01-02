@@ -8,6 +8,7 @@ import { Customer } from '../../store/models/customer.model';
 import * as customerSelectors from '../../store/selectors/customer.selector';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { CustomerApiService } from './customer-api.service';
+import { AreaCode } from 'src/app/store/models/area-code.model';
 
 @Injectable()
 export class CustomerStoreService {
@@ -30,7 +31,11 @@ export class CustomerStoreService {
 	loadCustomer(params: { [key: string]: any }, isMore: boolean) {
 		this.dispatch(customerActions.loadCustomer({ params, isMore }));
 	}
-	loadCustomerSuccess(res: Customer[], total: number, isMore: boolean) {
+	loadCustomerSuccess(
+		res: Customer<AreaCode>[],
+		total: number,
+		isMore: boolean
+	) {
 		this.dispatch(
 			customerActions.loadCustomerSuccess({ res, total, isMore })
 		);
@@ -40,10 +45,10 @@ export class CustomerStoreService {
 	}
 
 	// Add Customer
-	addCustomer(payload: Customer) {
+	addCustomer(payload: Customer<string>) {
 		this.dispatch(customerActions.addCustomer({ payload }));
 	}
-	addCustomerSuccess(res: Customer) {
+	addCustomerSuccess(res: Customer<AreaCode>) {
 		this.dispatch(customerActions.addCustomerSuccess({ res }));
 	}
 	addCustomerFail(error: string) {
@@ -51,10 +56,10 @@ export class CustomerStoreService {
 	}
 
 	// Update Customer
-	updateCustomer(payload: Customer) {
+	updateCustomer(payload: Customer<string>) {
 		this.dispatch(customerActions.updateCustomer({ payload }));
 	}
-	updateCustomerSuccess(res: Update<Customer>) {
+	updateCustomerSuccess(res: Update<Customer<AreaCode>>) {
 		this.dispatch(customerActions.updateCustomerSuccess({ res }));
 	}
 	updateCustomerFail(error: string) {
@@ -76,7 +81,7 @@ export class CustomerStoreService {
 	searchCustomer(params: { [key: string]: any }, isMore: boolean) {
 		this.dispatch(customerActions.searchCustomer({ params, isMore }));
 	}
-	searchCustomerSuccess(res: Customer[]) {
+	searchCustomerSuccess(res: Customer<AreaCode>[]) {
 		this.dispatch(customerActions.searchCustomerSuccess({ res }));
 	}
 	searchCustomerFail(error: string) {
@@ -100,7 +105,7 @@ export class CustomerStoreService {
 	getCustomerError = (): Observable<string> =>
 		this.select(customerSelectors.getCustomerError);
 
-	getCustomers = (): Observable<Customer[]> =>
+	getCustomers = (): Observable<Customer<AreaCode>[]> =>
 		this.select(customerSelectors.getCustomers);
 
 	generateSerialNumber() {
@@ -123,7 +128,7 @@ export class CustomerStoreService {
 		this.customerSearchTerm?.set(searchTerm);
 	}
 
-	customers: Signal<Customer[]> = toSignal(
+	customers: Signal<Customer<AreaCode>[]> = toSignal(
 		toObservable(this.customerSearchTerm).pipe(
 			debounceTime(300),
 			distinctUntilChanged(),
@@ -134,13 +139,13 @@ export class CustomerStoreService {
 						name: search,
 					};
 
-				const request$ = this.customerApi.searchCustomer(params);
+					const request$ = this.customerApi.searchCustomer(params);
 
-				return request$.pipe(
-					catchError((error) => {
-						return of([]);
-					})
-				);
+					return request$.pipe(
+						catchError((error) => {
+							return of([]);
+						})
+					);
 
 					// return request$
 				}

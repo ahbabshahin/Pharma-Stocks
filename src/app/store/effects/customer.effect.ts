@@ -7,6 +7,7 @@ import * as customerActions from '../../store/actions/customer.action';
 import { catchError, exhaustMap, map, mergeMap, of, switchMap } from 'rxjs';
 import { Customer } from '../models/customer.model';
 import { Update } from '@ngrx/entity';
+import { AreaCode } from '../models/area-code.model';
 
 @Injectable()
 export class CustomerEffects {
@@ -50,19 +51,21 @@ export class CustomerEffects {
         ofType(customerActions.addCustomer),
         exhaustMap((action) => {
           return this.customerApi.addCustomer(action.payload).pipe(
-            map((res: Customer) => {
-              this.customerStore.addCustomerSuccess(res);
-              this.commonService.dismissLoading();
-            }),
-            catchError((err) => {
-              const errorMessage =
-                err?.error?.message || 'Customer addition failed';
-              this.customerStore.addCustomerFail('Customer addition failed');
-              this.commonService.showErrorModal(errorMessage);
-              this.commonService.dismissLoading();
-              return of(err);
-            })
-          );
+				map((res: Customer<AreaCode>) => {
+					this.customerStore.addCustomerSuccess(res);
+					this.commonService.dismissLoading();
+				}),
+				catchError((err) => {
+					const errorMessage =
+						err?.error?.message || 'Customer addition failed';
+					this.customerStore.addCustomerFail(
+						'Customer addition failed'
+					);
+					this.commonService.showErrorModal(errorMessage);
+					this.commonService.dismissLoading();
+					return of(err);
+				})
+			);
         })
       ),
     { dispatch: false }
@@ -75,26 +78,28 @@ export class CustomerEffects {
         ofType(customerActions.updateCustomer),
         exhaustMap((action) => {
           return this.customerApi.updateCustomer(action.payload).pipe(
-            map((res: Customer) => {
-              let response: Update<Customer> = {
-                id: res?._id as string,
-                changes: {
-                  ...res,
-                },
-              };
-              this.customerStore.updateCustomerSuccess(response);
-              this.commonService.dismissLoading();
-            }),
-            catchError((err) => {
-              this.customerStore.updateCustomerFail('Customer update failed');
-              const errorMessage =
-                err?.error?.message || 'Customer update failed';
-              this.commonService.showErrorModal(errorMessage);
-              this.commonService.dismissLoading();
+				map((res: Customer<AreaCode>) => {
+					let response: Update<Customer<AreaCode>> = {
+						id: res?._id as string,
+						changes: {
+							...res,
+						},
+					};
+					this.customerStore.updateCustomerSuccess(response);
+					this.commonService.dismissLoading();
+				}),
+				catchError((err) => {
+					this.customerStore.updateCustomerFail(
+						'Customer update failed'
+					);
+					const errorMessage =
+						err?.error?.message || 'Customer update failed';
+					this.commonService.showErrorModal(errorMessage);
+					this.commonService.dismissLoading();
 
-              return of(err);
-            })
-          );
+					return of(err);
+				})
+			);
         })
       ),
     { dispatch: false }

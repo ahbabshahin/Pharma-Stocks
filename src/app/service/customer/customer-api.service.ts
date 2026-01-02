@@ -16,11 +16,11 @@ export class CustomerApiService {
     return this.http.get(`${this.env.rootURL}/v1/customer`, { params });
   }
 
-  addCustomer(payload: Customer) {
+  addCustomer(payload: Customer<string>) {
     return this.http.post(`${this.env.rootURL}/v1/customer`, payload).pipe(map((res: any) => res?.body));
   }
 
-  updateCustomer(payload: Customer) {
+  updateCustomer(payload: Customer<string>) {
     return this.http.put(
       `${this.env.rootURL}/v1/customer/${payload?._id}`,
       payload

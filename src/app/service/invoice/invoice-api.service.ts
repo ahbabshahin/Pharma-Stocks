@@ -4,13 +4,14 @@ import { Invoice } from '../../store/models/invoice.model';
 import { map, Observable } from 'rxjs';
 import { Config } from '../../config';
 import { Customer } from 'src/app/store/models/customer.model';
+import { AreaCode } from 'src/app/store/models/area-code.model';
 
 @Injectable()
 export class InvoiceApiService {
   constructor(private http: HttpClient, private env: Config) {}
 
-  getInvoices(params: { [key: string]: any }): Observable<Invoice<Customer>[]> {
-    return this.http.get<Invoice<Customer>[]>(`${this.env.rootURL}/v1/invoice`, {
+  getInvoices(params: { [key: string]: any }): Observable<Invoice<Customer<AreaCode>>[]> {
+    return this.http.get<Invoice<Customer<AreaCode>>[]>(`${this.env.rootURL}/v1/invoice`, {
       params,
     });
   }
