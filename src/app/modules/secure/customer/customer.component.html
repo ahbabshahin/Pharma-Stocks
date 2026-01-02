@@ -26,15 +26,16 @@
   @if(componentState?.customers?.length){
   <div class="container my-3" *ngIf="componentState?.customers as customers;">
     <div class="row">
-      <ng-container *ngFor="let list of customers; let i = index">
+      @for(list of customers; track list._id; let i = $index){
+	<ng-container>
         <div class="col-lg-4 col-md-6 col-sm-12">
           <nz-card class="customer-card" nzHoverable="true" [nzActions]="[edit, delete]">
-            <nz-card-meta [nzTitle]="list.name | titlecase" [nzDescription]="list.address"></nz-card-meta>
+            <nz-card-meta [nzTitle]="list?.name | titlecase" [nzDescription]="list?.address"></nz-card-meta>
             <p class="mt-2" *ngIf="list?.contacts">
               <strong>Phone Number:</strong> {{ list?.contacts }}
             </p>
             <p class="mt-2" *ngIf="list?.areaCode">
-              <strong>Area code:</strong> {{ list?.areaCode }}
+              <strong>Area code:</strong> {{ list?.areaCode?.code }}
             </p>
             <p class="mt-2" *ngIf="list?.customMessage">
               <strong>Custom Message:</strong> {{ list?.customMessage }}
@@ -47,7 +48,7 @@
         <ng-template #delete>
           <span (click)="deleteCustomer(list)" nz-icon nzType="delete"></span>
         </ng-template>
-      </ng-container>
+      </ng-container>}
     </div>
     <p *ngIf="customers?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
       Showing customer(s) {{ customers?.length }} out of {{ componentState?.total }}

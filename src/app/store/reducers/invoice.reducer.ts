@@ -3,13 +3,14 @@ import { Invoice } from '../models/invoice.model';
 import { createReducer, on } from '@ngrx/store';
 import * as invoiceActions from '../../store/actions/invoice.action';
 import { Customer } from '../models/customer.model';
+import { AreaCode } from '../models/area-code.model';
 
-export interface InvoiceState extends EntityState<Invoice<Customer>> {
-  loader: boolean;
-  subLoader: boolean;
-  loaded: boolean;
-  total: number;
-  error: string;
+export interface InvoiceState extends EntityState<Invoice<Customer<AreaCode>>> {
+	loader: boolean;
+	subLoader: boolean;
+	loaded: boolean;
+	total: number;
+	error: string;
 }
 
 export const defaultInvoiceState: InvoiceState = {
@@ -22,9 +23,9 @@ export const defaultInvoiceState: InvoiceState = {
   error: '',
 };
 
-export const invoiceAdapter: EntityAdapter<Invoice<Customer>> =
-  createEntityAdapter<Invoice<Customer>>({
-    selectId: (invoice: Invoice<Customer>) => invoice._id as string,
+export const invoiceAdapter: EntityAdapter<Invoice<Customer<AreaCode>>> =
+  createEntityAdapter<Invoice<Customer<AreaCode>>>({
+    selectId: (invoice: Invoice<Customer<AreaCode>>) => invoice._id as string,
   });
 export const initialState: InvoiceState =
   invoiceAdapter.getInitialState(defaultInvoiceState);

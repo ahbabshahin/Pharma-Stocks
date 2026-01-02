@@ -10,8 +10,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomerEffects } from '../../../store/effects/customer.effect';
 import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { CustomerStoreService } from '../../../service/customer/customer-store.service';
-import { LoaderComponent } from "../../../common-component/loader/loader.component";
 import { CommonComponentModule } from '../../../common-component/common-component.module';
+import { AreaCodeStoreService } from 'src/app/service/area-code/area-code-store.service';
+import { AreaCodeEffect } from 'src/app/store/effects/area-code.effect';
+import { AreaCodeApiService } from 'src/app/service/area-code/area-code-api.service';
 
 
 @NgModule({
@@ -22,8 +24,9 @@ import { CommonComponentModule } from '../../../common-component/common-componen
     SharedModule,
     StoreModule.forFeature(customerStateName, customerReducer),
     EffectsModule.forFeature(CustomerEffects),
+    EffectsModule.forFeature(AreaCodeEffect),
     CommonComponentModule,
 ],
-  providers: [CustomerApiService, CustomerStoreService,],
+  providers: [CustomerApiService, CustomerStoreService, AreaCodeStoreService, AreaCodeApiService,],
 })
 export class CustomerModule {}
