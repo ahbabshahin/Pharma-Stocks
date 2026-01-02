@@ -3,19 +3,18 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { SubSink } from 'subsink';
 import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
-import { CustomerStoreService } from '../../../service/customer/customer-store.service';
-import { CustomerApiService } from '../../../service/customer/customer-api.service';
 import { Observable, of } from 'rxjs';
 import { Customer } from '../../../store/models/customer.model';
 import { DatePipe } from '@angular/common';
 import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
 import { CommonService } from '../../../service/common/common.service';
+import { AreaCode } from 'src/app/store/models/area-code.model';
 
 type ComponentState = {
-  invoices: Signal<Invoice<Customer>[]>;
+  invoices: Signal<Invoice<Customer<AreaCode>>[]>;
   total: Signal<number>;
   isMore: boolean;
-  customers: Customer[];
+  customers: Customer<AreaCode>[];
   startDate: string;
   endDate: string;
   searchText: string;
@@ -92,7 +91,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   getInvoices() {
     this.subs.sink = this.invoiceStoreService.getInvoices().subscribe({
-      next: (res: Invoice<Customer>[]) => {
+      next: (res: Invoice<Customer<AreaCode>>[]) => {
         if (res) {
         //   this.componentState = {
         //     ...this.componentState,
@@ -153,7 +152,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 //         }
 //       },
 //       error: (error) => {
-//         this.customerStore.loadCustomerFail('Customer load failed');
+//         this.customerStore.loadCustomerFail('Customer<AreaCode> load failed');
 //       },
 //     });
 //   }
@@ -170,7 +169,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
 //   getCustomers() {
 //     this.subs.sink = this.customerStore.getCustomers().subscribe({
-//       next: (res: Customer[]) => {
+//       next: (res: Customer<AreaCode>[]) => {
 //         if (res) {
 //           this.componentState = {
 //             ...this.componentState,
@@ -182,7 +181,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 //     });
 //   }
 
-  async addInvoice(invoice?: Invoice<Customer>) {
+  async addInvoice(invoice?: Invoice<Customer<AreaCode>>) {
     const { NewInvoiceComponent } = await import(
       './new-invoice/new-invoice.component'
     );
@@ -197,7 +196,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  async viewInvoice(invoice: Invoice<Customer>) {
+  async viewInvoice(invoice: Invoice<Customer<AreaCode>>) {
     const { ViewInvoiceComponent } = await import(
       './view-invoice/view-invoice.component'
     );

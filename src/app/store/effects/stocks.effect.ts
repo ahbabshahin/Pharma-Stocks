@@ -136,10 +136,12 @@ export class StockEffects {
         switchMap((action) => {
           return this.stockApi.searchStock(action.params).pipe(
             map((res: any) => {
-              if (res?.bodylength) {
+              if (res?.body?.length) {
                 this.stockStore.searchStockSuccess(res.body ?? [], res?.total ?? 0);
               } else {
-                this.commonService.showErrorToast('Stock search failed');
+				const errorMessage = res?.message || 'Stock search failed';
+                this.commonService.showErrorToast(errorMessage);
+              	this.stockStore.searchStockFail(errorMessage);
               }
             }),
             catchError((err) => {

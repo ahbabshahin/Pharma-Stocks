@@ -15,6 +15,7 @@ import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { StockStoreService } from 'src/app/service/stocks/stock-store.service';
 import { of } from 'rxjs';
+import { AreaCode } from 'src/app/store/models/area-code.model';
 @Component({
 	selector: 'app-new-invoice',
 	templateUrl: './new-invoice.component.html',
@@ -28,14 +29,14 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 	business!: Business;
 	date: Date = new Date();
 	// products: Stock[] = [];
-	invoice!: Invoice<Customer>;
+	invoice!: Invoice<Customer<AreaCode>>;
 	invoiceForm!: FormGroup;
-	customer!: Customer;
+	customer!: Customer<AreaCode>;
 	stock!: Stock;
 
 	//signals
 	role = toSignal(this.authStore.getUserRole(), { initialValue: '' });
-	customers: Signal<Customer[]> = this.customerStore.customers;
+	customers: Signal<Customer<AreaCode>[]> = this.customerStore.customers;
 	products: Signal<Stock[]> = this.stockStore.products;
 	totalInvoices: Signal<number> = this.invoiceStore.totalInvoice;
 	formValues: Signal<Invoice<String>>;
@@ -48,16 +49,16 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 		private drawerRef: NzDrawerRef,
 		private businessService: BusinessService,
 		private authStore: AuthStoreService,
-		private injector: Injector,
+		private injector: Injector
 	) {
-		effect(() =>{
+		effect(() => {
 			const formRes = this.formValues?.();
 			const customers = this.customers();
 			if (!customers) return;
 			untracked(() => this.onCustomerSelected());
 			if (!formRes) return;
 			untracked(() => this.calculateProductTotal());
-		})
+		});
 	}
 
 	ngOnInit(): void {
@@ -127,20 +128,19 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 		this.populateProduct();
 	}
 
-	onCustomerSelected = () =>{
+	onCustomerSelected = () => {
 		const customers = this.customers();
 		console.log('customers: ', customers);
-		if (!customers?.length || !this.form?.value?.customer)
-			return null
-			let customerSelected = customers.find(
-				(item) => item?._id == this.form?.value?.customer
-			);
-		if(!customerSelected) return null;
+		if (!customers?.length || !this.form?.value?.customer) return null;
+		let customerSelected = customers.find(
+			(item) => item?._id == this.form?.value?.customer
+		);
+		if (!customerSelected) return null;
 		this.customer = customerSelected;
 		console.log('this.customer: ', this.customer);
 		// this.customerStore.setCustomerSearchParams(this.customer?.name);
 		return customerSelected;
-	}
+	};
 
 	get productsFormArray(): FormArray {
 		return this.form.get('products') as FormArray;
@@ -184,7 +184,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 		this.productsFormArray.removeAt(index);
 	}
 
-	calculateProductTotal(){
+	calculateProductTotal() {
 		const products = this.productsFormArray?.controls;
 		const discountRate = this.form.get('discount')?.value || 0;
 
@@ -272,7 +272,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 		this.customerStore.setCustomerSearchParams(search);
 	}
 
-	onCustomerSelect(customer: Customer) {
+	onCustomerSelect(customer: Customer<AreaCode>) {
 		this.form?.get('customer')?.patchValue(customer?._id);
 		this.customer = customer;
 	}

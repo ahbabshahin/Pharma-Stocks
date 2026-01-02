@@ -21,7 +21,9 @@
 <ng-container *ngIf="!(loader$ | async)">
     <div class="container my-3" *ngIf="stocks?.length">
         <nz-collapse>
-            <nz-collapse-panel *ngFor="let list of stocks; let i = index" [nzHeader]="collapseHeader" [nzActive]="false" class="stock-panel">
+            @for(list of stocks; track list._id; let i = $index){
+			<nz-collapse-panel  [nzHeader]="collapseHeader"
+            	[nzActive]="false" class="stock-panel">
                 <ng-template #collapseHeader>
                     <div class="collapse-header" (click)="$event.stopPropagation()">
                         <span class="product-name">
@@ -63,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-            </nz-collapse-panel>
+            </nz-collapse-panel>}
         </nz-collapse>
 
         <p *ngIf="stocks?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">

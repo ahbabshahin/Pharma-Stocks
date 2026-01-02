@@ -13,6 +13,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { AreaCode } from 'src/app/store/models/area-code.model';
 
 @Component({
   selector: 'app-view-invoice',
@@ -20,7 +21,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrl: './view-invoice.component.scss',
 })
 export class ViewInvoiceComponent {
-  invoice!: Invoice<Customer>;
+  invoice!: Invoice<Customer<AreaCode>>;
   business: Business;
   invoiceNumber: number;
   date: string;
@@ -31,7 +32,7 @@ export class ViewInvoiceComponent {
   isAdmin: boolean = false;
 
 	// signal
-	invoiceSignal: Signal<Invoice<Customer> | null>;
+	invoiceSignal: Signal<Invoice<Customer<AreaCode>> | null>;
   constructor(
     private commonService: CommonService,
     private drawerService: NzDrawerService,

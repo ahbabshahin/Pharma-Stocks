@@ -2,8 +2,9 @@ import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { Customer } from "../models/customer.model";
 import { createReducer, on } from "@ngrx/store";
 import * as customerActions from '../../store/actions/customer.action';
+import { AreaCode } from "../models/area-code.model";
 
-export interface CustomerState extends EntityState<Customer>{
+export interface CustomerState extends EntityState<Customer<AreaCode>>{
   loader: boolean;
   subLoader: boolean;
   loaded: boolean;
@@ -11,9 +12,9 @@ export interface CustomerState extends EntityState<Customer>{
   error: string;
 }
 
-export const customerAdapter: EntityAdapter<Customer> =
-  createEntityAdapter<Customer>({
-    selectId: (customer: Customer) => customer._id as string,
+export const customerAdapter: EntityAdapter<Customer<AreaCode>> =
+  createEntityAdapter<Customer<AreaCode>>({
+    selectId: (customer: Customer<AreaCode>) => customer._id as string,
   });
 
 const defaustCustomer: CustomerState = {

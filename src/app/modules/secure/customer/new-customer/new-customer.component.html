@@ -83,13 +83,19 @@
   </div>
   <div class="form-group my-2">
     <label>Area code</label>
-    <textarea
+    <!-- <textarea
       nz-input
       type="text"
       class="form-control"
       formControlName="areaCode"
       placeholder="GB"
-    ></textarea>
+    ></textarea> -->
+	<nz-select class="w-100" nzShowSearch [nzAllowClear]="form?.get('areaCode')?.value ? true: false" nzPlaceHolder="Select area code" formControlName="areaCode">
+		@for(areaCode of areaCodes(); track areaCode._id){
+		 	<nz-option [nzLabel]="areaCode?.code" [nzValue]="areaCode?._id"></nz-option>
+			}
+	 </nz-select>
+
     <div class="text-danger"
       *ngIf="
         form?.get('areaCode')?.invalid &&

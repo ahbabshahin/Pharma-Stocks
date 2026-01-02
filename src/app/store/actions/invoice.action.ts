@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { Invoice } from '../models/invoice.model';
 import { Customer } from '../models/customer.model';
+import { AreaCode } from '../models/area-code.model';
 
 export const setLoader = createAction(
   '[Invoice] set loader',
@@ -23,7 +24,7 @@ export const loadInvoice = createAction(
 );
 export const loadInvoiceSuccess = createAction(
   '[Invoice] load invoice success',
-  props<{ res: Invoice<Customer>[]; total: number, isMore: boolean }>()
+  props<{ res: Invoice<Customer<AreaCode>>[]; total: number, isMore: boolean }>()
 );
 export const loadInvoiceFail = createAction(
   '[Invoice] load invoice fail',
@@ -36,7 +37,7 @@ export const addInvoice = createAction(
 );
 export const addInvoiceSuccess = createAction(
 	'[Invoice] add invoice success',
-	props<{ res: Invoice<Customer> }>()
+	props<{ res: Invoice<Customer<AreaCode>> }>()
 );
 export const addInvoiceFail = createAction(
   '[Invoice] add invoice fail',
@@ -49,7 +50,7 @@ export const updateInvoice = createAction(
 );
 export const updateInvoiceSuccess = createAction(
 	'[Invoice] update invoice success',
-	props<{ res: Update<Invoice<Customer>> }>()
+	props<{ res: Update<Invoice<Customer<AreaCode>>> }>()
 );
 export const updateInvoiceFail = createAction(
   '[Invoice] update invoice fail',

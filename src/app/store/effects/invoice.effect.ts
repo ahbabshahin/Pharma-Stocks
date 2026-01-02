@@ -8,6 +8,7 @@ import { CommonService } from '../../service/common/common.service';
 import { Invoice } from '../models/invoice.model';
 import { Update } from '@ngrx/entity';
 import { Customer } from '../models/customer.model';
+import { AreaCode } from '../models/area-code.model';
 
 @Injectable()
 export class InvoiceEffects {
@@ -50,19 +51,19 @@ export class InvoiceEffects {
       ofType(invoiceActions.addInvoice),
       exhaustMap((action: any) =>{
         return this.invoiceApi.addInvoice(action.payload).pipe(
-          map((res: Invoice<Customer>) => {
-            this.invoiceStore.addInvoiceSuccess(res);
-            this.commonService.dismissLoading();
-            this.commonService.showSuccessToast('Add invoice successful');
-          }),
-          catchError((err) => {
-            const errMsg = err?.error?.message ?? 'Add invoice failed'
-            this.commonService.dismissLoading();
-            this.invoiceStore.addInvoiceFail('failed')
-            this.commonService.showErrorToast(errMsg);
-            return of();
-          })
-        );
+			map((res: Invoice<Customer<AreaCode>>) => {
+				this.invoiceStore.addInvoiceSuccess(res);
+				this.commonService.dismissLoading();
+				this.commonService.showSuccessToast('Add invoice successful');
+			}),
+			catchError((err) => {
+				const errMsg = err?.error?.message ?? 'Add invoice failed';
+				this.commonService.dismissLoading();
+				this.invoiceStore.addInvoiceFail('failed');
+				this.commonService.showErrorToast(errMsg);
+				return of();
+			})
+		);
       })
     ),
     {dispatch: false}
@@ -73,8 +74,8 @@ export class InvoiceEffects {
       ofType(invoiceActions.updateInvoice),
       exhaustMap((action: any) =>{
         return this.invoiceApi.updateInvoice(action.payload).pipe(
-          map((res: Invoice<Customer>) => {
-            let response : Update<Invoice<Customer>> = {
+          map((res: Invoice<Customer<AreaCode>>) => {
+            let response : Update<Invoice<Customer<AreaCode>>> = {
               id: res._id as string,
               changes: {
                 ...res
