@@ -26,6 +26,7 @@ export interface LineGraph {
 export interface PieGraph {
   labels: string[];
   datasets: DataSets;
+  backgroundColor: string[];
 }
 
 export enum PaymentStatus {

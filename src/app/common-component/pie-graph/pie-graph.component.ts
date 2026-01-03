@@ -38,6 +38,7 @@ export class PieGraphComponent {
     const {
       datasets: { label, data },
       labels,
+	  backgroundColor
     } = this.pieGraph;
 
     this.chart = new Chart(ctx, {
@@ -48,12 +49,13 @@ export class PieGraphComponent {
           {
             label,
             borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: data.map(
-              () =>
-                `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-                  Math.random() * 255
-                )}, ${Math.floor(Math.random() * 255)})`
-            ),
+            // backgroundColor: data.map(
+            //   () =>
+            //     `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+            //       Math.random() * 255
+            //     )}, ${Math.floor(Math.random() * 255)})`
+            // ),
+			backgroundColor,
             borderWidth: 1,
             data,
           },
