@@ -88,6 +88,7 @@ export class InvoiceStoreService {
   getInvoiceById = (id: string): Observable<Invoice<Customer<AreaCode>>> =>
 	this.select(invoiceSelectors.getInvoiceById(id))
 
-  totalInvoice = toSignal(this.getTotalInvoice(), {initialValue: 0});
-  invoices = toSignal(this.getInvoices(), {initialValue: []});
+  invoices = this.store.selectSignal(invoiceSelectors.getInvoices);
+  totalInvoice = this.store.selectSignal(invoiceSelectors.getTotalInvoice);
+
 }
