@@ -87,6 +87,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.params,
       this.componentState?.isMore
     );
+	this.checkIsMore();
   }
 
   getInvoices() {
@@ -135,51 +136,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       subLoader$: getInvoiceSubLoader(),
     };
   }
-
-//   loadCustomer() {
-//     const params = {
-//       page: 1,
-//       limit: 1000,
-//     };
-//     this.subs.sink = this.customerApi.getCustomers(params).subscribe({
-//       next: (res: any) => {
-//         if (res) {
-//           this.customerStore.loadCustomerSuccess(
-//             res?.body ?? [],
-//             res?.total ?? 0,
-//             false
-//           );
-//         }
-//       },
-//       error: (error) => {
-//         this.customerStore.loadCustomerFail('Customer<AreaCode> load failed');
-//       },
-//     });
-//   }
-
-//   isCustomerLoaded() {
-//     this.subs.sink = this.customerStore
-//       .getCustomerLoaded()
-//       .subscribe((loaded: boolean) => {
-//         if (loaded === false) {
-//           this.loadCustomer();
-//         }
-//       });
-//   }
-
-//   getCustomers() {
-//     this.subs.sink = this.customerStore.getCustomers().subscribe({
-//       next: (res: Customer<AreaCode>[]) => {
-//         if (res) {
-//           this.componentState = {
-//             ...this.componentState,
-//             customers: res,
-//           };
-//         }
-//       },
-//       error: (error) => {},
-//     });
-//   }
 
   async addInvoice(invoice?: Invoice<Customer<AreaCode>>) {
     const { NewInvoiceComponent } = await import(
@@ -263,6 +219,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.searchParams,
       this.componentState?.isMore
     );
+
+	this.checkIsMore();
   }
 
   formatDate(date: Date) {
@@ -335,7 +293,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       if (
         this.searchParams?.search ||
         this.searchParams?.startDate ||
-        this.searchParams?.endDate
+        this.searchParams?.endDate ||
+		this.searchParams?.status
       ) {
         this.searchParams = {
           ...this.searchParams,
@@ -353,6 +312,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.params = {
         ...this.params,
         page: 1,
+		status
       };
       this.searchParams = {
         ...this.searchParams,
@@ -402,6 +362,14 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         this.commonService.dismissLoading();
       },
     });
+  }
+
+  checkIsMore() {
+	if (this.componentState?.isMore)
+		this.componentState = {
+			...this.componentState,
+			isMore: false,
+		};
   }
 
   ngOnDestroy() {
