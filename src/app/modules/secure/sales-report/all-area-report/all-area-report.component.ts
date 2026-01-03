@@ -94,6 +94,7 @@ export class AllAreaReportComponent {
             this.isAmount ? item?.totalRevenue : item?.totalQuantity
           ),
         },
+		backgroundColor: report.map((item) => item?.color),
       },
     };
 
