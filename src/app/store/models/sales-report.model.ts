@@ -65,6 +65,8 @@ export interface SalesSummaryReport {
   totalQuantity: number;
   areaCode: string;
   totalRevenue: number;
+  color: string;
+  areaName?: string;
 }
 
 export interface SalesSummaryGrandTotal {
