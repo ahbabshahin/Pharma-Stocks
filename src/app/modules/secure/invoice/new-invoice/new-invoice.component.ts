@@ -1,12 +1,19 @@
-import { Component, OnInit, OnDestroy, Signal, computed, signal, Injector, effect, untracked } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    Signal,
+    computed,
+    Injector,
+    effect,
+    untracked,
+} from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 import { Invoice } from '../../../../store/models/invoice.model';
 import { Business } from '../../../../store/models/business.model';
 import { CommonService } from '../../../../service/common/common.service';
 import { Stock } from '../../../../store/models/stocks.model';
-import { StockApiService } from '../../../../service/stocks/stock-api.service';
-import { SubSink } from 'subsink';
 import { Customer } from '../../../../store/models/customer.model';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { CustomerStoreService } from '../../../../service/customer/customer-store.service';
@@ -14,7 +21,6 @@ import { BusinessService } from '../../../../service/business/business.service';
 import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { StockStoreService } from 'src/app/service/stocks/stock-store.service';
-import { of } from 'rxjs';
 import { AreaCode } from 'src/app/store/models/area-code.model';
 @Component({
 	selector: 'app-new-invoice',
@@ -22,7 +28,6 @@ import { AreaCode } from 'src/app/store/models/area-code.model';
 	styleUrls: ['./new-invoice.component.scss'],
 })
 export class NewInvoiceComponent implements OnInit, OnDestroy {
-	subs = new SubSink();
 	status!: boolean;
 	invoiceNumber: number = 1;
 	form!: FormGroup;
@@ -337,7 +342,5 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	ngOnDestroy() {
-		this.subs.unsubscribe();
-	}
+	ngOnDestroy() {}
 }

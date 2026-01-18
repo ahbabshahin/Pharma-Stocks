@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import * as invoiceActions from '../../store/actions/invoice.action';
 import * as invoiceSelectors from '../../store/selectors/invoice.selector';
@@ -72,12 +72,13 @@ export class InvoiceStoreService {
 
   // selectors
 
-  getInvoiceLoader = (): Observable<boolean> =>
-    this.select(invoiceSelectors.getInvoiceLoader);
-  getInvoiceSubLoader = (): Observable<boolean> =>
-    this.select(invoiceSelectors.getInvoiceSubLoader);
-  getInvoiceLoaded = (): Observable<boolean> =>
-    this.select(invoiceSelectors.getInvoiceLoaded);
+  getInvoiceLoader: Signal<boolean> =
+    this.store.selectSignal(invoiceSelectors.getInvoiceLoader);
+  getInvoiceSubLoader: Signal<boolean> =
+    this.store.selectSignal(invoiceSelectors.getInvoiceSubLoader);
+  getInvoiceLoaded : Signal<boolean> =
+    this.store.selectSignal(invoiceSelectors.getInvoiceLoaded);
+
   getInvoiceError = (): Observable<boolean> =>
     this.select(invoiceSelectors.getInvoiceError);
   getTotalInvoice = (): Observable<number> =>
