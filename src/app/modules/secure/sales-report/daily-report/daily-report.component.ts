@@ -1,24 +1,21 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Input, Signal, untracked } from '@angular/core';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { FormsModule } from '@angular/forms';
 import { LineGraph } from '../../../../store/models/common.model';
 import { SalesReportApiService } from '../../../../service/sales-report/sales-report-api.service';
 import { SubSink } from 'subsink';
-import {
-  DailyReport,
-  DailyReportResponse,
-} from '../../../../store/models/sales-report.model';
+import { DailyReport } from '../../../../store/models/sales-report.model';
 import { SalesReportService } from '../../../../service/sales-report/sales-report.service';
 import { SalesReportStoreService } from '../../../../service/sales-report/sales-report-store.service';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 type ComponentState = {
-  dailyReport: DailyReport[];
-  totalRevenue$: Observable<number>;
-  totalQuantity$: Observable<number>;
-  loader$: Observable<boolean>;
+  dailyReport: Signal<DailyReport[]>;
+  totalRevenue: Signal<number>;
+  totalQuantity: Signal<number>;
+  loader: Signal<boolean>;
   dailySalesReportLineGraph: LineGraph;
 };
 @Component({
@@ -33,6 +30,7 @@ type ComponentState = {
   templateUrl: './daily-report.component.html',
   styleUrl: './daily-report.component.scss',
   providers: [SalesReportApiService, SalesReportService, DatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DailyReportComponent {
   @Input() status: string;
@@ -55,9 +53,16 @@ export class DailyReportComponent {
   };
   constructor(
     private salesReport: SalesReportService,
-    private datePipe: DatePipe,
     private salesReportStore: SalesReportStoreService
-  ) {}
+  ) {
+	effect(() =>{
+		const dailyReport = this.componentState.dailyReport();
+
+		if(dailyReport){
+			untracked(() => this.processDailySalesReport());
+		}
+	})
+  }
 
   ngOnInit() {
     this.initialize();
@@ -66,17 +71,17 @@ export class DailyReportComponent {
   initialize() {
     this.componentState = {
       ...this.componentState,
-      totalRevenue$: of(0),
-      totalQuantity$: of(0),
-      loader$: of(true),
+      totalRevenue: this.salesReportStore.getDailyReportTotalRevenue,
+      totalQuantity: this.salesReportStore.getDailyReportTotalQuantity,
+      loader: this.salesReportStore.getDailyReportLoader,
+	  dailyReport: this.salesReportStore.getDailyReport,
     };
     this.params = {
       ...this.params,
       status: this.status,
     };
-    this.getLoader();
+
     this.getSalesReportDate();
-    this.getMonthlySalesReport();
     this.formatSelectedDate();
   }
   onDateChange(): void {
@@ -107,14 +112,6 @@ export class DailyReportComponent {
     this.loadMonthlySalesReport();
   }
 
-  getLoader() {
-    const { getDailyReportLoader } = this.salesReportStore;
-    this.componentState = {
-      ...this.componentState,
-      loader$: getDailyReportLoader(),
-    };
-  }
-
   loadMonthlySalesReport() {
     this.salesReportStore.loadDailyReport(this.params);
   }
@@ -141,44 +138,35 @@ export class DailyReportComponent {
 
     const { getDailyReport } = this.salesReportStore;
 
-    getDailyReport()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (res: DailyReport[]) => {
+    // getDailyReport()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe({
+    //     next: (res: DailyReport[]) => {
 
-          this.componentState = {
-            ...this.componentState,
-            dailyReport: res,
-          };
-          this.getTotal();
-          this.processDailySalesReport();
-        },
-        error: (err) => {
-          // this.loader = false;
-        },
-      });
+    //       this.componentState = {
+    //         ...this.componentState,
+    //         dailyReport: res,
+    //       };
+    //     //   this.getTotal();
+    //       this.processDailySalesReport();
+    //     },
+    //     error: (err) => {
+    //       // this.loader = false;
+    //     },
+    //   });
   }
 
-  getTotal() {
-    const { getDailyReportTotalRevenue, getDailyReportTotalQuantity } =
-      this.salesReportStore;
-    this.componentState = {
-      ...this.componentState,
-      totalRevenue$: getDailyReportTotalRevenue(),
-      totalQuantity$: getDailyReportTotalQuantity(),
-    };
-  }
 
   processDailySalesReport() {
-    if (this.componentState?.dailyReport) {
+    if (this.componentState?.dailyReport()) {
       const { dailyReport } = this.componentState;
       this.dailySalesReportLineGraph = {
-        labels: dailyReport?.map((item: DailyReport) => item?.date),
+        labels: dailyReport()?.map((item: DailyReport) => item?.date),
         xTitle: 'Date',
         yTitle: `Total ${this.isAmount ? 'Revenue' : 'Quantity'}`,
         datasets: {
           label: 'Daily Sales Report',
-          data: dailyReport?.map((item) =>
+          data: dailyReport()?.map((item) =>
             this.isAmount ? item?.totalRevenue : item?.totalQuantity
           ),
         },
