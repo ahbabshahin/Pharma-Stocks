@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { SalesReportState } from '../../store/reducers/sales-report.reducer';
 import * as salesReportActions from '../../store/actions/sales-report.action';
@@ -60,14 +60,15 @@ export class SalesReportStoreService {
   getSalesReportDate = (): Observable<string> =>
     this.select(salesReportSelectors.getSalesReportDate);
 
-  getDailyReportLoader = (): Observable<boolean> =>
-    this.select(salesReportSelectors.getDailyReportLoader);
-  getDailyReportTotalRevenue = (): Observable<number> =>
-    this.select(salesReportSelectors.getDailyReportTotalRevenue);
-  getDailyReportTotalQuantity = (): Observable<number> =>
-    this.select(salesReportSelectors.getDailyReportTotalQuantity);
-  getDailyReport = (): Observable<DailyReport[]> =>
-    this.select(salesReportSelectors.getDailyReport);
+  getDailyReportLoader: Signal<boolean> =
+    this.store.selectSignal(salesReportSelectors.getDailyReportLoader);
+
+  getDailyReportTotalRevenue: Signal<number> =
+    this.store.selectSignal(salesReportSelectors.getDailyReportTotalRevenue);
+  getDailyReportTotalQuantity: Signal<number> =
+    this.store.selectSignal(salesReportSelectors.getDailyReportTotalQuantity);
+  getDailyReport: Signal<DailyReport[]> =
+    this.store.selectSignal(salesReportSelectors.getDailyReport);
 
   getProductReportLoader = (): Observable<boolean> =>
     this.select(salesReportSelectors.getProductReportLoader);
