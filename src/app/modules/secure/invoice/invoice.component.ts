@@ -10,6 +10,7 @@ import { InvoiceApiService } from '../../../service/invoice/invoice-api.service'
 import { CommonService } from '../../../service/common/common.service';
 import { AreaCode } from 'src/app/store/models/area-code.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { InvoiceService } from 'src/app/service/invoice/invoice.service';
 
 type ComponentState = {
   invoices: Signal<Invoice<Customer<AreaCode>>[]>;
@@ -70,6 +71,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 		private datePipe: DatePipe,
 		private invoiceApi: InvoiceApiService,
 		private commonService: CommonService,
+		private invoiceService: InvoiceService,
 	) {
 		effect(() => {
 			const file = this.excelDownload();
@@ -280,7 +282,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 			}
 		}
 	}
-	status : string = '';
+	status: string = '';
 	onStatusChange(status: string) {
 		if (status) {
 			this.params = {
@@ -353,7 +355,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
 	excelDownload: Signal<any> = toSignal(
 		toObservable(this.excelGenerationParams).pipe(
-			filter((params): params is SearchParams  => !!params),
+			filter((params): params is SearchParams => !!params),
 			tap(() => this.commonService.presentLoading()),
 			switchMap((params) =>
 				this.invoiceApi.downloadSearchedInvoice(params).pipe(
@@ -395,6 +397,11 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 				...this.componentState,
 				isMore: false,
 			};
+	}
+
+	printAll(){
+		if(!this.componentState?.invoices) return
+		this.invoiceService.printInvoicesBulk(this.componentState?.invoices())
 	}
 
 	ngOnDestroy() {}
