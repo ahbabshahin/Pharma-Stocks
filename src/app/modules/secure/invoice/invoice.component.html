@@ -39,9 +39,9 @@
     <div>
       <nz-select
 	  	  class="w-100"
-          [(ngModel)]="params.status"
+          [(ngModel)]="status"
           (ngModelChange)="onStatusChange($event)"
-          [nzAllowClear]="params.status ? true : false"
+          [nzAllowClear]="status ? true : false"
 		  nzPlaceHolder="Paid/due"
       >
         <nz-option nzLabel="Due" nzValue="due"></nz-option>
@@ -50,15 +50,21 @@
     </div>
 
     <button nz-button nzType="default" (click)="resetSearch()"
-      *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || params.status">
+      *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || status">
       <span nz-icon nzType="clear"></span> Reset
     </button>
   </div>
 
   <button type="button" nz-button class="primary-btn" nzShape="round"
-    *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || params.status"
+    *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || status"
     (click)="downloadInvoiceExcel()">
     Excel
+  </button>
+
+  <button type="button" nz-button class="primary-btn" nzShape="round"
+    *ngIf="componentState?.searchText || (componentState?.startDate && componentState?.endDate) || status"
+    (click)="printAll()">
+    Print All
   </button>
   <button type="button" nz-button class="primary-btn" nzShape="round" (click)="addInvoice()">
     New Invoice
@@ -66,7 +72,7 @@
 </div>
 
 
-@if(loader?.loader$ | async){
+@if(loader?.loader()){
 <app-global-loader class="my-3"></app-global-loader>
 }@else{
 <ng-container>
@@ -118,18 +124,20 @@
       </nz-collapse-panel>}
     </nz-collapse>
 
-    <p *ngIf="invoices?.length" class="d-flex justify-content-end align-items-center my-2 mx-2">
+    @if(invoices?.length){
+	<p class="d-flex justify-content-end align-items-center my-2 mx-2">
       Showing invoice(s) {{ invoices?.length }} out of {{ componentState?.total() }}
-    </p>
+    </p>}
+	@if(loader?.subLoader()){
+    	<app-global-loader></app-global-loader>
+	}
 
-    <app-global-loader *ngIf="loader?.subLoader$ | async"></app-global-loader>
-
-    <div *ngIf="componentState?.total() > params.limit && invoices.length < componentState?.total()"
-      class="d-flex justify-content-center align-items-center my-3">
-      <button [disabled]="loader?.subLoader$ | async" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
+    @if(componentState?.total() > params.limit && invoices.length < componentState?.total()){
+	<div class="d-flex justify-content-center align-items-center my-3">
+      <button [disabled]="loader?.subLoader()" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
         Load More
       </button>
-    </div>
+    </div>}
   </div>
   }@else{
   <app-global-no-data bodyText="No invoice found"></app-global-no-data>

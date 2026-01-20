@@ -2,15 +2,15 @@
 <div class="d-flex justify-content-between">
     <div *ngIf="componentState as state">
         <span>Total {{isAmount ? 'Revenue': 'Quantity'}} </span>
-        <p *ngIf="isAmount">{{(state?.totalRevenue$ | async)  | currency}}</p>
-        <p *ngIf="!isAmount">{{state?.totalQuantity$ | async}}</p>
+        <p *ngIf="isAmount">{{(state?.totalRevenue())  | currency}}</p>
+        <p *ngIf="!isAmount">{{state?.totalQuantity()}}</p>
     </div>
     <div class="date-selection">
         <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" nzMode="month" nzFormat="MMMM yyyy" nzPlaceHolder="Select Year & Month">
         </nz-date-picker>
     </div>
 </div>
-@if(componentState?.loader$ | async){
+@if(componentState?.loader()){
 <app-global-loader></app-global-loader>
 }@else{
 <!-- Line Graph with Selected Date -->
