@@ -20,6 +20,7 @@ import { CustomerStoreService } from '../../../service/customer/customer-store.s
 import { CommonComponentModule } from '../../../common-component/common-component.module';
 import { ViewInvoiceComponent } from './view-invoice/view-invoice.component';
 import { StockStoreService } from 'src/app/service/stocks/stock-store.service';
+import { InvoiceService } from 'src/app/service/invoice/invoice.service';
 
 @NgModule({
   declarations: [InvoiceComponent, NewInvoiceComponent, ViewInvoiceComponent],
@@ -42,6 +43,7 @@ import { StockStoreService } from 'src/app/service/stocks/stock-store.service';
     CustomerApiService,
     CustomerStoreService,
     DatePipe,
+	InvoiceService,
   ],
 })
 export class InvoiceModule {}
