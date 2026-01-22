@@ -78,7 +78,7 @@
 <ng-container>
   @if(componentState?.invoices()?.length){
   <div class="container my-3" *ngIf="componentState?.invoices() as invoices;">
-    <nz-collapse>
+    <!-- <nz-collapse>
     @for(list of invoices; track list._id; let i = $index){
 	<nz-collapse-panel
         [nzHeader]="collapseHeader"
@@ -104,7 +104,6 @@
           <i nz-icon nzType="caret-right" class="collapse-arrow" [class.active]="active"></i>
         </ng-template>
 
-        <!-- Panel Content -->
         <div class="panel-content">
           <div class="products-section">
             <p class="product-details" *ngFor="let product of list?.products">
@@ -122,7 +121,8 @@
           </div>
         </div>
       </nz-collapse-panel>}
-    </nz-collapse>
+    </nz-collapse> -->
+	<app-invoice-list [invoices]="componentState?.invoices()" (onViewInvoice)="viewInvoice($event)"></app-invoice-list>
 
     @if(invoices?.length){
 	<p class="d-flex justify-content-end align-items-center my-2 mx-2">
