@@ -1,0 +1,226 @@
+// Core styles
+.full-drawer {
+	.ant-drawer {
+		width: 100% !important;
+		height: 100% !important;
+		max-width: 100% !important;
+		top: 0;
+	}
+
+	.ant-drawer-body {
+		padding: 0;
+	}
+}
+
+// Layout
+.container {
+	padding: 0 15px;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.row {
+	display: grid;
+	gap: 20px;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+// Search section
+.search {
+	&-container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+		padding: 20px;
+		background: #fff;
+		border-radius: 4px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		margin-bottom: 20px;
+	}
+
+	&-filters {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 10px;
+		flex: 1;
+	}
+
+	&-input {
+		flex: 1;
+		min-width: 180px;
+	}
+}
+
+// Date picker
+.date {
+	&-picker-container {
+		flex: 1;
+		min-width: 200px;
+	}
+
+	&-input-group {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		width: 100%;
+	}
+
+	&-separator {
+		color: #666;
+		padding: 0 4px;
+	}
+}
+
+.native-date-input {
+	flex: 1;
+	padding: 4px 11px;
+	border: 1px solid #d9d9d9;
+	border-radius: 2px;
+	height: 32px;
+
+	&:focus {
+		border-color: #40a9ff;
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+	}
+}
+
+// Invoice panel
+.invoice-panel {
+	margin-bottom: 16px;
+
+	.collapse-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+
+	.customer-name {
+		font-weight: 500;
+		text-align: left;
+	}
+
+	.header-details {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+
+		.date {
+			color: #8c8c8c;
+		}
+	}
+}
+
+.panel-content {
+	padding: 8px 0;
+
+	.product-details {
+		background: #fafafa;
+		padding: 12px;
+		border-radius: 4px;
+		margin-bottom: 12px;
+		font-size: 0.9rem;
+		color: #555;
+
+		span {
+			display: block;
+			margin-bottom: 4px;
+		}
+	}
+
+	.total-amount {
+		font-size: 16px;
+		color: #262626;
+		text-align: right;
+		margin-top: 16px;
+	}
+}
+
+// Utilities
+.clear-icon {
+	cursor: pointer;
+	color: #888;
+
+	&:hover {
+		color: #ff4d4f;
+	}
+}
+
+hr {
+	margin: 16px 0;
+	border: 0;
+	border-top: 1px solid #f0f0f0;
+}
+
+// Media queries
+@media (max-width: 768px) {
+
+	.search-container,
+	.search-filters {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.date-input-group {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.date-separator {
+		display: none;
+	}
+
+	.collapse-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+		width: 100%;
+
+		.customer-name {
+			align-self: flex-start;
+			width: 100%;
+			text-align: left;
+		}
+	}
+
+	.header-details {
+		width: 100%;
+		flex-wrap: wrap;
+		gap: 8px;
+		justify-content: flex-start;
+	}
+
+	.w-50,
+	.search-input,
+	.date-picker-container,
+	.native-date-input,
+	.primary-btn {
+		width: 100%;
+	}
+}
+
+// Date picker dropdown
+::ng-deep .ant-picker-dropdown {
+	@media (max-width: 768px) {
+		position: fixed !important;
+		left: 50% !important;
+		top: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		width: 95vw !important;
+		max-width: 320px !important;
+		margin: 0 !important;
+
+		.ant-picker-panel-container,
+		.ant-picker-panels,
+		.ant-picker-panel,
+		.ant-picker-content,
+		.ant-picker-date-panel {
+			width: 100% !important;
+			min-width: unset !important;
+		}
+	}
+}

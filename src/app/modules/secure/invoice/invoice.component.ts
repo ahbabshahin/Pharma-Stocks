@@ -5,12 +5,20 @@ import { Invoice } from '../../../store/models/invoice.model';
 import { InvoiceStoreService } from '../../../service/invoice/invoice-store.service';
 import { catchError, filter, Observable, of, switchMap, tap } from 'rxjs';
 import { Customer } from '../../../store/models/customer.model';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { InvoiceApiService } from '../../../service/invoice/invoice-api.service';
 import { CommonService } from '../../../service/common/common.service';
 import { AreaCode } from 'src/app/store/models/area-code.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { InvoiceService } from 'src/app/service/invoice/invoice.service';
+import { InvoiceListComponent } from './invoice-list/invoice-list.component';
+import { LoaderComponent } from 'src/app/common-component/loader/loader.component';
+import { NoDataComponent } from 'src/app/common-component/no-data/no-data.component';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { FormsModule } from '@angular/forms';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 type ComponentState = {
   invoices: Signal<Invoice<Customer<AreaCode>>[]>;
@@ -31,9 +39,22 @@ type SearchParams = {
 	endDate?: string;
 }
 @Component({
+	standalone: true,
 	selector: 'app-invoice',
 	templateUrl: './invoice.component.html',
 	styleUrl: './invoice.component.scss',
+	imports: [
+		CommonModule,
+		FormsModule,
+		LoaderComponent,
+		NoDataComponent,
+		InvoiceListComponent,
+
+		NzInputModule,
+		NzButtonModule,
+		NzIconModule,
+		NzSelectModule,
+	],
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
 	params = {
@@ -100,7 +121,12 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 	}
 
 	loadInvoice() {
-		if (!this.params.status) this.params.status = '';
+		if (!this.params.status) {
+			this.params = {
+				...this.params,
+				status: '',
+			}
+		};
 		this.invoiceStoreService.loadInvoice(
 			this.params,
 			this.componentState?.isMore,

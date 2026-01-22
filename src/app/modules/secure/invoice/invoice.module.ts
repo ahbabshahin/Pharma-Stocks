@@ -23,7 +23,7 @@ import { StockStoreService } from 'src/app/service/stocks/stock-store.service';
 import { InvoiceService } from 'src/app/service/invoice/invoice.service';
 
 @NgModule({
-  declarations: [InvoiceComponent, NewInvoiceComponent, ViewInvoiceComponent],
+  declarations: [NewInvoiceComponent, ViewInvoiceComponent],
   imports: [
     CommonModule,
     InvoiceRoutingModule,
