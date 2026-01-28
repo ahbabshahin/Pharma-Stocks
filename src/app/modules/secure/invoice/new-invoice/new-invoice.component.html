@@ -250,6 +250,9 @@
                 <td>
                   <input nz-input [nzBorderless]="true" formControlName="bonus" type="number" placeholder="Qty"
                           min="0" aria-label="Bonus Qty" />
+				@if(productsFormArray?.at(i)?.errors?.inventoryExceeded){
+					<p class="s_error">Stock Out</p>
+				}
                 </td>
                 <!-- <td>৳ {{ calculateProductTotal(product, i) }}</td> -->
                 <td>

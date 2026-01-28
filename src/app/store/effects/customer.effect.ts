@@ -131,16 +131,39 @@ export class CustomerEffects {
   );
 
   // Search Customer Effect
+//   searchCustomer$ = createEffect(
+//     () =>
+//       this.actions$.pipe(
+//         ofType(customerActions.searchCustomer),
+//         switchMap((action) => {
+//           return this.customerApi.getCustomers(action.params).pipe(
+//             map((res: any) => {
+//               this.customerStore.loadCustomerSuccess(
+//                 res?.body ?? [],
+//                 res?.total,
+//                 action.isMore as boolean
+//               );
+//             }),
+//             catchError(() => {
+//               this.customerStore.searchCustomerFail('Customer search failed');
+//               return of();
+//             })
+//           );
+//         })
+//       ),
+//     { dispatch: false }
+//   );
+  // Search Customer Effect
   searchCustomer$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(customerActions.searchCustomer),
         switchMap((action) => {
-          return this.customerApi.getCustomers(action.params).pipe(
+          return this.customerApi.searchCustomer(action.params).pipe(
             map((res: any) => {
               this.customerStore.loadCustomerSuccess(
-                res?.body ?? [],
-                res?.total,
+                res ?? [],
+                res?.length ?? 0,
                 action.isMore as boolean
               );
             }),
