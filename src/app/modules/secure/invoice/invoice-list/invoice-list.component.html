@@ -1,0 +1,51 @@
+
+	@if(invoices()?.length){
+	<!-- <div class="container my-3" *ngIf="invoices() as invoices;"> -->
+		<nz-collapse>
+			@for(list of invoices(); track list._id; let i = $index){
+			<nz-collapse-panel [nzHeader]="collapseHeader" [nzActive]="false" class="invoice-panel">
+				<ng-template #collapseHeader>
+					<div class="collapse-header" (click)="$event.stopPropagation()">
+						<span class="customer-name">
+							{{list?.sn}} - {{ list?.customer?.name || 'Unknown Customer' }}
+						</span>
+						<div class="header-details">
+							<span class="date">{{ list?.createdAt | date : 'dd-MM-yyyy' }}</span>
+							<nz-tag [nzColor]="list?.status === 'paid' ? 'success' : 'warning'">
+								{{ list?.status | titlecase }}
+							</nz-tag>
+							<button nz-button nzType="primary" nzGhost (click)="viewInvoice(list)">
+								<i nz-icon nzType="eye" nzTheme="outline"></i> View
+							</button>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template #expandIcon let-active>
+					<i nz-icon nzType="caret-right" class="collapse-arrow" [class.active]="active"></i>
+				</ng-template>
+
+				<!-- Panel Content -->
+				<div class="panel-content">
+					<div class="products-section">
+						@for(product of list?.products; track product._id){
+						<p class="product-details">
+							<span><strong>Product:</strong> {{ product?.name | titlecase }}</span><br />
+							<span><strong>Quantity:</strong> {{ product?.quantity }}</span><br />
+							<span><strong>Price:</strong>{{ product?.price | currency }}</span>
+						</p>}
+
+						@if(list?.discount){
+						<p>
+							<strong>Discount:</strong> {{ list?.discount | number : '1.2-2' }}%
+						</p>}
+
+						<hr />
+						<p class="total-amount"><strong>Total:</strong> {{ list?.totalAmount  | currency }}</p>
+					</div>
+				</div>
+			</nz-collapse-panel>}
+		</nz-collapse>
+	<!-- </div> -->
+	}@else{
+	<app-global-no-data bodyText="No invoice found"></app-global-no-data>
+	}

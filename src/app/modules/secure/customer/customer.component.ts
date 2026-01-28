@@ -27,6 +27,7 @@ export class CustomerComponent {
 		page: 1,
 		limit: 10,
 		search: '',
+		name: ''
 	};
 	componentState: ComponentState;
 	loader: {
@@ -178,12 +179,13 @@ export class CustomerComponent {
 		this.params = {
 			...this.params,
 			page: 1,
-			search: searchText,
+			name: searchText,
 		};
 
 		// this.loadCustomer();
 		// if(searchText)
 		this.customerStore.searchCustomer(this.params, isMore);
+		// this.customerStore.setCustomerSearchParams(searchText);
 	}
 
 	clearSearch() {

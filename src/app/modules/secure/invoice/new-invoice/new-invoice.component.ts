@@ -8,7 +8,7 @@ import {
     effect,
     untracked,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { InvoiceStoreService } from '../../../../service/invoice/invoice-store.service';
 import { Invoice } from '../../../../store/models/invoice.model';
 import { Business } from '../../../../store/models/business.model';
@@ -22,6 +22,16 @@ import { AuthStoreService } from '../../../../service/auth/auth-store.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { StockStoreService } from 'src/app/service/stocks/stock-store.service';
 import { AreaCode } from 'src/app/store/models/area-code.model';
+export function quantityBonusValidator(max: number): ValidatorFn {
+	return (control: AbstractControl): ValidationErrors | null => {
+		const quantity = control.get('quantity')?.value || 0;
+		const bonus = control.get('bonus')?.value || 0;
+
+		return quantity + bonus > max
+			? { inventoryExceeded: { max, actual: quantity + bonus } }
+			: null;
+	};
+}
 @Component({
 	selector: 'app-new-invoice',
 	templateUrl: './new-invoice.component.html',
@@ -58,12 +68,14 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 	) {
 		effect(() => {
 			const formRes = this.formValues?.();
-			const customers = this.customers();
-			if (!customers) return;
-			untracked(() => this.onCustomerSelected());
 			if (!formRes) return;
 			untracked(() => this.calculateProductTotal());
 		});
+		effect(() => {
+			const customers = this.customers();
+			if (!customers) return;
+			untracked(() => this.onCustomerSelected());
+		})
 	}
 
 	ngOnInit(): void {
@@ -167,16 +179,19 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 
 	populateProduct() {
 		this.invoice?.products.forEach((product) => {
-			const productGroup = this.formBuilder.group({
-				_id: product?._id,
-				name: product?.name,
-				quantity: product?.quantity,
-				price: product?.price,
-				tp: product?.tp || 0,
-				vat: product?.vat || 0,
-				bonus: product?.bonus || 0,
-				total: product?.quantity * (product?.tp + product?.vat) || 0,
-			});
+			const productGroup = this.formBuilder.group(
+				{
+					_id: product?._id,
+					name: product?.name,
+					quantity: product?.quantity,
+					price: product?.price,
+					tp: product?.tp || 0,
+					vat: product?.vat || 0,
+					bonus: product?.bonus || 0,
+					total:
+						product?.quantity * (product?.tp + product?.vat) || 0,
+				},
+			);
 			this.productsFormArray.push(productGroup);
 			// this.calculateProductTotal(
 			// 	productGroup,
@@ -305,6 +320,11 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 			productGroup
 				.get('quantity')
 				?.addValidators([Validators.max(this.stock?.quantity)]);
+
+			productGroup.setValidators([
+				quantityBonusValidator(selectedProduct?.quantity),
+			]);
+			productGroup.updateValueAndValidity();
 		}
 	}
 
