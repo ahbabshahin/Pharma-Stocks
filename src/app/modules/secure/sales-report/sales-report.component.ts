@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Signal } from '@angular/core';
 import { CommonComponentModule } from '../../../common-component/common-component.module';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { FilterComponent } from "../../../common-component/filter/filter.compone
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { FilterService } from '../../../service/filter/filter.service';
 import { PaymentStatus, SalesReportPeriod } from '../../../store/models/common.model';
+import { MonthlyRevenueComponent } from './monthly-revenue/monthly-revenue.component';
 
 @Component({
   selector: 'app-sales-report',
@@ -30,11 +31,13 @@ import { PaymentStatus, SalesReportPeriod } from '../../../store/models/common.m
     NzDatePickerModule,
     NzAffixModule,
     NzSelectModule,
+
     ProductReportTableComponent,
     ProductReportComponent,
     AllAreaReportComponent,
     CustomerWiseReportComponent,
-    FilterComponent
+    FilterComponent,
+	MonthlyRevenueComponent,
 ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
@@ -57,6 +60,7 @@ export class SalesReportComponent {
   };
   interval: SalesReportInterval = SalesReportInterval.MONTHLY;
   SalesReportInterval = SalesReportInterval;
+  loader: Signal<boolean> = this.salesReportStore.getSalesReportLoader;
   constructor(
     private salesReport: SalesReportService,
     private salesReportStore: SalesReportStoreService,
@@ -178,6 +182,10 @@ export class SalesReportComponent {
         });
     }
     // end get filter params
+
+	onTypeChange(isAmount: boolean) {
+		this.isAmount = isAmount;
+	}
 
   ngOnDestroy() {
     // this.subs.unsubscribe();

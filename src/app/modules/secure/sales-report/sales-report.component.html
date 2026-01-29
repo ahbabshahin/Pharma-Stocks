@@ -60,16 +60,18 @@
   </div>
 </nz-affix> -->
 
-<app-filter title="Sales Report"></app-filter>
-
-<div class="report-container">
-  <app-all-area-report class="mb-3" [status]="status" [isAmount]="isAmount">
-  </app-all-area-report>
-  <app-customer-wise-report class="mb-3" [status]="status" [isAmount]="isAmount"></app-customer-wise-report>
-  <app-product-report class="my-2" [status]="status" [isAmount]="isAmount"></app-product-report>
-
+<app-filter title="Sales Report" (onTypeChange)="onTypeChange($event)"></app-filter>
+@if(loader()){
+<app-global-loader></app-global-loader>
+}
+@else{<div class="report-container">
+	<app-all-area-report class="mb-3" [status]="status" [isAmount]="isAmount">
+	</app-all-area-report>
+	<app-monthly-revenue [isAmount]="isAmount"></app-monthly-revenue>
+	<app-customer-wise-report class="mb-3" [status]="status" [isAmount]="isAmount"></app-customer-wise-report>
+	<app-product-report class="my-2" [status]="status" [isAmount]="isAmount"></app-product-report>
 </div>
 
 <div class="my-3">
-  <app-product-report-table></app-product-report-table>
-</div>
+	<app-product-report-table></app-product-report-table>
+</div>}

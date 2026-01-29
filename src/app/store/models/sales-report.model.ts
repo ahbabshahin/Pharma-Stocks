@@ -101,6 +101,13 @@ export enum SalesReportInterval {
   YEARLY = 'yearly',
 }
 
+export interface MonthlyRevenue {
+	totalQuantity: number;
+	totalInvoices: number;
+	month: string;
+	totalRevenue: number;
+}
+
 export interface SalesSummaryResponse {
   period: SalesSummaryPeriod;
   grandTotals: SalesSummaryGrandTotal;
@@ -112,5 +119,8 @@ export interface SalesSummaryResponse {
   };
   customer: {
     report: CustomerWiseSalesReport[]
+  },
+  monthlyRevenue: {
+	report: MonthlyRevenue[]
   }
 }
