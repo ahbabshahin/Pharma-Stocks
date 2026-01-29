@@ -34,6 +34,10 @@ export const getProductReportLoader = createSelector(
   getSalesReportState,
   (state: SalesReportState) => state.productReportLoader
 );
+export const getSalesReportLoader = createSelector(
+	getSalesReportState,
+	(state: SalesReportState) => state.salesReportLoader,
+);
 
 export const getProductReportTotalRevenue = createSelector(
   getSalesReportState,
@@ -63,6 +67,11 @@ export const getCustomerReportLoader = createSelector(
 export const getCustomerWiseSalesReport = createSelector(
   getSalesReportState,
   (state: SalesReportState) => state.customerWiseReport
+);
+
+export const getMonthlyRevenue = createSelector(
+	getSalesReportState,
+	(state: SalesReportState) => state.monthlyRevenue,
 );
 
 export const getSalesReportGrandTotals = createSelector(

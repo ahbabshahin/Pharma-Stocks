@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { SalesReportPeriod, PaymentStatus } from '../../store/models/common.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,58 +10,63 @@ import { CustomerListComponent } from '../../modules/secure/sold-products/custom
 import { FilterService } from '../../service/filter/filter.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-filter',
-  templateUrl: './filter.component.html',
-  styleUrl: './filter.component.scss',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NzSelectModule,
-    NzDatePickerModule,
-    NzRadioModule,
-    NzAffixModule,
-  ],
+	standalone: true,
+	selector: 'app-filter',
+	templateUrl: './filter.component.html',
+	styleUrl: './filter.component.scss',
+	imports: [
+		CommonModule,
+		FormsModule,
+		NzSelectModule,
+		NzDatePickerModule,
+		NzRadioModule,
+		NzAffixModule,
+	],
 })
 export class FilterComponent {
-  @Input() title: string = '';
-  @Input() isAmountNeeded: boolean = true;
-  Object = Object;
-  isAmount: boolean = true;
-  selectedDate: Date = new Date();
-  formattedDate: string = '';
-  navHeight: number = 60;
-  period: SalesReportPeriod = SalesReportPeriod.MONTHLY;
-  status: PaymentStatus = PaymentStatus.PAID;
-  SalesReportPeriod = SalesReportPeriod;
-  PaymentStatus = PaymentStatus;
+	@Input() title: string = '';
+	@Input() isAmountNeeded: boolean = true;
+	Object = Object;
+	isAmount: boolean = true;
+	selectedDate: Date = new Date();
+	formattedDate: string = '';
+	navHeight: number = 60;
+	period: SalesReportPeriod = SalesReportPeriod.MONTHLY;
+	status: PaymentStatus = PaymentStatus.PAID;
+	SalesReportPeriod = SalesReportPeriod;
+	PaymentStatus = PaymentStatus;
 
-  constructor(private filterServie: FilterService) {}
+	onTypeChange = output<boolean>();
+	constructor(private filterServie: FilterService) {}
 
-  ngOnInit() {
-    this.initialize();
-  }
+	ngOnInit() {
+		this.initialize();
+	}
 
-  initialize() {
-    this.onDateChange();
-  }
+	initialize() {
+		this.onDateChange();
+	}
 
-  onPeriodChange() {
-    this.filterServie.setFilterPeriod(this.period);
-  }
+	onPeriodChange() {
+		this.filterServie.setFilterPeriod(this.period);
+	}
 
-  onDateChange(): void {
-    this.formattedDate = this.filterServie.formatSelectedDate(
-      this.selectedDate
-    );
-    this.filterServie.setFilterDate(this.formattedDate);
-  }
+	onDateChange(): void {
+		this.formattedDate = this.filterServie.formatSelectedDate(
+			this.selectedDate,
+		);
+		this.filterServie.setFilterDate(this.formattedDate);
+	}
 
-  onStatusChange(): void {
-    this.filterServie.setFilterStatus(this.status);
+	onStatusChange(): void {
+		this.filterServie.setFilterStatus(this.status);
 
-    // this.dispatchActions();
-  }
+		// this.dispatchActions();
+	}
 
-  ngOnDestroy() {}
+	typeChange(){
+		this.onTypeChange.emit(this.isAmount);
+	}
+
+	ngOnDestroy() {}
 }

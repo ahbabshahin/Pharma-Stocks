@@ -15,7 +15,7 @@
               [nzValue]="term"></nz-option>
           </nz-select>
           @if(isAmountNeeded){
-           <nz-radio-group [(ngModel)]="isAmount">
+           <nz-radio-group [(ngModel)]="isAmount" (ngModelChange)="typeChange()">
              <label nz-radio-button [nzValue]="true">Amount</label>
              <label nz-radio-button [nzValue]="false">Quantity</label>
            </nz-radio-group>
