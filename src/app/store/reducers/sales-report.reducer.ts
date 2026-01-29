@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { CustomerWiseSalesReport, CustomerWiseSalesReportResponse, DailyReport, ProductReport, SalesReportByPrice, SalesSummaryByArea, SalesSummaryGrandTotal, SalesSummaryReport } from '../models/sales-report.model';
+import { CustomerWiseSalesReport, CustomerWiseSalesReportResponse, DailyReport, MonthlyRevenue, ProductReport, SalesReportByPrice, SalesSummaryByArea, SalesSummaryGrandTotal, SalesSummaryReport } from '../models/sales-report.model';
 import * as salesReportActions from '../actions/sales-report.action';
 
 export interface SalesReportState {
@@ -15,6 +15,7 @@ export interface SalesReportState {
   salesSummaryByArea: SalesSummaryReport[];
   customerWiseReport: CustomerWiseSalesReport[];
   grandTotals: SalesSummaryGrandTotal;
+  monthlyRevenue: MonthlyRevenue[];
   customerReportLoader: boolean;
   salesReportLoader: boolean;
   error: string;
@@ -37,6 +38,7 @@ const defaultSales: SalesReportState = {
     totalQuantity: 0,
     totalRevenue: 0
   },
+  monthlyRevenue:[],
   customerReportLoader: false,
   salesReportLoader: false,
   error: '',
@@ -160,6 +162,7 @@ export const salesReportReducer = createReducer(
       productReport: action?.res?.product?.report,
       salesSummaryByArea: action?.res?.area?.report,
       customerWiseReport: action.res?.customer?.report,
+	  monthlyRevenue: action?.res?.monthlyRevenue?.report,
       grandTotals: action?.res?.grandTotals,
       salesReportLoader: false,
     };
