@@ -109,7 +109,7 @@ export class StocksComponent {
 		nzWidth: this.isMobile ? '100%' : '50%',
 		// nzWrapClassName: 'md-drawer',
 		nzContent: NewStockComponent,
-		nzData: { stock },
+		nzData: { stock, isAdmin: this.isAdmin },
 	});
   }
 

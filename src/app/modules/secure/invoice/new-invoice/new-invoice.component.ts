@@ -332,7 +332,7 @@ export class NewInvoiceComponent implements OnInit, OnDestroy {
 		if (this.form.valid) {
 			const formRes = this.form.value;
 			let payload: Invoice<string> = {
-				sn: `SN-${this.totalInvoices() + 1}`,
+				sn: formRes?.sn,
 				products: formRes?.products,
 				discount: formRes?.discount,
 				totalAmount: this.totals()?.total,
