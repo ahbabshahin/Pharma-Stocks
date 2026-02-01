@@ -13,6 +13,11 @@
     <input id="price" nz-input type="number" class="form-control" formControlName="price" placeholder="e.g., ৳1200"
       min="1" />
   </div>
+  @if(isAdmin){
+	<div class="form-group">
+    <label for="price">Purchase Price </label>
+    <input id="price" nz-input type="number" class="form-control" formControlName="purchasePrice" placeholder="e.g., ৳1000"/>
+  </div>}
   <div class="form-group">
     <label for="brand">Brand <sup class="text-danger">*</sup></label>
     <input id="brand" nz-input type="text" class="form-control" formControlName="brand"

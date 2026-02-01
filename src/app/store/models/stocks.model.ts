@@ -10,4 +10,5 @@ export interface Stock {
   lowStockThreshold: number;
   isLowStock?: boolean;
   activity_log?: ActivityLog[];
+  purchasePrice?: number;
 }
