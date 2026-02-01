@@ -13,6 +13,7 @@ import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 export class NewStockComponent {
   stock!: Stock;
   form!: FormGroup;
+  isAdmin: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,6 +39,7 @@ export class NewStockComponent {
       name: ['', [Validators?.required]],
       quantity: [null, [Validators?.required]],
       price: [null, [Validators?.required]],
+	  purchasePrice: [0],
       brand: ['', [Validators?.required]],
       dosage: ['', [Validators?.required]],
       lowStockThreshold: [10, [Validators?.required]],
