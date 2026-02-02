@@ -83,6 +83,11 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
+	  {
+		path: 'expense',
+		loadComponent: () => import('./expense/expense.component').then(m => m.ExpenseComponent),
+		canActivate: [AuthGuard, AdminGuard],
+	  },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route
     ],

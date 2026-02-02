@@ -33,6 +33,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { label: 'sales report', path: '/sales-report', roles: ['admin'] },
     { label: 'sold-products', path: '/sold-products', roles: ['admin'] },
     { label: 'area code', path: '/area-code', roles: ['admin', 'office'] },
+    { label: 'expense', path: '/expense', roles: ['admin'] },
   ];
 
   constructor(
