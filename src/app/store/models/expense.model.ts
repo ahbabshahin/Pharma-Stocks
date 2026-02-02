@@ -21,3 +21,11 @@ export interface ExpenseResponse {
 	body: Expense[];
 	total: 0;
 }
+
+export interface ExpenseParams {
+	page: number;
+	limit: number;
+	type?: string;
+	startDate?: string;
+	endDate?: string;
+}

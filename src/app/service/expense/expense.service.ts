@@ -1,8 +1,20 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { ExpenseApiService } from './expense-api.service';
-import { Expense, ExpenseResponse } from 'src/app/store/models/expense.model';
+import {
+	Expense,
+	ExpenseParams,
+	ExpenseResponse,
+} from 'src/app/store/models/expense.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, distinct, distinctUntilChanged, filter, of, switchMap, tap } from 'rxjs';
+import {
+	catchError,
+	distinct,
+	distinctUntilChanged,
+	filter,
+	of,
+	switchMap,
+	tap,
+} from 'rxjs';
 
 @Injectable()
 export class ExpenseService {
@@ -10,6 +22,7 @@ export class ExpenseService {
 
 	private expenseState = signal<{
 		data: Expense[];
+		subloader: boolean;
 		loader: boolean;
 		loaded: boolean;
 		error: string;
@@ -20,6 +33,7 @@ export class ExpenseService {
 	}>({
 		data: [],
 		loader: false,
+		subloader: false,
 		loaded: false,
 		error: '',
 		addloader: false,
@@ -30,6 +44,7 @@ export class ExpenseService {
 
 	expenseList = computed(() => this.expenseState().data);
 	loader = computed(() => this.expenseState().loader);
+	subloader = computed(() => this.expenseState().subloader);
 	loaded = computed(() => this.expenseState().loaded);
 	error = computed(() => this.expenseState().error);
 	addLoader = computed(() => this.expenseState().addloader);
@@ -37,10 +52,10 @@ export class ExpenseService {
 	deleteLoader = computed(() => this.expenseState().deleteLoader);
 	total = computed(() => this.expenseState().total);
 
-	loadExpenseParams = signal<{params: {[keys: string]: any}}>(null as any);
+	loadExpenseParams = signal<ExpenseParams>(null as any);
 
-	loadExpense(params: {[keys: string]: any}){
-		this.loadExpenseParams.set({params});
+	loadExpense(params: ExpenseParams) {
+		this.loadExpenseParams.set({ ...params });
 	}
 
 	setExpenseLoader(loader: boolean, key: string) {
@@ -54,30 +69,45 @@ export class ExpenseService {
 		toObservable(this.loadExpenseParams).pipe(
 			filter((params) => params !== null),
 			distinctUntilChanged(),
-			tap(() => this.setExpenseLoader(true, 'loader')),
-			switchMap((params) => this.expenseApi.getExpenses(params.params).pipe(
-				tap((res: ExpenseResponse) => {
-					this.expenseState.set({
-						...this.expenseState(),
-						data: res.body,
-						loader: false,
-						error: '',
-						total: res.total,
-					})
-				}),
-				catchError((err) => {
-					this.expenseState.set({
-						...this.expenseState(),
-						loader: false,
-						error: err,
-					});
+			tap((params) =>
+				this.setExpenseLoader(
+					true,
+					params?.page > 1 ? 'subloader' : 'loader',
+				),
+			),
+			switchMap((params) =>
+				this.expenseApi.getExpenses(params).pipe(
+					tap((res: ExpenseResponse) => {
+						let expenses: Expense[] = res?.body;
+						if(params?.page > 1) {
+							expenses = [...this.expenseState().data, ...res?.body]
+						}
+						this.expenseState.set({
+							...this.expenseState(),
+							data: expenses,
+							loader: false,
+							subloader: false,
+							loaded: true,
+							error: '',
+							total: res.total,
+						});
+					}),
+					catchError((err) => {
+						this.expenseState.set({
+							...this.expenseState(),
+							loader: false,
+							subloader: false,
+							loaded: false,
+							error: err,
+						});
 
-					return of({body: [], total: 0})
-				})
-			))
+						return of({ body: [], total: 0 });
+					}),
+				),
+			),
 		),
 		{
-			initialValue: null
-		}
-	)
+			initialValue: null,
+		},
+	);
 }
