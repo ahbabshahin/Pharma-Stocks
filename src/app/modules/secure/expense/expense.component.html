@@ -1,0 +1,25 @@
+@if(loader()){
+<app-global-loader></app-global-loader>
+}
+@else{
+@defer(when expenseList()?.length){
+<app-expense-list [expenseList]="expenseList()"></app-expense-list>
+
+@if(expenseList()?.length){
+<p class="d-flex justify-content-end align-items-center my-2 mx-2">
+	Showing expense(s) {{ expenseList()?.length }} out of {{ total() }}
+</p>}
+@if(subloader()){
+<app-global-loader></app-global-loader>
+}
+@if(total() > params().limit && expenseList().length < total()){ <div
+	class="d-flex justify-content-center align-items-center my-3">
+	<button [disabled]="subloader()" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
+		Load More
+	</button>
+	</div>
+	}
+	}@placeholder {
+	<app-global-no-data bodyText="No expense found"></app-global-no-data>
+	}
+	}
