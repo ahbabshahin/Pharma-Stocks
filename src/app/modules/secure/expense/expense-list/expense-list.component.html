@@ -1,4 +1,4 @@
-@if(expenseList()?.length){
+<!-- @if(expenseList()?.length){
 <table class="table table-responsive">
 	  <thead>
 	  	<tr>
@@ -34,4 +34,70 @@
 </table>
 }@else {
 	<app-global-loader></app-global-loader>
+} -->
+@if(expenseList()?.length){
+<div class="table-responsive d-none d-md-block">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Type</th>
+				<th scope="col">Description</th>
+				<th scope="col">Amount</th>
+				<th scope="col">Created By</th>
+				@if(type() !== ExpenseType.PRODUCT){
+				<th scope="col" class="text-end">Actions</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@for(list of expenseList(); track list._id; let i = $index){
+			<tr>
+				<th scope="row">{{i + 1}}</th>
+				<td><span class="badge bg-light text-dark">{{list?.type | titlecase}}</span></td>
+				<td class="text-wrap" style="max-width: 200px;">{{list?.description}}</td>
+				<td><strong>{{list?.amount | currency}}</strong></td>
+				<td>{{list?.createdBy?.name | titlecase}}</td>
+				@if(list?.type !== ExpenseType.PRODUCT){
+				<td class="text-end">
+					<button nz-button nzType="default" nzShape="circle" class="me-2"><span nz-icon
+							nzType="edit"></span></button>
+					<button nz-button nzDanger nzShape="circle"><span nz-icon nzType="delete"></span></button>
+				</td>
+				}@else { <td></td> }
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="d-md-none">
+	@for(list of expenseList(); track list._id; let i = $index){
+	<div class="card mb-3 shadow-sm">
+		<div class="card-body">
+			<div class="d-flex justify-content-between align-items-start mb-2">
+				<span class="badge bg-primary">#{{i + 1}}</span>
+				<strong class="text-success">{{list?.amount | currency}}</strong>
+			</div>
+
+			<p class="mb-1"><strong>Type:</strong> {{list?.type | titlecase}}</p>
+			<p class="mb-1 text-muted"><strong>Desc:</strong> {{list?.description}}</p>
+			<p class="mb-2 small"><strong>By:</strong> {{list?.createdBy?.name | titlecase}}</p>
+
+			@if(list?.type !== ExpenseType.PRODUCT){
+			<div class="border-top pt-2 d-flex justify-content-end gap-2">
+				<button nz-button nzBlock nzType="default" class="d-flex align-items-center justify-content-center">
+					<span nz-icon nzType="edit"></span> Edit
+				</button>
+				<button nz-button nzBlock nzDanger class="d-flex align-items-center justify-content-center">
+					<span nz-icon nzType="delete"></span> Delete
+				</button>
+			</div>
+			}
+		</div>
+	</div>
+	}
+</div>
+} @else {
+<app-global-loader></app-global-loader>
 }

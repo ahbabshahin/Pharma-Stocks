@@ -2,9 +2,15 @@
 <app-global-loader></app-global-loader>
 } @else {
 @if(type !== ExpenseType.PRODUCT){
-<div class="d-flex justify-content-end">
-	<button type="button" nz-button class="primary-btn" nzShape="round" (click)="addExpense()">Add</button>
-</div>}
+<div class="d-flex flex-column flex-sm-row justify-content-sm-end mb-3">
+	<button type="button" nz-button nzType="primary" class="primary-btn w-sm-auto" nzShape="round" [ngClass]="{'w-100': isMobile}"
+		(click)="addExpense()">
+		<span nz-icon nzType="plus"></span> Add Expense
+	</button>
+</div>
+}
+
+<div class="overflow-auto">
 <nz-tabset (nzSelectedIndexChange)="onTabChange($event)" [nzSelectedIndex]="selectedIndx">
 	@for(tab of tabs; track $index;){
 
@@ -13,7 +19,7 @@
 	</nz-tab>
 	}
 </nz-tabset>
-
+</div>
 }
 
 <ng-template #tabBody>
