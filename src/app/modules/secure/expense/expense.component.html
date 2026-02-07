@@ -1,25 +1,44 @@
-@if(loader()){
+@if (initialLoader) {
 <app-global-loader></app-global-loader>
-}
-@else{
-@defer(when expenseList()?.length){
-<app-expense-list [expenseList]="expenseList()"></app-expense-list>
+} @else {
+@if(type !== ExpenseType.PRODUCT){
+<div class="d-flex justify-content-end">
+	<button type="button" nz-button class="primary-btn" nzShape="round" (click)="addExpense()">Add</button>
+</div>}
+<nz-tabset (nzSelectedIndexChange)="onTabChange($event)" [nzSelectedIndex]="selectedIndx">
+	@for(tab of tabs; track $index;){
 
-@if(expenseList()?.length){
-<p class="d-flex justify-content-end align-items-center my-2 mx-2">
-	Showing expense(s) {{ expenseList()?.length }} out of {{ total() }}
-</p>}
-@if(subloader()){
-<app-global-loader></app-global-loader>
-}
-@if(total() > params().limit && expenseList().length < total()){ <div
-	class="d-flex justify-content-center align-items-center my-3">
-	<button [disabled]="subloader()" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
-		Load More
-	</button>
-	</div>
+	<nz-tab [nzTitle]="tab?.label">
+		<ng-container *ngTemplateOutlet="tabBody"></ng-container>
+	</nz-tab>
 	}
-	}@placeholder {
+</nz-tabset>
+
+}
+
+<ng-template #tabBody>
+	@if (loader()) {
+	<app-global-loader></app-global-loader>
+	}@else{
+	@if (expenseList()?.length) {
+	<app-expense-list [expenseList]="expenseList()" [type]="type"></app-expense-list>
+	<p class="d-flex justify-content-end align-items-center my-2 mx-2">
+		Showing expense(s) {{ expenseList()?.length }} out of {{ total() }}
+	</p>
+	} @else {
 	<app-global-no-data bodyText="No expense found"></app-global-no-data>
 	}
+
+	@if (subloader()) {
+	<app-global-loader></app-global-loader>
 	}
+
+	@if (total() > params().limit && expenseList().length < total()) { <div
+		class="d-flex justify-content-center align-items-center my-3">
+		<button [disabled]="subloader()" (click)="loadMore()" type="button" nz-button nzShape="round" class="w-50">
+			Load More
+		</button>
+		</div>
+		}
+		}
+</ng-template>

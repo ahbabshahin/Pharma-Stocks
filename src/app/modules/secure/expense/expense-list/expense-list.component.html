@@ -1,4 +1,5 @@
-<table class="table table-striped">
+@if(expenseList()?.length){
+<table class="table table-responsive">
 	  <thead>
 	  	<tr>
 	  		<th scope="col">#</th>
@@ -6,7 +7,9 @@
 	  		<th scope="col">Description</th>
 	  		<th scope="col">Amount</th>
 	  		<th scope="col">Created By</th>
-	  		<!-- <th scope="col">Actions</th> -->
+			@if(type() !== ExpenseType.PRODUCT){
+	  		<th scope="col">Actions</th>
+			}
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -17,10 +20,18 @@
 	  		<td>{{list?.description}}</td>
 	  		<td>{{list?.amount | currency}}</td>
 			<td>{{list?.createdBy?.name | titlecase}}</td>
-			<!-- <td>
-				<button class="btn btn-primary">Update</button>
-			</td> -->
+			@if(list?.type !== ExpenseType.PRODUCT){
+			<td class="d-flex flex-wrap">
+				<button type="button" nz-button nzShape="circle" nzDanger><span nz-icon nzType="delete" nzTheme="outline"></span></button>
+				<button type="button" nz-button nzShape="circle" nzType="default" ><span nz-icon nzType="edit" nzTheme="outline"></span></button>
+			</td>
+			}@else {
+				<td></td>
+			}
 	  	</tr>}
 	  </tbody>
 
 </table>
+}@else {
+	<app-global-loader></app-global-loader>
+}

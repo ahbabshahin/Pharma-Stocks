@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Config } from 'src/app/config';
-import { ExpenseResponse } from 'src/app/store/models/expense.model';
+import { ExpenseResponse, NewExpense } from 'src/app/store/models/expense.model';
 
 @Injectable()
 export class ExpenseApiService {
@@ -17,5 +17,12 @@ export class ExpenseApiService {
 				return { body: res?.body || [], total: res?.total || 0 };
 			}),
 		);
+	}
+
+	createExpense(payload: NewExpense) {
+		return this.http.post(`${this.env.rootURL}/v1/expense`, payload).pipe(
+			map((res: any) => res?.body),
+		);
+
 	}
 }

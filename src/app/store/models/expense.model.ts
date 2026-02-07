@@ -6,10 +6,11 @@ export interface Expense {
 	amount: number;
 	referenceInvoice: string;
 	description: string;
-	createdBy: ExpenseCreatedBy
+	createdBy: ExpenseCreatedBy;
 	activity_log: ActivityLog[];
 	createdAt: string;
 	updatedAt: string;
+	expenseReason: string;
 }
 
 export interface ExpenseCreatedBy {
@@ -28,4 +29,17 @@ export interface ExpenseParams {
 	type?: string;
 	startDate?: string;
 	endDate?: string;
+}
+
+export enum ExpenseType {
+	PRODUCT = 'product',
+	SALARY = 'salary',
+	GENERAL = 'general',
+}
+
+export interface NewExpense extends Pick<Expense, 'type' | 'amount' | 'description' | 'expenseReason'>{}
+
+export enum ExpenseTypeSelector {
+	GENERAL = 'general',
+	SALARY = 'salary',
 }
