@@ -101,7 +101,7 @@ export class ExpenseComponent {
 		const { NewExpenseComponent } =
 			await import('src/app/modules/secure/expense/new-expense/new-expense.component');
 		this.drawerService.create({
-			nzTitle: 'New Expense',
+			nzTitle: `${expense ? 'Update' : 'Add'} Expense`,
 			nzClosable: true,
 			nzMaskClosable: false,
 			nzWidth: this.isMobile ? '100%' : '50%',

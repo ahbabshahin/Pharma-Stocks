@@ -26,7 +26,7 @@ export class ExpenseApiService {
 	}
 
 	updateExpense(payload: UpdateExpense): Observable<Expense> {
-		return this.http.post(`${this.env.rootURL}/v1/expense/${payload?._id}`, payload).pipe(
+		return this.http.put(`${this.env.rootURL}/v1/expense/${payload?._id}`, payload).pipe(
 			map((res: any) => res?.body),
 		);
 	}
