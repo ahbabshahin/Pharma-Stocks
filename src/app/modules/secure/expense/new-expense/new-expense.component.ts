@@ -14,9 +14,11 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ExpenseService } from 'src/app/service/expense/expense.service';
 import {
+	Expense,
 	ExpenseType,
 	ExpenseTypeSelector,
 	NewExpense,
+	UpdateExpense,
 } from 'src/app/store/models/expense.model';
 
 @Component({
@@ -36,12 +38,14 @@ import {
 	],
 })
 export class NewExpenseComponent {
+	expense: Expense;
 	expenseService: ExpenseService;
 	form: FormGroup;
 	expenseTypes: string[] = Object.values(ExpenseTypeSelector);
 	type: ExpenseType;
 	expenseReasons: string[] = [];
 	addloader: Signal<boolean>;
+	updateloader: Signal<boolean>;
 	error: Signal<string>;
 
 	isSubmitted = signal<boolean>(false);
@@ -59,6 +63,7 @@ export class NewExpenseComponent {
 	initialize() {
 		this.expenseReasons = this.expenseService.getExpenseReasons();
 		this.addloader = this.expenseService.addLoader;
+		this.updateloader = this.expenseService.updateLoader;
 		this.error = this.expenseService.error;
 		this.initializeForm();
 	}
@@ -70,19 +75,40 @@ export class NewExpenseComponent {
 			description: [''],
 			expenseReason: [this.expenseReasons[0], [Validators.required]],
 		});
+
+		if(this.expense){
+			this.populateForm();
+		}
+	}
+
+	populateForm() {
+		const { _id, type, amount, description, expenseReason } = this.expense;
+		this.form.patchValue({
+			type,
+			amount,
+			description,
+			expenseReason,
+		});
+
+		this.form.addControl('_id', this.formBuilder.control(_id));
 	}
 
 	onSubmit() {
-		// this.expenseService.addExpense();
-		const payload: NewExpense = this.form.value;
+		if (this.expense) {
+			const payload: UpdateExpense = this.form.value;
 
-		this.expenseService.addExpense(payload);
+			this.expenseService.updateExpense(payload);
+		} else {
+			const payload: NewExpense = this.form.value;
+
+			this.expenseService.addExpense(payload);
+		}
 		this.isSubmitted.set(true);
 	}
 
 	getError() {
 		const error: string = this.error();
-		const loader: boolean = this.addloader();
+		const loader: boolean = this.expense ? this.updateloader() : this.addloader();
 
 		if (!error && !loader && this.isSubmitted()) {
 			untracked(() => this.isSubmitted.set(false));

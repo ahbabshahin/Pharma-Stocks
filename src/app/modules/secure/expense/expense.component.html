@@ -27,7 +27,8 @@
 	<app-global-loader></app-global-loader>
 	}@else{
 	@if (expenseList()?.length) {
-	<app-expense-list [expenseList]="expenseList()" [type]="type" (onDeleteExpense)="deleteExpense($event)"
+	<app-expense-list [expenseList]="expenseList()" [type]="type" (onUpdateExpense)="addExpense($event)"
+		(onDeleteExpense)="deleteExpense($event)"
 		[loader]="deleteloader()"></app-expense-list>
 	<p class="d-flex justify-content-end align-items-center my-2 mx-2">
 		Showing expense(s) {{ expenseList()?.length }} out of {{ total() }}

@@ -25,7 +25,8 @@ export class ExpenseListComponent {
 	type = input<string>();
 	ExpenseType = ExpenseType;
 
-	onDeleteExpense = output<Expense>()
+	onDeleteExpense = output<Expense>();
+	onUpdateExpense = output<Expense>();
 	selectedIndx: number = -1;
 
 	constructor(){
@@ -34,6 +35,10 @@ export class ExpenseListComponent {
 			if(!loader)
 				this.selectedIndx = -1;
 		})
+	}
+
+	updateExpense(expense: Expense) {
+		this.onUpdateExpense.emit(expense);
 	}
 
 	deleteExpense(expense: Expense, indx: number) {
