@@ -1,0 +1,58 @@
+<nz-spin [nzSpinning]="addloader()" nzTip="expense creation in progress">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()">
+		<div class="form-group">
+			<label for="type">Type <sup class="text-danger">*</sup></label>
+			<nz-select class="w-100" nzPlaceHolder="Select an expense type" formControlName="type">
+				@for(type of expenseTypes; track $index){
+				<nz-option [nzValue]="type" [nzLabel]="type | titlecase"></nz-option>
+				}
+			</nz-select>
+		</div>
+		<div class="form-group mt-3">
+			<label for="amount">Amount <sup class="text-danger">*</sup></label>
+			<input id="amount" nz-input type="number" class="form-control" formControlName="amount"
+				placeholder="e.g., ৳1200" min="1" />
+			@if(form?.get('amount')?.errors?.['required']){
+			<div class="text-danger">
+				<small>
+					Amount is required.
+				</small>
+			</div>
+			}
+			@if(form?.get('amount')?.errors?.['min']){
+			<div class="text-danger">
+				<small>
+					Amount must be greater than 0
+				</small>
+			</div>
+			}
+		</div>
+		<div class="form-group mt-3">
+			<label for="description">Description </label>
+			<textarea id="description" nz-input type="text" class="form-control" formControlName="description"
+				placeholder="January's rent for office" min="3"></textarea>
+
+		</div>
+
+		<div class="form-group mt-3">
+			<label for="reason">Expense For <sup class="text-danger">*</sup></label>
+			<nz-select class="w-100" nzPlaceHolder="Select an expense reason" formControlName="expenseReason">
+				@for(reason of expenseReasons; track $index){
+				<nz-option [nzValue]="reason" [nzLabel]="reason | titlecase"></nz-option>
+				}
+			</nz-select>
+			@if(form?.get('reason')?.errors?.['required']){
+			<div class="text-danger">
+				<small>
+					Reason is required.
+				</small>
+			</div>
+			}
+		</div>
+		<div class="form-group d-flex justify-content-end mt-3">
+			<button type="submit" class="primary-btn" [disabled]="form?.invalid" nz-button nzShape="round">
+				Submit
+			</button>
+		</div>
+	</form>
+</nz-spin>

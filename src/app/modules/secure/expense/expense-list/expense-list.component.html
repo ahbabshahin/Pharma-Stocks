@@ -1,26 +1,75 @@
-<table class="table table-striped">
-	  <thead>
-	  	<tr>
-	  		<th scope="col">#</th>
-	  		<th scope="col">Type</th>
-	  		<th scope="col">Description</th>
-	  		<th scope="col">Amount</th>
-	  		<th scope="col">Created By</th>
-	  		<!-- <th scope="col">Actions</th> -->
-	  	</tr>
-	  </thead>
-	  <tbody>
-	  	@for(list of expenseList(); track list._id; let i = $index){
-		<tr>
-	  		<th scope="row">{{i + 1}}</th>
-	  		<td>{{list?.type | titlecase}}</td>
-	  		<td>{{list?.description}}</td>
-	  		<td>{{list?.amount | currency}}</td>
-			<td>{{list?.createdBy?.name | titlecase}}</td>
-			<!-- <td>
-				<button class="btn btn-primary">Update</button>
-			</td> -->
-	  	</tr>}
-	  </tbody>
+@if(expenseList()?.length){
+<div class="table-responsive d-none d-md-block">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Type</th>
+				<th scope="col">Description</th>
+				<th scope="col">Expense For</th>
+				<th scope="col">Amount</th>
+				<th scope="col">Created By</th>
+				@if(type() !== ExpenseType.PRODUCT){
+				<th scope="col" class="text-end">Actions</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@for(list of expenseList(); track list._id; let i = $index){
+			<tr [ngClass]="{'disabled': loader() && selectedIndx === i}">
+				<th scope="row">{{i + 1}}</th>
+				<td><span class="badge bg-light text-dark">{{list?.type | titlecase}}</span></td>
+				<td class="text-wrap" style="max-width: 200px;">{{list?.description}}</td>
+				<td class="text-wrap">{{list?.expenseReason}}</td>
+				<td><strong>{{list?.amount | currency}}</strong></td>
+				<td>{{list?.createdBy?.name | titlecase}}</td>
+				@if(list?.type !== ExpenseType.PRODUCT){
+				<td class="text-end">
+					<button nz-button nzType="default" nzShape="circle" class="me-2" (click)="updateExpense(list)"><span
+							nz-icon nzType="edit"></span></button>
+					<button nz-button nzDanger nzShape="circle" (click)="deleteExpense(list, i)"><span nz-icon
+							nzType="delete"></span></button>
+				</td>
+				}@else { <td></td> }
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
 
-</table>
+<div class="d-md-none">
+	@for(list of expenseList(); track list._id; let i = $index){
+	<div class="card mb-3 shadow-sm" [ngClass]="{'disabled': loader() && selectedIndx === i}">
+		<div class="card-body">
+			<div class="d-flex justify-content-between align-items-start mb-2">
+				<span class="badge bg-primary">#{{i + 1}}</span>
+				<strong class="text-success">{{list?.amount | currency}}</strong>
+			</div>
+
+			<p class="mb-1"><strong>Type:</strong> {{list?.type | titlecase}}</p>
+			@if(list?.description){
+			<p class="mb-1 text-muted"><strong>Desc:</strong> {{list?.description}}</p>
+			}
+			@if(list?.expenseReason){
+			<p class="mb-1 text-muted"><strong>Expense For:</strong> {{list?.expenseReason}}</p>}
+			<p class="mb-2 small"><strong>By:</strong> {{list?.createdBy?.name | titlecase}}</p>
+
+			@if(list?.type !== ExpenseType.PRODUCT){
+			<div class="border-top pt-2 d-flex justify-content-end gap-2">
+				<button nz-button nzBlock nzType="default" (click)="updateExpense(list)"
+					class="d-flex align-items-center justify-content-center">
+					<span nz-icon nzType="edit"></span> Edit
+				</button>
+				<button nz-button nzBlock nzDanger (click)="deleteExpense(list, i)"
+					class="d-flex align-items-center justify-content-center">
+					<span nz-icon nzType="delete"></span> Delete
+				</button>
+			</div>
+			}
+		</div>
+	</div>
+	}
+</div>
+} @else {
+<app-global-loader></app-global-loader>
+}
