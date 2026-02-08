@@ -3,22 +3,22 @@
 } @else {
 @if(type !== ExpenseType.PRODUCT){
 <div class="d-flex flex-column flex-sm-row justify-content-sm-end mb-3">
-	<button type="button" nz-button nzType="primary" class="primary-btn w-sm-auto" nzShape="round" [ngClass]="{'w-100': isMobile}"
-		(click)="addExpense()">
+	<button type="button" nz-button nzType="primary" class="primary-btn w-sm-auto" nzShape="round"
+		[ngClass]="{'w-100': isMobile}" (click)="addExpense()">
 		<span nz-icon nzType="plus"></span> Add Expense
 	</button>
 </div>
 }
 
 <div class="overflow-auto">
-<nz-tabset (nzSelectedIndexChange)="onTabChange($event)" [nzSelectedIndex]="selectedIndx">
-	@for(tab of tabs; track $index;){
+	<nz-tabset (nzSelectedIndexChange)="onTabChange($event)" [nzSelectedIndex]="selectedIndx">
+		@for(tab of tabs; track $index;){
 
-	<nz-tab [nzTitle]="tab?.label">
-		<ng-container *ngTemplateOutlet="tabBody"></ng-container>
-	</nz-tab>
-	}
-</nz-tabset>
+		<nz-tab [nzTitle]="tab?.label">
+			<ng-container *ngTemplateOutlet="tabBody"></ng-container>
+		</nz-tab>
+		}
+	</nz-tabset>
 </div>
 }
 
@@ -27,7 +27,8 @@
 	<app-global-loader></app-global-loader>
 	}@else{
 	@if (expenseList()?.length) {
-	<app-expense-list [expenseList]="expenseList()" [type]="type"></app-expense-list>
+	<app-expense-list [expenseList]="expenseList()" [type]="type" (onDeleteExpense)="deleteExpense($event)"
+		[loader]="deleteloader()"></app-expense-list>
 	<p class="d-flex justify-content-end align-items-center my-2 mx-2">
 		Showing expense(s) {{ expenseList()?.length }} out of {{ total() }}
 	</p>

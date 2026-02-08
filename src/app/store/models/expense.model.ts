@@ -38,6 +38,9 @@ export enum ExpenseType {
 }
 
 export interface NewExpense extends Pick<Expense, 'type' | 'amount' | 'description' | 'expenseReason'>{}
+export interface UpdateExpense extends NewExpense {
+	_id: string;
+}
 
 export enum ExpenseTypeSelector {
 	GENERAL = 'general',

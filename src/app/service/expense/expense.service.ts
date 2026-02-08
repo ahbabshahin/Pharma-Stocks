@@ -6,6 +6,7 @@ import {
 	ExpenseResponse,
 	ExpenseType,
 	NewExpense,
+	UpdateExpense,
 } from 'src/app/store/models/expense.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -31,6 +32,7 @@ export class ExpenseService {
 
 	private expenseReasons: string[] = [
 		'Rent & Utilities',
+		'Payroll',
 		'Marketing & Advertising',
 		'Maintenance',
 		'Office Supplies',
@@ -38,7 +40,10 @@ export class ExpenseService {
 		'Legal & Professional Services',
 	];
 
-	constructor(private expenseApi: ExpenseApiService, private commonService: CommonService,) {}
+	constructor(
+		private expenseApi: ExpenseApiService,
+		private commonService: CommonService,
+	) {}
 
 	private expenseState = signal<{
 		data: Expense[];
@@ -63,6 +68,8 @@ export class ExpenseService {
 	});
 
 	private newExpensePayload = signal<NewExpense>(null as any);
+	private updateExpensePayload = signal<UpdateExpense>(null as any);
+	private deleteExpensePayload = signal<string>('');
 
 	expenseList = computed(() => this.expenseState().data);
 	loader = computed(() => this.expenseState().loader);
@@ -85,7 +92,15 @@ export class ExpenseService {
 	}
 
 	addExpense(payload: NewExpense) {
-		this.newExpensePayload.set({...payload});
+		this.newExpensePayload.set({ ...payload });
+	}
+
+	updateExpense(payload: UpdateExpense) {
+		this.updateExpensePayload.set({ ...payload });
+	}
+
+	deleteExpense(id: string) {
+		this.deleteExpensePayload.set(id);
 	}
 
 	setExpenseLoader(loader: boolean, key: string) {
@@ -148,13 +163,13 @@ export class ExpenseService {
 		toObservable(this.newExpensePayload).pipe(
 			filter((payload) => payload !== null),
 			distinctUntilChanged(),
-			tap((payload) => this.setExpenseLoader(true, 'addloader')),
+			tap(() => this.setExpenseLoader(true, 'addloader')),
 			exhaustMap((payload) => {
 				return this.expenseApi.createExpense(payload).pipe(
 					tap((res: Expense) => {
 						const expenses: Expense[] = [
-							...this.expenseState().data,
 							res,
+							...this.expenseState().data,
 						];
 						const total: number = this.expenseState().total + 1;
 						this.expenseState.set({
@@ -164,18 +179,108 @@ export class ExpenseService {
 							error: '',
 							total,
 						});
-						this.commonService.showSuccessToast('Expense created successfully');
+						this.commonService.showSuccessToast(
+							'Expense created successfully',
+						);
 					}),
 					catchError((err) => {
 						console.log('err: ', err);
-						const error = err?.error?.message || 'Create expense failed';
+						const error =
+							err?.error?.message || 'Create expense failed';
 						this.expenseState.set({
 							...this.expenseState(),
 							addloader: false,
-							error: err,
+							error,
 						});
 						this.newExpensePayload.set(null as any);
 						this.commonService.showErrorToast(error);
+						return of(error);
+					}),
+				);
+			}),
+		),
+	);
+
+	readonly updateExpenseApiCall = toSignal(
+		toObservable(this.updateExpensePayload).pipe(
+			filter((payload) => payload !== null),
+			distinctUntilChanged(),
+			tap(() => this.setExpenseLoader(true, 'updateLoader')),
+			exhaustMap((payload) => {
+				return this.expenseApi.updateExpense(payload).pipe(
+					tap((res: Expense) => {
+						let expenses: Expense[] = [...this.expenseState().data];
+						let indx: number = expenses.findIndex(
+							(expense) => expense?._id === res?._id,
+						);
+						if (indx !== -1) expenses.splice(indx, 1, res);
+
+						const total: number = this.expenseState().total + 1;
+						this.expenseState.set({
+							...this.expenseState(),
+							data: [...expenses],
+							updateLoader: false,
+							error: '',
+							total,
+						});
+						this.commonService.showSuccessToast(
+							'Expense updated successfully',
+						);
+					}),
+					catchError((err) => {
+						console.log('err: ', err);
+						const error =
+							err?.error?.message || 'Update expense failed';
+						this.expenseState.set({
+							...this.expenseState(),
+							updateLoader: false,
+							error: err,
+						});
+						this.updateExpensePayload.set(null as any);
+						this.commonService.showErrorToast(error);
+						return of(error);
+					}),
+				);
+			}),
+		),
+	);
+
+	readonly deleteExpenseApiCall = toSignal(
+		toObservable(this.deleteExpensePayload).pipe(
+			filter((id) => !!id),
+			distinctUntilChanged(),
+			tap(() => this.setExpenseLoader(true, 'deleteLoader')),
+			exhaustMap((id) => {
+				return this.expenseApi.deleteExpense(id).pipe(
+					tap((res: any) => {
+						let expenses: Expense[] = [...this.expenseState().data];
+						let indx: number = expenses.findIndex(
+							(expense) => expense?._id === id,
+						);
+						if (indx !== -1) expenses.splice(indx, 1);
+						const total: number = this.expenseState().total - 1;
+						this.expenseState.set({
+							...this.expenseState(),
+							data: [...expenses],
+							deleteLoader: false,
+							error: '',
+							total,
+						});
+						this.commonService.showSuccessToast(
+							'Expense deleted successfully',
+						);
+					}),
+					catchError((err) => {
+						console.log('err: ', err);
+						const error =
+							err?.error?.message || 'Update expense failed';
+						this.expenseState.set({
+							...this.expenseState(),
+							deleteLoader: false,
+							error,
+						});
+						this.commonService.showErrorToast(error);
+						this.deleteExpensePayload.set('');
 						return of(error);
 					}),
 				);

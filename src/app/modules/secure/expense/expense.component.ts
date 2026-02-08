@@ -33,6 +33,7 @@ export class ExpenseComponent {
 	expenseList: Signal<Expense[]> = this.expenseService.expenseList;
 	loader: Signal<boolean> = this.expenseService.loader;
 	subloader: Signal<boolean> = this.expenseService.subloader;
+	deleteloader: Signal<boolean> = this.expenseService.deleteLoader;
 	loaded: Signal<boolean> = this.expenseService.loaded;
 	error: Signal<string> = this.expenseService.error;
 	total: Signal<number> = this.expenseService.total;
@@ -111,5 +112,14 @@ export class ExpenseComponent {
 				expenseService: this.expenseService,
 			},
 		});
+	}
+
+	async deleteExpense(expense: Expense) {
+		const ok = await this.commonService.showConfirmModal(
+			`Are you sure you want to delete this expense?`
+		);
+
+		if(!ok) return;
+		this.expenseService.deleteExpense(expense?._id);
 	}
 }
