@@ -1,40 +1,3 @@
-<!-- @if(expenseList()?.length){
-<table class="table table-responsive">
-	  <thead>
-	  	<tr>
-	  		<th scope="col">#</th>
-	  		<th scope="col">Type</th>
-	  		<th scope="col">Description</th>
-	  		<th scope="col">Amount</th>
-	  		<th scope="col">Created By</th>
-			@if(type() !== ExpenseType.PRODUCT){
-	  		<th scope="col">Actions</th>
-			}
-	  	</tr>
-	  </thead>
-	  <tbody>
-	  	@for(list of expenseList(); track list._id; let i = $index){
-		<tr>
-	  		<th scope="row">{{i + 1}}</th>
-	  		<td>{{list?.type | titlecase}}</td>
-	  		<td>{{list?.description}}</td>
-	  		<td>{{list?.amount | currency}}</td>
-			<td>{{list?.createdBy?.name | titlecase}}</td>
-			@if(list?.type !== ExpenseType.PRODUCT){
-			<td class="d-flex flex-wrap">
-				<button type="button" nz-button nzShape="circle" nzDanger><span nz-icon nzType="delete" nzTheme="outline"></span></button>
-				<button type="button" nz-button nzShape="circle" nzType="default" ><span nz-icon nzType="edit" nzTheme="outline"></span></button>
-			</td>
-			}@else {
-				<td></td>
-			}
-	  	</tr>}
-	  </tbody>
-
-</table>
-}@else {
-	<app-global-loader></app-global-loader>
-} -->
 @if(expenseList()?.length){
 <div class="table-responsive d-none d-md-block">
 	<table class="table align-middle">
@@ -52,7 +15,7 @@
 		</thead>
 		<tbody>
 			@for(list of expenseList(); track list._id; let i = $index){
-			<tr>
+			<tr [ngClass]="{'disabled': loader() && selectedIndx === i}">
 				<th scope="row">{{i + 1}}</th>
 				<td><span class="badge bg-light text-dark">{{list?.type | titlecase}}</span></td>
 				<td class="text-wrap" style="max-width: 200px;">{{list?.description}}</td>
@@ -62,7 +25,7 @@
 				<td class="text-end">
 					<button nz-button nzType="default" nzShape="circle" class="me-2"><span nz-icon
 							nzType="edit"></span></button>
-					<button nz-button nzDanger nzShape="circle"><span nz-icon nzType="delete"></span></button>
+					<button nz-button nzDanger nzShape="circle" (click)="deleteExpense(list, i)"><span nz-icon nzType="delete"></span></button>
 				</td>
 				}@else { <td></td> }
 			</tr>
@@ -73,7 +36,7 @@
 
 <div class="d-md-none">
 	@for(list of expenseList(); track list._id; let i = $index){
-	<div class="card mb-3 shadow-sm">
+	<div class="card mb-3 shadow-sm" [ngClass]="{'disabled': loader() && selectedIndx === i}">
 		<div class="card-body">
 			<div class="d-flex justify-content-between align-items-start mb-2">
 				<span class="badge bg-primary">#{{i + 1}}</span>
@@ -89,7 +52,7 @@
 				<button nz-button nzBlock nzType="default" class="d-flex align-items-center justify-content-center">
 					<span nz-icon nzType="edit"></span> Edit
 				</button>
-				<button nz-button nzBlock nzDanger class="d-flex align-items-center justify-content-center">
+				<button nz-button nzBlock nzDanger (click)="deleteExpense(list, i)" class="d-flex align-items-center justify-content-center">
 					<span nz-icon nzType="delete"></span> Delete
 				</button>
 			</div>
