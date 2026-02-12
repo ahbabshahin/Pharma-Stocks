@@ -30,7 +30,7 @@ export interface PieGraph {
 }
 
 export enum PaymentStatus {
-  // ALL = 'all',
+  ALL = 'all',
   PAID = 'paid',
   DUE = 'due',
 }

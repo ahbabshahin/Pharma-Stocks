@@ -13,12 +13,13 @@ import { ProductReportComponent } from "./product-report/product-report.componen
 import { AllAreaReportComponent } from './all-area-report/all-area-report.component';
 import { CustomerWiseReportComponent } from './customer-wise-report/customer-wise-report.component';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { SalesReportInterval } from '../../../store/models/sales-report.model';
+import { MonthlyRevenue, SalesReportInterval } from '../../../store/models/sales-report.model';
 import { FilterComponent } from "../../../common-component/filter/filter.component";
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { FilterService } from '../../../service/filter/filter.service';
 import { PaymentStatus, SalesReportPeriod } from '../../../store/models/common.model';
 import { MonthlyRevenueComponent } from './monthly-revenue/monthly-revenue.component';
+import { MonthlyGrowthComponent } from './monthly-growth/monthly-growth.component';
 
 @Component({
   selector: 'app-sales-report',
@@ -38,6 +39,7 @@ import { MonthlyRevenueComponent } from './monthly-revenue/monthly-revenue.compo
     CustomerWiseReportComponent,
     FilterComponent,
 	MonthlyRevenueComponent,
+	MonthlyGrowthComponent,
 ],
   templateUrl: './sales-report.component.html',
   styleUrl: './sales-report.component.scss',
@@ -52,17 +54,19 @@ export class SalesReportComponent {
   selectedDate: Date = new Date();
   navHeight: number = 60;
   isAmount: boolean = true;
-  status: PaymentStatus = PaymentStatus.PAID;
+//   status: PaymentStatus = PaymentStatus.PAID;
+  status: PaymentStatus = PaymentStatus.ALL;
   params: {
     date: string;
-    status: PaymentStatus;
+    status: PaymentStatus | string;
     period: SalesReportPeriod
   };
   interval: SalesReportInterval = SalesReportInterval.MONTHLY;
   SalesReportInterval = SalesReportInterval;
   loader: Signal<boolean> = this.salesReportStore.getSalesReportLoader;
+  monthlyRevenue: Signal<MonthlyRevenue[]> =
+		this.salesReportStore.getMonthlyRevenue;
   constructor(
-    private salesReport: SalesReportService,
     private salesReportStore: SalesReportStoreService,
     private filterService: FilterService,
   ) {}
@@ -114,49 +118,6 @@ export class SalesReportComponent {
     }
   }
 
-  // getSalesReportDate() {
-  //   this.subs.sink = this.salesReportStore
-  //     .getSalesReportDate()
-  //     .subscribe((date: string) => {
-  //       if (date !== '') {
-  //         if (date !== this.formattedDate) {
-  //           this.selectedDate = new Date(date);
-  //           this.formattedDate = date;
-  //           this.params = {
-  //             ...this.params,
-  //             date,
-  //           };
-  //           this.dispatchActions();
-  //         } else {
-  //           console.log('reset');
-  //         }
-  //       } else this.getFilterParams();
-  //     });
-  // }
-
-  // onDateChange(): void {
-  //   this.formattedDate = this.salesReport.formatSelectedDate(this.selectedDate);
-  //   this.params = {
-  //     ...this.params,
-  //     date: this.formattedDate,
-  //   };
-  //   this.dispatchActions();
-  // }
-
-  // onStatusChange(status: string): void {
-  //   this.status = status;
-  //   this.params = {
-  //     ...this.params,
-  //     status,
-  //   };
-  //   this.dispatchActions();
-  // }
-
-  // onIntervalChange(){
-  //   // this.loadCustomerWiseSalesReport();
-  //   this.dispatchActions();
-  // }
-
   // start get filter params
     getFilterParams() {
       combineLatest([
@@ -174,6 +135,7 @@ export class SalesReportComponent {
               period,
             };
             // this.loadCustomerSummaryList();
+			if(this.params?.date && this.params?.period)
             this.dispatchActions()
           },
           error: (err) => {

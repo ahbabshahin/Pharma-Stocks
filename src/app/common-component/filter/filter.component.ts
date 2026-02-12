@@ -32,7 +32,7 @@ export class FilterComponent {
 	formattedDate: string = '';
 	navHeight: number = 60;
 	period: SalesReportPeriod = SalesReportPeriod.MONTHLY;
-	status: PaymentStatus = PaymentStatus.PAID;
+	status: PaymentStatus = PaymentStatus.ALL;
 	SalesReportPeriod = SalesReportPeriod;
 	PaymentStatus = PaymentStatus;
 

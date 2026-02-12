@@ -39,7 +39,7 @@ export class CustomerListComponent {
   params: {
     page: number;
     limit: number;
-    status: PaymentStatus;
+    status: PaymentStatus | string;
     period: SalesReportPeriod;
     date: string;
   };
@@ -134,7 +134,7 @@ export class CustomerListComponent {
   }
 
   loadCustomerSummaryList() {
-    if (this.params?.date && this.params?.status && this.params?.period)
+    if (this.params?.date && this.params?.period)
       this.customerSummaryStore.loadCustomerSummaryList(this.params, this.isMore);
   }
 
