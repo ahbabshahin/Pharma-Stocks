@@ -3,13 +3,13 @@ import * as FilterActions from '../actions/filter.action';
 import { PaymentStatus, SalesReportPeriod } from '../models/common.model';
 
 export interface FilterState {
-  status: PaymentStatus;
+  status: PaymentStatus | string;
   date: string;
   period: SalesReportPeriod;
 }
 
 const initialState: FilterState = {
-  status: PaymentStatus.PAID,
+  status: 'all',
   date: new Date().toISOString().split('T')[0], // default today
   period: SalesReportPeriod.MONTHLY,
 };

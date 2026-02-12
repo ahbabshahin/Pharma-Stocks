@@ -206,13 +206,11 @@ export class ExpenseService {
 						);
 						if (indx !== -1) expenses.splice(indx, 1, res);
 
-						const total: number = this.expenseState().total + 1;
 						this.expenseState.set({
 							...this.expenseState(),
 							data: [...expenses],
 							updateLoader: false,
 							error: '',
-							total,
 						});
 						this.commonService.showSuccessToast(
 							'Expense updated successfully',

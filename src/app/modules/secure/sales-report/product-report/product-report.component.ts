@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { Observable, of, Subject, takeUntil } from 'rxjs';
 import { BarGraphComponent } from '../../../../common-component/bar-graph/bar-graph.component';
@@ -21,6 +21,7 @@ type ComponentState = {
   templateUrl: './product-report.component.html',
   styleUrl: './product-report.component.scss',
   imports: [CommonModule, CommonComponentModule, BarGraphComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductReportComponent {
   componentState: ComponentState;

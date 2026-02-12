@@ -35,12 +35,17 @@
           <button *ngIf="isAdmin" nz-button nzType="default" (click)="salesReport()">View All Sales Report</button>
       </div>
       <div>
-        <app-daily-report [isAmount]="isAmount" [status]=status></app-daily-report>
+        <app-daily-report [isAmount]="isAmount" [status]="status"></app-daily-report>
           <div class="mt-2 d-flex justify-content-between">
-            <nz-radio-group [(ngModel)]="status">
+            <!-- <nz-radio-group [(ngModel)]="status">
+              <label nz-radio-button nzValue="">All</label>
               <label nz-radio-button nzValue="paid">Paid</label>
               <label nz-radio-button nzValue="due">Due</label>
-            </nz-radio-group>
+            </nz-radio-group> -->
+			<nz-select nzPlaceHolder="Select payment status" [(ngModel)]="status">
+            <nz-option *ngFor="let term of Object?.values(PaymentStatus)" [nzLabel]="term | titlecase"
+              [nzValue]="term"></nz-option>
+          </nz-select>
             <nz-radio-group [(ngModel)]="isAmount">
               <label nz-radio-button [nzValue]="true">Amount</label>
               <label nz-radio-button [nzValue]="false">Quantity</label>
@@ -50,7 +55,7 @@
   </ng-container>
 
   <div class="footer-section">
-      <p>&copy; 2025 Pharma Stocks. All Rights Reserved.</p>
+      <p>&copy; {{year}} Pharma Stocks. All Rights Reserved.</p>
   </div>
 </ng-container>
 <!-- </div> -->
