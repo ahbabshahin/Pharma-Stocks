@@ -4,6 +4,7 @@ import { Business } from '../../../store/models/business.model';
 import { SubSink } from 'subsink';
 import { Router } from '@angular/router';
 import { AuthStoreService } from '../../../service/auth/auth-store.service';
+import { PaymentStatus } from 'src/app/store/models/common.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,10 @@ export class DashboardComponent {
   business!: Business;
   isAdmin: boolean = false;
   isAmount: boolean = true;
-  status: string = 'paid';
+  status: string = PaymentStatus.ALL;
+  PaymentStatus = PaymentStatus;
+  Object = Object;
+  year: number = new Date().getFullYear();
   constructor(
     private businessService: BusinessService,
     private router: Router,

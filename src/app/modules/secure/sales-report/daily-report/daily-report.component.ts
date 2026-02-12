@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, effect, Input, Signal, untracked } 
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CommonComponentModule } from '../../../../common-component/common-component.module';
 import { FormsModule } from '@angular/forms';
-import { LineGraph } from '../../../../store/models/common.model';
+import { LineGraph, PaymentStatus } from '../../../../store/models/common.model';
 import { SalesReportApiService } from '../../../../service/sales-report/sales-report-api.service';
 import { SubSink } from 'subsink';
 import { DailyReport } from '../../../../store/models/sales-report.model';
@@ -35,7 +35,7 @@ type ComponentState = {
 export class DailyReportComponent {
   @Input() status: string;
   @Input() isAmount: boolean = true;
-  newStatus: string = 'paid';
+  newStatus: string = PaymentStatus.ALL;
   subs = new SubSink();
   selectedDate: Date = new Date();
   loader: boolean = true;
@@ -82,14 +82,13 @@ export class DailyReportComponent {
     };
 
     this.getSalesReportDate();
-    this.formatSelectedDate();
+    // this.formatSelectedDate();
   }
   onDateChange(): void {
     this.formatSelectedDate();
   }
 
   ngOnChanges() {
-
     if (this.status !== this.newStatus) {
       this.loader = true;
       this.newStatus = this.status;
@@ -113,6 +112,7 @@ export class DailyReportComponent {
   }
 
   loadMonthlySalesReport() {
+	if(this.params?.date && this.params?.status)
     this.salesReportStore.loadDailyReport(this.params);
   }
 
@@ -187,7 +187,7 @@ export class DailyReportComponent {
               ...this.params,
               date,
             };
-            // this.dispatchActions();
+            this.loadMonthlySalesReport();
           } else {
 
           }

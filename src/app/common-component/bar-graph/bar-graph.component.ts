@@ -4,6 +4,7 @@ import Chart from 'chart.js/auto';
 import { SubSink } from 'subsink';
 import { BarGraph } from '../../store/models/common.model';
 import { SalesReportService } from '../../service/sales-report/sales-report.service';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-bar-graph',
@@ -40,32 +41,42 @@ export class BarGraphComponent {
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
     this.chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: this.barGraph?.labels,
-        datasets: [
-          {
-            label: this.barGraph?.datasets?.label,
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: this.barGraph?.datasets?.data.map(
-              () =>
-                `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-                  Math.random() * 255
-                )}, ${Math.floor(Math.random() * 255)})`
-            ),
-            data: this.barGraph?.datasets?.data,
-          },
-        ],
-      },
-      options: {
-        indexAxis: 'x',
-        scales: {
-          x: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
+		type: 'bar',
+		data: {
+			labels: this.barGraph?.labels,
+			datasets: [
+				{
+					label: this.barGraph?.datasets?.label,
+					borderColor: 'rgb(255, 99, 132)',
+					backgroundColor: this.barGraph?.datasets?.data.map(
+						() =>
+							`rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+								Math.random() * 255,
+							)}, ${Math.floor(Math.random() * 255)})`,
+					),
+					data: this.barGraph?.datasets?.data,
+				},
+			],
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			layout: {
+				padding: {
+					top: 20, // Extra space so top labels don't hit the ceiling
+				},
+			},
+			indexAxis: 'x',
+			scales: {
+				x: {
+					beginAtZero: true,
+				},
+				y: {
+					grace: '15%', // Gives more room for labels
+				},
+			},
+		},
+	});
     this.chart.update();
   }
 

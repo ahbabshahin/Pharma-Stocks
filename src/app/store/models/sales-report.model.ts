@@ -102,6 +102,7 @@ export enum SalesReportInterval {
 }
 
 export interface MonthlyRevenue {
+	growth: number;
 	totalQuantity: number;
 	totalInvoices: number;
 	month: string;

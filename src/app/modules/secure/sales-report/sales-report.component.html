@@ -67,9 +67,23 @@
 @else{<div class="report-container">
 	<app-all-area-report class="mb-3" [status]="status" [isAmount]="isAmount">
 	</app-all-area-report>
-	<app-monthly-revenue [isAmount]="isAmount"></app-monthly-revenue>
-	<app-customer-wise-report class="mb-3" [status]="status" [isAmount]="isAmount"></app-customer-wise-report>
-	<app-product-report class="my-2" [status]="status" [isAmount]="isAmount"></app-product-report>
+	@if(monthlyRevenue()?.length > 1){
+	<div class="scroll-wrapper">
+	<app-monthly-revenue class="bar-graph-container" [monthlyRevenue]="monthlyRevenue()" [isAmount]="isAmount">
+	</app-monthly-revenue>
+	</div>
+	<div class="scroll-wrapper">
+	<app-monthly-growth class="bar-graph-container" [monthlyRevenue]="monthlyRevenue()"></app-monthly-growth>
+	</div>
+}
+	<div class="scroll-wrapper">
+		<app-customer-wise-report class="mb-3 bar-graph-container" [status]="status" [isAmount]="isAmount">
+		</app-customer-wise-report>
+	</div>
+	<div class="scroll-wrapper">
+	<app-product-report class="my-2 bar-graph-container" [status]="status" [isAmount]="isAmount">
+	</app-product-report>
+	</div>
 </div>
 
 <div class="my-3">
