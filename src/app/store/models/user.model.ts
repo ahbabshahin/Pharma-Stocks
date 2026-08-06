@@ -17,6 +17,12 @@ export interface LoginCred {
   password: string;
 }
 
+export interface PasswordSetupCred {
+  token: string;
+  password: string;
+  confirmPassword: string
+}
+
 export interface RegisterCred extends User {
   password: string;
 }

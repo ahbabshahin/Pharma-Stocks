@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Signal } from '@angular/core';
+import { Component, computed, effect, Signal, untracked } from '@angular/core';
 import { CommonComponentModule } from '../../../common-component/common-component.module';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
@@ -69,7 +69,17 @@ export class SalesReportComponent {
   constructor(
     private salesReportStore: SalesReportStoreService,
     private filterService: FilterService,
-  ) {}
+  ) {
+	effect(() => {
+		const status = this.filterService.getFilterStatusSignal();
+		const period = this.filterService.getFilterPeriodSignal();
+		const date = this.filterService.getFilterDateSignal();
+
+		if (status && period && date) {
+			untracked(() => this.processFilterParams());
+		}
+	})
+  }
 
   ngOnInit() {
     this.initialize();
@@ -81,7 +91,7 @@ export class SalesReportComponent {
       ...this.params,
       status: this.status,
     };
-    this.getFilterParams();
+    // this.getFilterParams();
     // this.getSalesReportDate();
   }
 
@@ -144,6 +154,26 @@ export class SalesReportComponent {
         });
     }
     // end get filter params
+
+	processFilterParams() {
+		try {
+			const status = this.filterService.getFilterStatusSignal();
+			const period = this.filterService.getFilterPeriodSignal();
+			const date = this.filterService.getFilterDateSignal();
+
+			if (status && period && date) {
+				this.params = {
+					...this.params,
+					date,
+					status,
+					period,
+				};
+				this.dispatchActions();
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
 
 	onTypeChange(isAmount: boolean) {
 		this.isAmount = isAmount;

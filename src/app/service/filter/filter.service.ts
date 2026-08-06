@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { FilterState } from '../../store/reducers/filter.reducer';
 import {
@@ -45,4 +45,13 @@ export class FilterService {
 
   getFilterPeriod = (): Observable<SalesReportPeriod> =>
     this.select(filterSelectors.getFilterPeriod);
+
+  getFilterStatusSignal : Signal<PaymentStatus | string> =
+	this.store.selectSignal(filterSelectors.getFilterStatus);
+
+  getFilterDateSignal : Signal<string> =
+	this.store.selectSignal(filterSelectors.getFilterDate);
+
+  getFilterPeriodSignal : Signal<SalesReportPeriod> =
+	this.store.selectSignal(filterSelectors.getFilterPeriod);
 }
