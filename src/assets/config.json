@@ -1,4 +1,4 @@
 {
   "rootURL": "https://pharma-stocks-server.vercel.app/api",
-  "local": "http://localhost:5000/api"
+  "local": "http://localhost:5500/api"
 }
